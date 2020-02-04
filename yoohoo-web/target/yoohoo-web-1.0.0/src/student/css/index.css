@@ -1,0 +1,96 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body{
+	background-image: url("../img/background.png");
+    background-repeat:no-repeat;  
+    background-attachment:fixed;
+    background-position:bottom left;
+    background-size:100% 263px;
+    background-color: #EDF6F6;
+}
+
+i {
+    font-style: normal
+}
+
+.main1 {
+    width: 72%;
+    height: 80%;
+    max-width: 1200px;
+    border-radius: 30px;
+    margin: 28px auto;
+    box-shadow: 0 0 10px #80C7CB;
+    position: relative;
+    
+	background-image: url("../img/inner_bottom.png");
+    background-repeat:no-repeat;  
+/*     background-attachment:fixed; */
+    background-position:bottom left;
+    background-size:100% 61px;
+    background-color: #DFFAFB;
+    -webkit-box-shadow: 0 0 10px #80C7CB;
+}
+
+.main {
+    width: 72%;
+    height: 80%;
+    max-width: 1200px;
+    max-height: 700px;
+    border-radius: 30px;
+    margin: 28px auto;
+    background-color: #DFFAFB;
+    -webkit-box-shadow: 0 0 10px #80C7CB;
+    box-shadow: 0 0 10px #80C7CB;
+    overflow: hidden;
+    position: relative;
+    
+}
+.top-left-bg{
+    width: 125px;
+    height: 38px;
+    background-image: url("../img/top-left-bg.png");
+    background-size: 100% 100%;
+    position: absolute;
+    left: 50px;
+    top: 2px;
+}
+
+.top-right-bg{
+    width: 113px;
+    height: 39px;
+    background-image: url("../img/top-right-bg.png");
+    background-size: 100% 100%;
+    position: absolute;
+    right: 10px;
+    top: 2px;
+}
+
+.main .top-tab {
+    width: 45%;
+    height: 40px;
+    height: 10%;
+    color: #666666;
+    margin: auto;
+}
+
+.main .top-tab span {
+    display: inline-block;
+    width: 49%;
+    height: 40px;
+    line-height: 55px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.main .content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 90%;
+}
+

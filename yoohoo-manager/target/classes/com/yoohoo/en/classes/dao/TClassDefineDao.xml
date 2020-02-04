@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoohoo.en.classes.dao.TClassDefineDao">
+
+	<select id="queryObject" resultType="com.yoohoo.en.classes.entity.TClassDefineEntity">
+		select * from t_class_define where class_item_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yoohoo.en.classes.entity.TClassDefineEntity">
+		select * from t_class_define 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_class_define 
+	</select>
+	 
+	<insert id="save" parameterType="com.yoohoo.en.classes.entity.TClassDefineEntity">
+		insert into t_class_define
+		(
+			`class_item_name`, 
+			`student_num`, 
+			`add_time`, 
+			`lesson_price`, 
+			`absenteeism_price`, 
+			`leave_price`, 
+			`try_price`, 
+			`attend_price`
+		)
+		values
+		(
+			#{classItemName}, 
+			#{studentNum}, 
+			#{addTime}, 
+			#{lessonPrice}, 
+			#{absenteeismPrice}, 
+			#{leavePrice}, 
+			#{tryPrice}, 
+			#{attendPrice}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yoohoo.en.classes.entity.TClassDefineEntity">
+		update t_class_define 
+		<set>
+			<if test="classItemName != null">`class_item_name` = #{classItemName}, </if>
+			<if test="studentNum != null">`student_num` = #{studentNum}, </if>
+			<if test="addTime != null">`add_time` = #{addTime}, </if>
+			<if test="lessonPrice != null">`lesson_price` = #{lessonPrice}, </if>
+			<if test="absenteeismPrice != null">`absenteeism_price` = #{absenteeismPrice}, </if>
+			<if test="leavePrice != null">`leave_price` = #{leavePrice}, </if>
+			<if test="tryPrice != null">`try_price` = #{tryPrice}, </if>
+			<if test="attendPrice != null">`attend_price` = #{attendPrice}</if>
+		</set>
+		where class_item_id = #{classItemId}
+	</update>
+	
+	<delete id="delete">
+		delete from t_class_define where class_item_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_class_define where class_item_id in 
+		<foreach item="classItemId" collection="array" open="(" separator="," close=")">
+			#{classItemId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>班级课程表</title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			#if($shiro.hasPermission("tclassschedule:save"))
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			#end
+			#if($shiro.hasPermission("tclassschedule:update"))
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			#end
+			#if($shiro.hasPermission("tclassschedule:delete"))
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			#end
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">班级ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.classId" placeholder="班级ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">课程ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.lessonId" placeholder="课程ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">课节ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.chapterId" placeholder="课节ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">上课时间</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.lessonTime" placeholder="上课时间"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">老师ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.teacherId" placeholder="老师ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">直播音间ID</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.roomId" placeholder="直播音间ID"/>
+			    </div>
+			</div>
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">直播间密码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.roomPasswd" placeholder="直播间密码"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">直播间URL</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tClassSchedule.roomUrl" placeholder="直播间URL"/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="${rc.contextPath}/js/tclassschedule.js?_${date.systemTime}"></script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TTeacherInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TTeacherInfo" >
+    <id column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="add_user_id" property="addUserId" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="job_number" property="jobNumber" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="teacher_image" property="teacherImage" jdbcType="VARCHAR" />
+    <result column="teacher_video" property="teacherVideo" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="position_type" property="positionType" jdbcType="INTEGER" />
+    <result column="teacherAge" property="teacherage" jdbcType="VARCHAR" />
+    <result column="educational" property="educational" jdbcType="VARCHAR" />
+    <result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    <result column="evaluation" property="evaluation" jdbcType="VARCHAR" />
+    <result column="addtime" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="add_user_id" property="addUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="communicate_account" property="communicateAccount" jdbcType="INTEGER" />
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="SimpleResultMap" type="com.yoohoo.en.dao.model.TTeacherInfo">
+    <id column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="teacher_image" property="teacherImage" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    teacher_id, account, password, name, en_name, phone, job_number, email, country, 
+    position, address, create_time, update_time, status, teacher_image, teacher_video, 
+    sex, position_type, teacherAge, educational, introduce, evaluation, price, communicate_account
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TTeacherInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_teacher_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+      order by convert(`name` using gbk)
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_teacher_info
+    where teacher_id = #{teacherId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_teacher_info
+    where teacher_id = #{teacherId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yoohoo.en.dao.model.TTeacherInfoExample" >
+    delete from t_teacher_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yoohoo.en.dao.model.TTeacherInfo" >
+    insert into t_teacher_info (teacher_id, account, password, 
+      name, en_name, phone, 
+      job_number, email, country, 
+      position, address, create_time, 
+      update_time, status, teacher_image, 
+      teacher_video, sex, position_type, 
+      teacherAge, educational, introduce, 
+      evaluation, addtime, add_user_id, update_user_id, price, communicate_account, head_image)
+    values (#{teacherId,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{enName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{jobNumber,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{teacherImage,jdbcType=VARCHAR}, 
+      #{teacherVideo,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{positionType,jdbcType=INTEGER}, 
+      #{teacherage,jdbcType=VARCHAR}, #{educational,jdbcType=VARCHAR}, #{introduce,jdbcType=VARCHAR}, 
+      #{evaluation,jdbcType=VARCHAR}, #{addtime,jdbcType=TIMESTAMP}, #{addUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}
+      , #{price,jdbcType=INTEGER}, #{communicateAccount,jdbcType=VARCHAR}, #{headImage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoohoo.en.dao.model.TTeacherInfo" useGeneratedKeys="true" keyProperty="teacherId"  >
+    insert into t_teacher_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="jobNumber != null" >
+        job_number,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="teacherImage != null" >
+        teacher_image,
+      </if>
+      <if test="teacherVideo != null" >
+        teacher_video,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="positionType != null" >
+        position_type,
+      </if>
+      <if test="teacherage != null" >
+        teacherAge,
+      </if>
+      <if test="educational != null" >
+        educational,
+      </if>
+      <if test="introduce != null" >
+        introduce,
+      </if>
+      <if test="evaluation != null" >
+        evaluation,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="communicateAccount != null" >
+        communicate_account,
+      </if>
+      <if test="headImage != null" >
+        	teacher_image
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNumber != null" >
+        #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="teacherImage != null" >
+        #{teacherImage,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherVideo != null" >
+        #{teacherVideo,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="positionType != null" >
+        #{positionType,jdbcType=INTEGER},
+      </if>
+      <if test="teacherage != null" >
+        #{teacherage,jdbcType=VARCHAR},
+      </if>
+      <if test="educational != null" >
+        #{educational,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluation != null" >
+        #{evaluation,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="communicateAccount != null" >
+        #{communicateAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null" >
+        #{headImage,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yoohoo.en.dao.model.TTeacherInfoExample" resultType="java.lang.Integer" >
+    select count(*) from t_teacher_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_teacher_info
+    <set >
+      <if test="record.teacherId != null" >
+        teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null" >
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jobNumber != null" >
+        job_number = #{record.jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null" >
+        country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null" >
+        position = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.teacherImage != null" >
+        teacher_image = #{record.teacherImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherVideo != null" >
+        teacher_video = #{record.teacherVideo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.positionType != null" >
+        position_type = #{record.positionType,jdbcType=INTEGER},
+      </if>
+      <if test="record.teacherage != null" >
+        teacherAge = #{record.teacherage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.educational != null" >
+        educational = #{record.educational,jdbcType=VARCHAR},
+      </if>
+      <if test="record.introduce != null" >
+        introduce = #{record.introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="record.evaluation != null" >
+        evaluation = #{record.evaluation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=INTEGER},
+      </if>
+      <if test="record.communicateAccount != null" >
+        communicate_account = #{record.communicateAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_teacher_info
+    set teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      account = #{record.account,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      job_number = #{record.jobNumber,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      position = #{record.position,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      teacher_image = #{record.teacherImage,jdbcType=VARCHAR},
+      teacher_video = #{record.teacherVideo,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=INTEGER},
+      position_type = #{record.positionType,jdbcType=INTEGER},
+      teacherAge = #{record.teacherage,jdbcType=VARCHAR},
+      educational = #{record.educational,jdbcType=VARCHAR},
+      introduce = #{record.introduce,jdbcType=VARCHAR},
+      evaluation = #{record.evaluation,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=INTEGER},
+      communicate_account = #{record.communicateAccount,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoohoo.en.dao.model.TTeacherInfo" >
+    update t_teacher_info
+    <set >
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="jobNumber != null" >
+        job_number = #{jobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="teacherImage != null" >
+        teacher_image = #{teacherImage,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherVideo != null" >
+        teacher_video = #{teacherVideo,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="positionType != null" >
+        position_type = #{positionType,jdbcType=INTEGER},
+      </if>
+      <if test="teacherage != null" >
+        teacherAge = #{teacherage,jdbcType=VARCHAR},
+      </if>
+      <if test="educational != null" >
+        educational = #{educational,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluation != null" >
+        evaluation = #{evaluation,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="communicateAccount != null" >
+        communicate_account = #{communicateAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where teacher_id = #{teacherId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoohoo.en.dao.model.TTeacherInfo" >
+    update t_teacher_info
+    set account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      en_name = #{enName,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      job_number = #{jobNumber,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      teacher_image = #{teacherImage,jdbcType=VARCHAR},
+      teacher_video = #{teacherVideo,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      position_type = #{positionType,jdbcType=INTEGER},
+      teacherAge = #{teacherage,jdbcType=VARCHAR},
+      educational = #{educational,jdbcType=VARCHAR},
+      introduce = #{introduce,jdbcType=VARCHAR},
+      evaluation = #{evaluation,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=INTEGER},
+      communicate_account = #{record.communicateAccount,jdbcType=VARCHAR}
+    where teacher_id = #{teacherId,jdbcType=INTEGER}
+  </update>
+  
+   <select id="selectNameById" resultType="java.lang.String">
+        SELECT name from t_teacher_info where teacher_id=#{assistantId};
+   </select>
+
+
+  <sql id="MysqlDialectSuffix" >
+    <if test="pageHelper != null" >
+      <![CDATA[ limit #{pageHelper.begin}, #{pageHelper.length}]]>
+    </if>
+  </sql>
+  <insert id="insertBatch" parameterType="com.yoohoo.en.dao.model.TTeacherInfo" >
+    insert into t_teacher_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      teacher_id,account,password,name,en_name,phone,job_number,email,country,position,address,create_time,update_time,status
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.teacherId,jdbcType=INTEGER},#{item.account,jdbcType=VARCHAR},#{item.password,jdbcType=VARCHAR},#{item.name,jdbcType=VARCHAR},#{item.enName,jdbcType=VARCHAR},#{item.phone,jdbcType=VARCHAR},#{item.jobNumber,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR},#{item.country,jdbcType=VARCHAR},#{item.position,jdbcType=VARCHAR},#{item.address,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},#{item.updateTime,jdbcType=TIMESTAMP},#{item.status,jdbcType=INTEGER},
+
+	  </trim>
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectTeacherByPrimaryKey" resultMap="SimpleResultMap">
+    SELECT teacher_id,name,teacher_image from t_teacher_info where teacher_id=#{teacherId};
+  </select>
+
+</mapper>

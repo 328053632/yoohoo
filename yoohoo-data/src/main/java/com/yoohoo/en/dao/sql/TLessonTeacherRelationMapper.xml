@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TLessonTeacherRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="position_type" property="positionType" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, lesson_id, position_type, teacher_id, teacher_name, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_lesson_teacher_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_lesson_teacher_relation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_lesson_teacher_relation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelationExample" >
+    delete from t_lesson_teacher_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    insert into t_lesson_teacher_relation (id, lesson_id, position_type, 
+      teacher_id, teacher_name, status, addtime, add_user_id, update_time, update_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{lessonId,jdbcType=INTEGER}, #{positionType,jdbcType=INTEGER}, 
+      #{teacherId,jdbcType=INTEGER}, #{teacherName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+      	#{addtime,jdbcType=TIMESTAMP}, #{addUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    insert into t_lesson_teacher_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lessonId != null" >
+        lesson_id,
+      </if>
+      <if test="positionType != null" >
+        position_type,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="teacherName != null" >
+        teacher_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lessonId != null" >
+        #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="positionType != null" >
+        #{positionType,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherName != null" >
+        #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelationExample" resultType="java.lang.Integer" >
+    select count(*) from t_lesson_teacher_relation
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_lesson_teacher_relation
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.lessonId != null" >
+        lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="record.positionType != null" >
+        position_type = #{record.positionType,jdbcType=INTEGER},
+      </if>
+      <if test="record.teacherId != null" >
+        teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.teacherName != null" >
+        teacher_name = #{record.teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_lesson_teacher_relation
+    set id = #{record.id,jdbcType=INTEGER},
+      lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      position_type = #{record.positionType,jdbcType=INTEGER},
+      teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      teacher_name = #{record.teacherName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    update t_lesson_teacher_relation
+    <set >
+      <if test="lessonId != null" >
+        lesson_id = #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="positionType != null" >
+        position_type = #{positionType,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherName != null" >
+        teacher_name = #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    update t_lesson_teacher_relation
+    set lesson_id = #{lessonId,jdbcType=INTEGER},
+      position_type = #{positionType,jdbcType=INTEGER},
+      teacher_id = #{teacherId,jdbcType=INTEGER},
+      teacher_name = #{teacherName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <insert id="insertBatch" parameterType="com.yoohoo.en.dao.model.TLessonTeacherRelation" >
+    insert into t_lesson_teacher_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      lesson_id,teacher_id,teacher_name,position_type,status, addtime, add_user_id, update_time, update_user_id
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.lessonId,jdbcType=INTEGER},#{item.teacherId,jdbcType=INTEGER},#{item.teacherName,jdbcType=VARCHAR},#{item.positionType,jdbcType=INTEGER},#{item.status,jdbcType=INTEGER},
+      	#{item.addtime,jdbcType=TIMESTAMP}, #{item.addUserId,jdbcType=INTEGER}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateUserId,jdbcType=INTEGER}
+      </trim>
+      )
+    </foreach>
+  </insert>
+  <select id="queryList" resultType="com.yoohoo.en.dao.model.TLessonTeacherRelation">
+    SELECT * from   t_lesson_teacher_relation  where   lesson_id =#{param1} and status=1  and position_type=#{param2};
+  </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<!--     development environment      -->    
+	<pool id="POOL01_SD">
+ 		<addressList>127.0.0.1:11211</addressList>
+		<connectSize>2</connectSize>
+		<mergeFactor>20</mergeFactor>
+		<initBufSize>20</initBufSize>
+		<maxBufSize>1024</maxBufSize>
+		<compressionThreshold>4096</compressionThreshold>
+		<connectTimeout>5000</connectTimeout>
+		<isDefaultTranscode>true</isDefaultTranscode>
+		<failureMode>false</failureMode>
+	</pool>
+	
+	<!--     acceptance test environment    
+	<pool id="POOL01_SD">
+ 		<addressList>172.18.0.1:11211</addressList>
+		<connectSize>2</connectSize>
+		<mergeFactor>20</mergeFactor>
+		<initBufSize>20</initBufSize>
+		<maxBufSize>1024</maxBufSize>
+		<compressionThreshold>4096</compressionThreshold>
+		<connectTimeout>5000</connectTimeout>
+		<isDefaultTranscode>true</isDefaultTranscode>
+		<failureMode>false</failureMode>
+	</pool>
+	 -->
+	 
+	<!--     production environment     
+	<pool id="POOL01_SD">
+ 		<addressList>172.18.16.1:11211</addressList>
+		<connectSize>2</connectSize>
+		<mergeFactor>20</mergeFactor>
+		<initBufSize>20</initBufSize>
+		<maxBufSize>1024</maxBufSize>
+		<compressionThreshold>4096</compressionThreshold>
+		<connectTimeout>5000</connectTimeout>
+		<isDefaultTranscode>true</isDefaultTranscode>
+		<failureMode>false</failureMode>
+	</pool>
+	-->
+	<cache-item>
+		<cache cachename="STUDENTINFO" master="POOL01_SD"/>
+		<cache cachename="TEACHERINFO" master="POOL01_SD"/>
+		<cache cachename="PARENTSINFO" master="POOL01_SD"/>
+		<cache cachename="CLASSSTUDENTONLINE-CACHE" master="POOL01_SD"/>
+		<cache cachename="SCHOOLTEACHERONLINE-CACHE" master="POOL01_SD"/>
+		<cache cachename="CLASSING-CACHE" master="POOL01_SD"/>
+	</cache-item>
+</config>

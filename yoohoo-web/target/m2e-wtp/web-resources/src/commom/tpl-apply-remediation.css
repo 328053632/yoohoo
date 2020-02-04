@@ -1,0 +1,78 @@
+
+*:focus {
+    outline: none;
+}
+
+.poohoo-apply-frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 11;
+}
+
+.poohoo-apply-frame .border {
+    /*width: 380px;*/
+    /*height: 485px;*/
+    width: 430px;
+    height: 520px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 10px;
+    color: #1A2148;
+    background-image: url("img/apply-bg.png");
+    background-size: 100% 100%;
+}
+
+.poohoo-apply-frame .border > div {
+    height: 50px;
+    line-height: 50px;
+}
+
+.poohoo-apply-frame .border .btn-recommend {
+    width: 80%;
+    height: 40px;
+    margin: 10px 10%;
+    background-color: #62C456;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+.poohoo-apply-frame .border .tip {
+    color: #999999;
+    font-size: 12px;
+    text-align: center;
+    width: 75%;
+    margin: 5px auto;
+}
+
+.poohoo-apply-frame table tr td {
+    height: 50px;
+}
+
+.poohoo-apply-frame .label {
+    width: 80px;
+}
+
+.poohoo-apply-frame .content {
+    width: 260px;
+}
+
+.poohoo-apply-frame .content select,
+.poohoo-apply-frame .content input {
+    width: 99%;
+    height: 35px;
+    margin: 0;
+    border: 1px solid #9DA0B3;
+    padding: 0;
+}
+
+.pointer {
+    cursor: pointer;
+}

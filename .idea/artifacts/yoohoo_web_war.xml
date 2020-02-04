@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="yoohoo-web:war">
+    <output-path>$PROJECT_DIR$/yoohoo-web/target</output-path>
+    <root id="archive" name="yoohoo-web-1.0.0.war">
+      <element id="artifact" artifact-name="yoohoo-web:war exploded" />
+    </root>
+  </artifact>
+</component>

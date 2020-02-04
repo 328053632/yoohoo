@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoohoo.en.student.dao.TStudentInfoDao">
+
+	<select id="queryObject" resultType="com.yoohoo.en.student.entity.TStudentInfoEntity">
+		select * from t_student_info where user_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yoohoo.en.student.entity.TStudentInfoEntity">
+		SELECT
+			si.*,(select u.username from sys_user u where u.user_id=si.add_user_id) subAdminName
+		FROM
+			t_student_info si
+		<where>
+			<if test="status != null">si.`status` = #{status}</if>
+			<if test="classItemId != null">
+				AND EXISTS (
+					SELECT
+						1
+					FROM
+						t_class c,
+						t_class_student_r csr
+					WHERE
+						c.class_id = csr.class_id
+					AND si.user_id = csr.student_id
+					AND c.class_item_id = #{classItemId}
+				)
+			</if>
+			<if test="studentName != null">AND si.`name` like #{studentName} OR si.msisdn LIKE #{studentName} OR si.en_name  LIKE #{studentName}</if>
+			<if test="addUserId != null">AND si.`add_user_id` = #{addUserId}</if>
+		</where>
+-- 		order by si.`name` collate Chinese_PRC_CS_AS_KS_WS
+		ORDER BY  CONVERT(si.`name` USING gbk)COLLATE gbk_chinese_ci asc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+
+	<select id="queryIdList" resultType="long">
+		SELECT
+			si.user_id
+		FROM
+			t_student_info si
+		<where>
+			<if test="addUserId != null">AND si.`add_user_id` = #{addUserId}</if>
+		</where>
+	</select>
+	
+	
+	<select id="queryListforReg" resultType="com.yoohoo.en.student.entity.TStudentInfoEntity">
+		SELECT
+		si.*
+		FROM
+		t_student_info si
+		<where>
+			<if test="status != null">si.`status` = #{status}</if>
+			<if test="classItemId != null">
+				AND EXISTS (
+				SELECT
+				1
+				FROM
+				t_class c,
+				t_class_student_r csr
+				WHERE
+				c.class_id = csr.class_id
+				AND si.user_id = csr.student_id
+				AND c.class_item_id = #{classItemId}
+				)
+			</if>
+			<if test="studentName != null">AND si.`name` like #{studentName} OR si.msisdn LIKE #{studentName} OR si.en_name  LIKE #{studentName}</if>
+			<if test="addUserId != null">AND si.`add_user_id` = #{addUserId}</if>
+		</where>
+		ORDER BY si.reg_time DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+ 	<select id="queryTotal" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			t_student_info si
+		<where>
+			<if test="status != null">si.`status` = #{status}</if>
+			<if test="classItemId != null">
+				AND EXISTS (
+					SELECT
+						1
+					FROM
+						t_class c,
+						t_class_student_r csr
+					WHERE
+						c.class_id = csr.class_id
+					AND si.user_id = csr.student_id
+					AND c.class_item_id = #{classItemId}
+				)
+			</if>
+			<if test="studentName != null">AND si.`name` like #{studentName} OR si.msisdn LIKE #{studentName} OR si.en_name  LIKE #{studentName}</if>
+			<if test="addUserId != null">AND si.`add_user_id` = #{addUserId}</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yoohoo.en.student.entity.TStudentInfoEntity" useGeneratedKeys="true" keyProperty="userId">
+		insert into t_student_info
+		(
+			`name`, 
+			`en_name`, 
+			`balance`, 
+			`birthday`, 
+			`msisdn`, 
+			`passwd`, 
+			`status`, 
+			`reg_status`, 
+			`reg_time`, 
+			`from_admin`, 
+			`last_update_time`, 
+			`last_update_admin`, 
+			`update_time`, 
+			`addtime`, 
+			`add_user_id`, 
+			`update_user_id`
+		)
+		values
+		(
+			#{name}, 
+			#{enName}, 
+			#{balance}, 
+			#{birthday}, 
+			#{msisdn}, 
+			#{passwd}, 
+			#{status}, 
+			#{regStatus}, 
+			#{regTime}, 
+			#{fromAdmin}, 
+			#{lastUpdateTime}, 
+			#{lastUpdateAdmin}, 
+			#{updateTime}, 
+			#{addtime}, 
+			#{addUserId}, 
+			#{updateUserId}
+		)
+	</insert>
+	
+	<delete id="deleteBatch">
+		delete from t_student_info where user_id in 
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+	 
+	<update id="clearUnfinishLesson" parameterType="com.yoohoo.en.student.entity.TStudentInfoEntity">
+		update t_student_lesson_schedule t set t.`status` = 0 where t.schedule_id in 
+		(select schedule_id from t_class_schedule p,t_class q where p.class_id=q.class_id and q.add_user_id=#{oldAddUserId} and p.check_status != 2)
+		and t.student_id=#{userId}
+	</update>
+	 
+	<update id="clearClassSchedule">
+		update t_student_lesson_schedule t set t.`status` = 0 where t.schedule_id in
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+	</update>
+	
+ 	<select id="queryUnFinishScheduleIdList" parameterType="com.yoohoo.en.student.entity.TStudentInfoEntity"
+ 	 resultType="long">
+		select p.schedule_id from 
+			t_student_lesson_schedule t,
+			t_class_schedule p,
+			t_class q 
+				where 
+					t.schedule_id=p.schedule_id 
+					and p.class_id=q.class_id 
+					and p.check_status != 2 
+					and p.`status`=1
+					and t.student_id=#{userId}
+					and q.add_user_id=#{oldAddUserId}
+	</select>
+	
+ 	<select id="queryUnConfirmLessons" resultType="int">
+	  select count(p.schedule_id) from 
+		   t_student_lesson_schedule t,
+		   t_class_schedule p,
+		   t_class q 
+		    where 
+		     t.schedule_id=p.schedule_id 
+		     and p.class_id=q.class_id 
+		     and t.`status`= 1
+		     and p.check_status != 2 
+		     and p.`status` != 0
+		     and t.student_id=#{studentId}
+		     and q.add_user_id=#{subAdminUserId}
+		     and now() > p.lesson_time
+	</select>
+
+</mapper>

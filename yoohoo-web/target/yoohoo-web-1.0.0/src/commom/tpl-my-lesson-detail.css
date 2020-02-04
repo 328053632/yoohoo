@@ -1,0 +1,148 @@
+.my-lesson-detail{
+    display: flex;
+    display: -webkit-flex;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.my-lesson-detail .left{
+    flex: 1.5;
+    min-height: 200px;
+}
+
+.my-lesson-detail .left .cover{
+    width: 260px;
+    height: 146px;
+    background-color: #FDEFC8;
+    position: relative;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+.my-lesson-detail .left .cover img{
+    max-width: 260px;
+    max-height: 146px;
+    margin: auto;
+}
+
+.my-lesson-detail .left .cover i{
+    display: inline-flex;
+    width: 67px;
+    height: 67px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.my-lesson-detail .left .cover .shi-ting{
+    background-image: url("./img/shi-ting.png");
+    background-size: 100% 100%;
+}
+
+.my-lesson-detail .left .cover .fu-fei{
+    background-image: url("./img/fu-fei.png");
+    background-size: 100% 100%;
+}
+
+.my-lesson-detail .right{
+    flex: 3;
+}
+
+.my-lesson-detail .right .line-2,
+.my-lesson-detail .right .line-1{
+    height: 20px;
+    line-height: 20px;
+}
+.my-lesson-detail .right .line-1 .semester{
+    color: #292929;
+    font-size: 18px;
+}
+
+.my-lesson-detail .right .line-1 .time-quantum{
+    color: #999999;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.my-lesson-detail .right .line-2{
+    margin-top: 7px;
+}
+
+.my-lesson-detail .right .line-2 span{
+    color: #666666;
+    font-size: 16px;
+    margin-right: 18px;
+}
+
+.my-lesson-detail .right .line-2 span label{
+    color: #292929;
+}
+
+.my-lesson-detail .right .chapter-list{
+    margin-top: 40px;
+}
+
+.my-lesson-detail .right .chapter-list span{
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    background-image: url("../../src/student/img/lesson-1.png");
+    background-size: 100% 100%;
+    width: 125px;
+}
+
+.my-lesson-detail .right .chapter-list .chapter-title{
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.my-lesson-detail .right .chapter-list i {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    line-height: 32px;
+    font-size: 12px;
+    color: #ffffff;
+    z-index: 9;
+    cursor: pointer;
+}
+
+.my-lesson-detail .right .chapter-list .absent {
+    background-color: #F03A3A;
+}
+
+.my-lesson-detail .right .chapter-list .leave {
+    background-color: #EF7336;
+}
+
+.my-lesson-detail .right .chapter-list .apply-remediation {
+    display: inline-block;
+    width: 105px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    background-image: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 5px #1C2149;
+    cursor: pointer;
+}
+
+.my-lesson-detail .right .chapter-list .finish{
+    background-image: url("../../src/student/img/lesson-0.png");
+}

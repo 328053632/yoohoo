@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	#parse("sys/header.html")
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/lesson.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/frame.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/teacherTag.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/employees.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList == 1">
+		<div class="grid-btn clearfix">
+			<div style="width: 500px;height:100%;float: left">
+				#if($shiro.hasPermission("tlessoninfo:save"))
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				#end #if($shiro.hasPermission("tlessoninfo:update"))
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+				#end #if($shiro.hasPermission("tteacherinfo:updateBind"))
+				<a class="btn btn-primary" @click="updateAdmin"><i class="fa fa-pencil-square-o"></i>&nbsp;修改绑定子管理员</a>
+				#end
+				<a class="btn btn-primary" @click="ztudentTime"><i class="fa fa-pencil-square-o"></i>时间</a>
+			</div>
+			<div style="float: left">
+				<input class="form-control" type="text" placeholder="中文名" id="findteachername" />
+			</div>
+			<div style="width: 200px;height:100%;float: left;margin-left: 15px">
+				<a class="btn btn-primary" @click="findenName">查询</a>
+			</div>
+			
+
+		</div>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+
+	<div v-show="showList == 2" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group" :class="errors.has('account')? 'has-error' :''">
+				<div class="col-sm-2 control-label">*登录账号</div>
+				<div class="col-sm-10">
+					<input type="text" v-validate="'required|alpha_dash|min:3|max:20'" :aria-invalid="errors.has('account')" class="form-control" v-model="tTeacherInfo.account" name="account" placeholder="登录账号" />
+					<span v-show="errors.has('account')" class="help-block">{{ errors.first('account') }}</span>
+				</div>
+			</div>
+			<div class="form-group" :class="errors.has('password')? 'has-error' :''">
+				<div class="col-sm-2 control-label">*用户密码</div>
+				<div class="col-sm-10">
+					<input type="password" v-validate="'required|min:6|max:20'" :aria-invalid="errors.has('password')" class="form-control" v-model="tTeacherInfo.password" name="password" placeholder="用户密码" />
+					<span v-show="errors.has('password')" class="help-block">{{ errors.first('password') }}</span>
+				</div>
+			</div>
+			<!--修改中英文的位置-->
+			<div class="form-group">
+				<div class="col-sm-2 control-label">英文名+工号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.name" placeholder="英文名+工号" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">中文名</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.enName" placeholder="中文名" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">老师性别</div>
+				<div class="col-sm-10">
+					<select id="teacher_sex" class="form-control" v-model="tTeacherInfo.sex">
+						<option value="1">男</option>
+						<option value="2">女</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">手机</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.phone" placeholder="手机" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">工号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.jobNumber" placeholder="工号" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">教师图片</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="background-color: #ffffff; cursor: pointer;" v-model="tTeacherInfo.teacherImage" placeholder="点击选择图片" readonly @click="choiceFileTeacher" />
+					<input id="fileuploadTeacher" type="file" style="display: none;" name="file" data-url="../upload/uploadCover" accept="image/*" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">教师视频</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="background-color: #ffffff; cursor: pointer;" v-model="tTeacherInfo.teacherVideo" placeholder="点击选择视频" readonly @click="choicevideoTeacher" />
+					<input id="videoploadTeacher" type="file" style="display: none;" name="file" data-url="../upload/uploadCover" accept="video/*" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">教龄</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.teacherAge" placeholder="教龄" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">学历</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.educational" placeholder="学历" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">邮箱</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.email" placeholder="邮箱" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">国家</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.country" placeholder="国家" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">职位</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.position" placeholder="职位" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">地址</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tTeacherInfo.address" placeholder="地址" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">基本介绍</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none;" v-model="tTeacherInfo.introduce" placeholder="基本介绍"></textarea>
+					<!--<input type="text" class="form-control" v-model="tTeacherInfo.introduce" placeholder="介绍" />-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">机构评价</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none;" v-model="tTeacherInfo.evaluation" placeholder="机构评价"></textarea>
+					<!--<input type="text" class="form-control" v-model="tTeacherInfo.evaluation" placeholder="评价" />-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">员工类型</div>
+				<div class="col-sm-10">
+					<select id="teacher_type" class="form-control">
+						<option value="1" name="老师">老师</option>
+						<option value="2" name="课长">课长</option>
+						<option value="3" name="电教">电教</option>
+						<option value="4" name="助教">助教</option>
+					</select>
+				</div>
+				<input type="button" class="btn btn-primary" @click="addPositionType()" value="添加" />
+			</div>
+			<div class="form-tag">
+				<Tag v-for="item in teacherPositionArray" type="dot" color="primary" :key="item" :name="item" closable @on-close="handleClose2">{{item.positionName}}</Tag>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" /> &nbsp;&nbsp;
+				<input type="button" class="btn btn-warning" @click="reload" value="返回" />
+			</div>
+		</form>
+	</div>
+
+	<div v-show="showList == 4" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">系统子管理员</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="tTeacherInfo.addUserId">
+						<option v-for="item in subAdminList" :value="item.userId">{{item.username}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="updateBind" value="确定" /> &nbsp;&nbsp;
+				<input type="button" class="btn btn-warning" @click="reload" value="返回" />
+			</div>
+		</form>
+	</div>
+	
+	
+	
+	
+	
+	<style>
+		zpan{
+			margin-bottom:20px;
+			background-color:#fff;
+			border:1px;
+		}
+		.zpan-default{
+			border-color:#ddd
+		}
+
+	</style>
+	<div v-show="showList == 3" class="zpan zpan-default" style="background-color:#f0ad4e ">
+		<div class="panel-heading" style="width: 100%;background-color: #cccccc;margin-bottom: 30px;height: 50px">
+			{{title}}
+			<input type="button" class="btn btn-warning" @click="showList=1" value="返回" style="float: right"/>
+			<!--<span style="float: right">返回</span>-->
+		</div>
+		<div style="width: 50%;height: 100%;float: left;">
+			<div class="calendar" id="calendar">
+				<div class="top">
+					<span><i class="left" @click="lastMonth"></i></span>
+					<span @click="toThisMonth">{{dateLabel}}</span>
+					<span><i class="right" @click="nextMonth"></i></span>
+				</div>
+				<div class="title">
+					<span>周一</span>
+					<span>周二</span>
+					<span>周三</span>
+					<span>周四</span>
+					<span>周五</span>
+					<span>周六</span>
+					<span>周日</span>
+				</div>
+				<div class="date-table">
+					<div class="row1" v-for="week in month">
+						<span v-for="day in week"
+							  :class="(day.day == dateInfo.day && day.month == dateInfo.month && day.year == dateInfo.year) ?
+								'cur' : ((day.month == (date.getMonth()+1) && day.year == date.getFullYear()) ? '' : 'no-this-month')"
+							  :date-key="day.year+'-'+ (day.month > 9 ? day.month : '0'+day.month) + '-' + (day.day > 9 ? day.day : '0'+day.day)"
+							  @click="selectDay(day.day, day.month, day.year)">
+							<label class="day">{{day.day}}</label>
+							<label class="count"></label>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width: 50%;height: 100%;float: left;">
+			<div class="calendar_right">
+				<p>{{selecttodaytime}}</p>
+				<div v-if="jsonarray!=null" class="calendar_rightdiv" v-for="item  in jsonarray">
+					<input type="checkbox" value="item.name" checked disabled />
+					<span v-bind:class="{ ccccolor: item.value }">{{item.name}}</span>
+				</div>
+				<div v-if="jsonarray==''">
+					<p style="text-align: center;height: 50px;line-height: 50px;width: 100%">没有时间！</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!--日量新加-->
+<script src="${rc.contextPath}/statics/datay/layer/layer.js"></script>
+<script src="${rc.contextPath}/statics/datay/laydate/laydate.js"></script>
+
+<script src="${rc.contextPath}/statics/libs/Sortable.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/vuedraggable.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/vendor/jquery.ui.widget.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/jquery.iframe-transport.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/jquery.fileupload.js"></script>
+<script src="${rc.contextPath}/js/tteacherinfo.js?_${date.systemTime}"></script>
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/iview.css"><!--新改变-->
+<script src="${rc.contextPath}/statics/libs/vue.min.js"></script><!--新改变-->
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/iview.min.js"></script><!--新改变-->
+<!--<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+<!--<script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+<!--<script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body{
+	background-image: url("../img/background.png");
+    background-repeat:no-repeat;  
+    background-attachment:fixed;
+    background-position:bottom left;
+    background-size:100% 263px;
+    background-color: #EDF6F6;
+}
+
+i {
+    font-style: normal
+}
+
+.main {
+    width: 72%;
+    max-width: 1200px;
+    min-height: 80%;
+    border-radius: 30px;
+    background-color: #DFFAFB;
+    margin: 28px auto;
+    -webkit-box-shadow: 0 0 10px #80C7CB;
+    box-shadow: 0 0 10px #80C7CB;
+    overflow: hidden;
+    position: relative;
+}
+
+.main .top-left-bg{
+    width: 125px;
+    height: 38px;
+    background-image: url("../img/top-left-bg.png");
+    background-size: 100% 100%;
+    position: absolute;
+    left: 50px;
+    top: 2px;
+}
+
+.main .top-right-bg{
+    width: 113px;
+    height: 39px;
+    background-image: url("../img/top-right-bg.png");
+    background-size: 100% 100%;
+    position: absolute;
+    right: 10px;
+    top: 2px;
+}
+
+.main .top-tab {
+    width: 45%;
+    height: 55px;
+    color: #666666;
+    margin: auto;
+}
+
+.main .top-tab span {
+    display: inline-block;
+    width: 49%;
+    height: 40px;
+    line-height: 55px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.main .content {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+}
+
+
+.main .bottom {
+    height: 50px;
+    width: 100%;
+    background-color: #A1DEE0;
+    display: flex;
+    align-items: center;
+}
+
+.main .bottom .house{
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    background-image: url("../img/house.png");
+    background-size: 100% 100%;
+    position: absolute;
+    left: 41px;
+    bottom: 0;
+}
+
+.main .bottom .car{
+    display: inline-block;
+    width: 104px;
+    height: 20px;
+    background-image: url("../img/car.png");
+    background-size: 100% 100%;
+    position: absolute;
+    right: 41px;
+    bottom: 3px;
+}
+
+.main .bottom .btns{
+    width: 450px;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.main .bottom .btns div{
+    margin: auto;
+    color: #01483F;
+}
+
+.main .bottom .btns .i-last-week{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url("../img/left.png");
+    background-size: 100% 100%;
+    cursor: pointer;
+}
+
+.main .bottom .btns .i-last-week:hover{
+    background-image: url("../img/left-hover.png");
+}
+
+.main .bottom .btns span{
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+}
+
+.main .bottom .btns .i-next-week{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url("../img/left.png");
+    background-size: 100% 100%;
+    -moz-transform:scaleX(-1);
+    -webkit-transform:scaleX(-1);
+    -o-transform:scaleX(-1);
+    transform:scaleX(-1);
+    cursor: pointer;
+}
+
+.main .bottom .btns .i-next-week:hover{
+    background-image: url("../img/left-hover.png");
+}
+

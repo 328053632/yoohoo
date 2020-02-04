@@ -1,0 +1,16 @@
+.form-tag{
+    background-color:#f9f9f9;
+    width: 73%;
+    height: auto;
+    padding-left: 10px;
+    margin-left:130px;
+}
+
+
+.form-tagFile{
+    background-color:#f9f9f9;
+    width: 100%;
+    height: auto;
+    padding-left: 10px;
+    margin: auto;
+}

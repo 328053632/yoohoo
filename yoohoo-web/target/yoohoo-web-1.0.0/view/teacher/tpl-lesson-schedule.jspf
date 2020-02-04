@@ -1,0 +1,316 @@
+<%@ page pageEncoding="UTF-8"%>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/src/commom/tpl-lesson-schedule.css?version=${_dt}">
+<style>
+<!--
+.lesson-list {
+	font-size: 16px;
+}
+
+.lesson-list .title {
+	padding: 30px 0px 20px 0px;
+	color: #F9B743;
+	line-height: 18px;
+}
+
+.lesson-list .title span {
+	font-size: 18px;
+	margin-right: 5px;
+}
+
+.lesson-list .data {
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+.lesson-list .data table{
+	width: 100%;
+	border: none;
+	color: #1A2148;
+	line-height: 24px;
+}
+.lesson-list .data table  td{
+	border-bottom: 1px solid #D9E9EA;
+	min-width: 35px;
+}
+
+.lesson-list .data table thead{
+	height: 20px;
+	color: #666666;
+}
+.lesson-list .data table tbody tr{
+	padding: 0px;
+}
+.lesson-list .data table tbody tr td{
+	height: 48px;
+}
+.lesson-list .button{
+	height: 36px;
+	width: 88px;
+	border-radius: 4px;
+	display: inline-block;
+	line-height: 36px;
+	text-align: center;
+}
+.lesson-list div .ysk{
+	background-color: #C1D7D8;
+}
+.lesson-list div .kssk{
+	background-color: #62C456;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+.lesson-list div .bssk{
+	background-color: #0097c4;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+.lesson-list div .ddsk{
+	background-color: #FFFFFF;
+}
+.lesson-list tr .none{
+	column-span: 4;
+	text-align: center;
+	width: 100%;
+}
+-->
+</style>
+<script type="text/x-template" id="tpl-lesson-schedule">
+    <div class="lesson-list">
+		<input id="type" type="hidden" value="${sessionScope.LOGIN_TEACHER.type}">
+		<div class="title">
+			<span style="margin-right: 5px">BeiJing Time</span>
+			<span>{{weekStr}}</span>{{dateStr}}
+		    <%--<div v-if="type=='老师端'" class="button bssk" style="cursor: pointer;font-size: 14px" @click="openmytime">Time Slots</div>--%>
+		</div>
+		<div v-if="null != date && date" class="data">
+			<table>
+				<thead>
+					<tr>
+						<td>时间</td>
+						<td>班级</td>
+						<td>课时</td>
+						<td>录像</td>
+						<td>操作</td>
+						<td v-if="allcaozuo==false">课件</td>
+					</tr>
+				</thead>
+				<tbody  v-if="null != lessonList && lessonList.length > 0" >
+					<tr v-for="(info,idx) in lessonList">
+						<td>{{info.lessonPeriod}}</td>
+						<td>{{info.className}}</td>
+						<td>{{info.lessonName}}-{{info.chapterName}}</td>
+						<td>
+							<div>
+								<div v-if="info.teachStatus == 2" @click="openVideBackLayer(info)" class="button bssk ">Replay </div>
+							</div>
+						</td>
+						<td>
+					       <div v-if="info.teachStatus == 2" @click="openTalkWindow(info.roomTeacherUrl)" class="button ysk"> Passed </div>
+						   <div v-else-if="info.teachStatus == 1  && TeacherType==1"   @click="openTalkWindow(info.roomTeacherUrl)" class="button kssk"> Start </div>
+							<div v-else-if="info.teachStatus == 1  && TeacherType==2"   >  </div>
+							<div v-else-if="info.teachStatus == 1  && TeacherType==3"   >  </div>
+							<div v-else class="button ddsk"> Waiting </div>
+
+						</td>
+						<td>
+							<div v-if="info.teachStatus == 2">  </div>
+							<div v-else-if="info.teachStatus == 1  && TeacherType==1"   @click="TPreview(info)" class="button kssk"> Preview </div>
+							<div v-else-if="info.teachStatus == 1  && TeacherType==2"  @click="TPreview(info)" class="button kssk" >预习</div>
+							<div v-else-if="info.teachStatus == 1  && TeacherType==3"  @click="TPreview(info)" class="button kssk">预习</div>
+							<div v-else-if="info.teachStatus == 0  && TeacherType==1" class="button kssk" @click="TPreview(info)"> Preview </div>
+							<div v-else-if="info.teachStatus == 0  && TeacherType==2" class="button kssk" @click="TPreview(info)"> 预习 </div>
+							<div v-else-if="info.teachStatus == 0  && TeacherType==3" class="button kssk" @click="TPreview(info)"> 预习 </div>
+							<div v-else class="button kssk"></div>
+
+
+						</td>
+					</tr>
+				</tbody>
+				<tbody v-else >
+					<tr>
+						<td class="none" colspan="4">没有课程记录</td>
+                    </tr>
+				</tbody>
+			</table>
+
+		</div>
+    </div>
+</script>
+<html><head></head>
+<body>
+<table>
+	<tbody >
+		<tr>
+		<td colspan="1">
+		</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>
+<script>
+//对Date的扩展，将 Date 转化为指定格式的String   
+//月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+//年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+//例子：   
+//(new Date()).format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+//(new Date()).format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+Date.prototype.format = function(fmt)   
+{ //author: meizz   
+var o = {   
+ "M+" : this.getMonth()+1,                 //月份   
+ "d+" : this.getDate(),                    //日   
+ "h+" : this.getHours(),                   //小时   
+ "m+" : this.getMinutes(),                 //分   
+ "s+" : this.getSeconds(),                 //秒   
+ "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+ "S"  : this.getMilliseconds()             //毫秒   
+};   
+if(/(y+)/.test(fmt))   
+ fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+for(var k in o)   
+ if(new RegExp("("+ k +")").test(fmt))   
+fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+return fmt;   
+} 
+	Vue.component('lesson-schedule', {
+		template : '#tpl-lesson-schedule',
+		props : ['date'],
+		data : function() {
+			return {
+				lessonList:[],
+				dateStr : '',
+				weekStr : '',
+				TeacherType:"",
+                ThidChapterMenu:false,
+                TshowChapterMenu:false,
+                tipStyleT:"",
+                TYXbooknamelist:[],
+				allcaozuo:true,
+				type:"",
+                teacherid:"",
+
+			}
+		},
+        created: function () {
+            this.init();
+        },
+        mounted: function () {
+        },
+        updated: function () {
+        },
+        watch: {
+            'date': function () {
+                this.init();
+            }
+        },
+		methods : {
+			init:function(){
+				if(!this.date)
+				{
+					return ;
+				}
+				var show_day=new Array('星期日','星期一','星期二','星期三','星期四','星期五','星期六'); 
+				var useDate=new Date(Date.parse(this.date.replace(/-/g,  "/")));
+				this.weekStr=show_day[useDate.getDay()];
+				this.dateStr=useDate.format('yyyy年M月d日');
+                this.type=$("#type").val();
+
+				this.loadLessonSchedule();
+			},
+			loadLessonSchedule:function(){
+                var me = this;
+                AjaxClient.post({
+                    url: contextPath + '/teach/user/getTeacherLessonPeriod',
+                    data: {date:me.date},
+                    success: function (resp) {
+                        if (resp.code == '0' ) {
+                        	if(resp.data && resp.data['lessons'])
+                       		{
+                       			me.lessonList=resp.data['lessons'];
+                       			me.TeacherType=resp.data.TeacherType;
+                       		} else {
+                       			me.lessonList=[];
+                                me.allcaozuo=true;
+                       		}
+                       		if(me.lessonList.length==0){
+                                me.allcaozuo=true;
+							}
+                       		for(var i=0;i<me.lessonList.length;i++){
+                       		    if(me.lessonList[i].teachStatus != 2){
+                       		        me.allcaozuo=false;
+                       		       break;
+								}else{
+                                    me.allcaozuo=true;
+								}
+							}
+                        } else {
+                            message.error('服务器异常, 请稍后重试提交申请!');
+                        }
+                    }
+                });
+			},
+			openTalkWindow:function(url){
+				if(url){
+					window.open(url);    
+				}
+			},
+            openVideBackLayer:function (info) {
+                layer.open({
+                    type: 2,
+                    title: '录像回放',
+                    maxmin: true,
+                    shadeClose: true, //点击遮罩关闭层
+                    area : ['750px' , '500px'],
+                    content: '/view/student/video-replay.jsp?id='+info.scheduleId
+                });
+            },
+            TPreview:function(info){
+			    var cardid=1;
+			    var _this = this;
+			    var kejainname="";
+                if (_this.TeacherType==1){
+                     cardid=2;
+                     kejainname="预习上课课件！"
+                    this.layerOpen(info,cardid,kejainname);
+				}else {
+                    cardid=1;
+                    kejainname="预习课件"
+                    this.layerOpen(info,cardid,kejainname);
+				}
+
+
+			},
+			layerOpen:function (info,cardid,kejainname) {
+                layer.open({
+                    type: 2,
+                    title: kejainname,
+                    maxmin: false,
+                    fix: false,
+                    move: false,
+                    shadeClose: true, //点击遮罩关闭层
+                    area : ['400px' , '500px'],
+                    content: '/view/teacher/Teacherkejain.jsp?id='+info.chapterId+"&cardid="+cardid
+                });
+            },
+            openmytime:function () {
+                var _this =this;
+                var time = _this.date;
+                layer.open({
+                    type: 2,
+                    title: "BeiJing Time"+_this.date,
+                    shade: 0.4,   //遮罩透明度
+                    maxmin: false,
+                    fix: false,
+                    move: false,
+                    shadeClose: true, //点击遮罩关闭层
+                    scrollbar: false ,//屏蔽浏览器滚动条
+                    /* btn: ['确定', '取消'], //按钮组*/
+                    area : ['400px' , '500px'],
+                    content: '/view/teacher/MyTimeLayer.jsp?date='+time,
+                });
+            }
+		}
+	});
+</script>

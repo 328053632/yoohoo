@@ -1,0 +1,283 @@
+<%@ page pageEncoding="UTF-8" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/src/commom/tpl-apply-audition.css?version=${_dt}">
+<script type="text/x-template" id="tpl-student-apply-dialog">
+    <div class="poohoo-apply-frame" @click="hide" v-show="showFlag" v-cloak>
+        <div class="border" @click="stopPropagation($event)">
+            <h3 style="text-align: center; margin: 45px 0 10px;">{{applyInfo.title}}</h3>
+            <table>
+                <tr>
+                    <td class="label">课程:</td>
+                    <td class="content">{{applyInfo.chapterName}}</td>
+                </tr>
+                <tr>
+                    <td class="label">预约日期:</td>
+                    <td class="content">
+                        <input id="apply-date" v-model="applyInfo.lessonDate" type="text" class="pointer verify"
+                               verify-data="请输入" placeholder="选择预约日期" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">具体上课时间:</td>
+                    <td class="content">
+                        <select id="lesson-time" v-model="applyInfo.lessonTime"
+                                class="verify" verify-data="请选择具体上课时间" @change="selectteacher">
+                            <option v-for="item in lessonTimes" :value="item.value">{{item.label}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">上课老师:</td>
+                    <td class="content">
+                        <select id="lesson-teacher" v-model="applyInfo.teacherName"
+                                class="verify" verify-data="请选择老师">
+                            <option v-for="item in selectteacherarray" :value="item.name">{{item.name}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">班级类型:</td>
+                    <td class="content">
+                        <select id="class-type" v-model="applyInfo.classItemId"
+                                class="verify" verify-data="请选择">
+                            <option v-for="item in classTypeList" :value="item.classItemId">{{item.classItemName}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">手机号:</td>
+                    <td class="content">
+                        <input id="apply-phone" type="text" v-model="applyInfo.applyPhone" placeholder="输入手机号"
+                               class="verify" verify-data="请输入" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">建议:</td>
+                    <td class="content">
+                        <textarea rows="3" name=textarea style="resize:none;" placeholder="建议" cols="32" v-model="applyInfo.suggest"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"></td>
+                    <td class="content"></td>
+                </tr>
+            </table>
+            <div><button class="btn-recommend" @click="apply">确认</button></div>
+            <p class="tip">班级人数不同，课时费消耗不同；人数不同，组班时间会不同 ，建议尽量提前</p>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('student-apply-dialog', {
+        template: '#tpl-student-apply-dialog',
+        props: ['applyType','showFlag','chapterInfo', 'lessonInfo'],
+        data: function () {
+            return {
+                classTypeList:[],
+                lessonTimes:[],
+                applyInfo:{
+                	title:'申请试听',
+                    chapterId: '',
+                    chapterName: '',
+                    lessonDate: '',
+                    lessonTime: '',
+                    applyPhone: '${sessionScope.LOGIN_STUDENT.msisdn}',
+                    recommendPhone:'',
+                    classItemId: '',
+                    className: '',
+                    teacherName:"",//新加老师
+                    suggest:""
+                },
+                selectteacherarray:[],
+                num:1
+
+            }
+        },
+        created: function(){
+        	this.updateData();
+            this.classTypeListData();
+        },
+	    updated: function(){
+	    	this.updateData();
+	    },
+        mounted: function(){
+            this.initLayDate();
+        },
+        watch: {
+            'applyInfo.classItemId': function (val, oldVal) {
+                for (var i = 0, len = this.classTypeList.length; i < len; i++) {
+                    if (val == this.classTypeList[i].classItemId) {
+                        this.applyInfo.className = this.classTypeList[i].classItemName;
+                        console.log(this.applyInfo.className);
+                        break;
+                    }
+                }
+            },
+            'applyInfo.lessonDate':function () {
+                var me = this;
+                if(me.num==1){
+                    me.num++;
+                    return;
+                }else {
+                    me.num++;
+                    var lessonDate = me.applyInfo.lessonDate;//日期
+                    var lessonTime  = me.applyInfo.lessonTime;//时间段
+                    if (lessonDate==""){
+                        layer.alert("请选择日期！")
+                        return
+                    }
+                    if (lessonTime==""){
+                        layer.alert("请选择时间段！")
+                        return
+                    }
+                    AjaxClient.post({
+                        url: contextPath + '/stu/user/getTeacherListByTime',
+                        data:{
+                            dateTime:lessonDate,
+                            timeSchedule:lessonTime
+                        },
+                        success: function (resp) {
+                            if (resp.code == '0') {
+                                me.selectteacherarray=resp.data.teacherList;
+                                if (me.selectteacherarray==null){
+                                    layer.alert("该时间段没有老师，请重新选择时间！")
+                                }
+                            } else if (resp.code == '500') {
+                                message.error('服务器异常, 请稍后重试提交申请!');
+                            } else {
+                                message.error(resp.message);
+                            }
+                        }
+                    });
+
+                }
+                
+            }
+        },
+        methods: {
+            updateData: function(){
+                this.applyInfo.messageType=this.applyType;
+                switch(this.applyType)
+                {
+                	case 3:this.applyInfo.title="申请旁听";break;
+                	case 4:this.applyInfo.title="申请试听";break;
+                	case 5:this.applyInfo.title="申请测评";break;
+                }
+                if(null != this.chapterInfo)
+                {
+    	            this.applyInfo.chapterId=this.chapterInfo.chapterId;
+    	            this.applyInfo.chapterName=this.chapterInfo.title;
+                }
+
+                if(this.lessonInfo){
+                    this.applyInfo.lessonName = this.lessonInfo.title;
+                    this.applyInfo.lessonId = this.lessonInfo.lessonId;
+                }
+            },
+        	apply: function () {
+                if (!this.examineApplyInfo()) {
+                    return;
+                }
+                this.applyInfo.messageType = this.applyType;
+                var me = this;
+
+                AjaxClient.post({
+                    url: contextPath + '/stu/user/applyLesson',
+                    data: this.applyInfo,
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            message.info('您的申请提交成功, 老师会尽快处理!');
+                            me.hide();
+                        } else if(resp.code == '500') {
+                            message.error('服务器异常, 请稍后重试提交申请!');
+                        }else{
+                        	message.error(resp.message);
+                        }
+                    }
+                });
+            },
+            examineApplyInfo: function () {
+                var $verify = $('.verify');
+                for (var i = 0, len = $verify.length; i < len; i++) {
+                    if (!$($verify[i]).val()) {
+                        var message = $($verify[i]).attr('verify-data');
+                        var id = '#' + $($verify[i]).attr('id');
+                        layer.tips(message, id);
+                        return false;
+                    }
+                }
+                return true;
+            },
+            initLayDate: function(){
+                var me = this;
+                laydate.render({
+                    elem: '#apply-date',
+                    done: function(value, date){
+                        me.applyInfo.lessonDate = value;
+                    }
+                });
+            },
+            classTypeListData: function () {
+                var me = this;
+                $.get(contextPath + '/stu/user/classTypeList', function (resp) {
+                    me.classTypeList = [{classItemName: '请选择', classItemId: ''}];
+                    if (resp.classDefines) {
+                        for(var i=0, len=resp.classDefines.length; i<len; i++){
+                            me.classTypeList.push(resp.classDefines[i]);
+                        }
+                    }
+                    me.lessonTimes = [{label: '请选择', value: ''}];
+                    if (resp.lessonTimes) {
+                        for (var i = 0, len = resp.lessonTimes.length; i < len; i++) {
+                            me.lessonTimes.push({label: resp.lessonTimes[i], value: resp.lessonTimes[i]});
+                        }
+                    }
+                }, 'json');
+            },
+            hide: function () {
+                this.showFlag = false;
+                this.$emit('close-dialog',this.showFlag);
+            },
+            show: function () {
+                this.showFlag = true;
+                this.$emit('close-dialog',this.showFlag);
+            },
+            stopPropagation: function(e){
+                e.stopPropagation();
+            },
+            selectteacher:function () {
+                var me = this;
+                me.num++;
+                var lessonDate = me.applyInfo.lessonDate;//日期
+                var lessonTime  = me.applyInfo.lessonTime;//时间段
+                if (lessonDate==""){
+                    layer.alert("请选择日期！")
+                    return
+                }
+                if (lessonTime==""){
+                    layer.alert("请选择时间段！")
+                    return
+                }
+                AjaxClient.post({
+                    url: contextPath + '/stu/user/getTeacherListByTime',
+                    data:{
+                        dateTime:lessonDate,
+                        timeSchedule:lessonTime
+                    },
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            me.selectteacherarray=resp.data.teacherList;
+                            if (me.selectteacherarray==null){
+                                layer.alert("该时间段没有老师，请重新选择时间！")
+                            }
+                        } else if (resp.code == '500') {
+                            message.error('服务器异常, 请稍后重试提交申请!');
+                        } else {
+                            message.error(resp.message);
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>

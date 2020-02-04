@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>课时确认</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showType ==1">
+	<div>
+		<div class="grid-btn">
+            <div class="form-group col-md-2">
+                <select class="form-control" v-model="q.lessonId" placeholder="课程">
+                    <option value="" >全部</option>
+                    <option v-for="item in lessonArray" :value="item.lessonId">{{item.title}}</option>
+                </select>
+            </div>
+  			<div class="form-group col-md-2">
+                <select class="form-control" v-model="q.classItemId" placeholder="班级">
+                    <option value="">全部</option>
+                    <option v-for="item in classItemArray" :value="item.classItemId">{{item.classItemName}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" id="date-str" class="form-control form_date" placeholder="选择日期">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+		</div>
+    </div>
+    <data  v-if="null != consumeList && consumeList.length >0">
+	<div  v-for="(schedule,idx1) in consumeList" class="ui-jqgrid">
+		<div class="row">
+		   <span class="text-left" v-if="null != schedule.lessonName" style="cursor: pointer;color: #00a7d0;">
+			   <a :href="'/tclass/tclass.html?zclassId='+schedule.classId+'&zlessonId='+schedule.lessonId+'&lessonName='+ encodeURI(schedule.lessonName)+'&classType='+encodeURI(schedule.classType)+'&classItem='+ encodeURI(schedule.classItemName)">课本：{{schedule.lessonName}}</a></span>
+		   &nbsp;&nbsp;&nbsp;&nbsp;
+		   <span class="text-left" v-if="null != schedule.className">名称：{{schedule.className}}({{schedule.classItemName}})</span>
+			<span>
+			<a class="btn" @click="enter(schedule)">助教:{{schedule.assistantName}}</a>
+			</span>
+			<span class="text-left" v-if="null != schedule.roomId">教室号：{{schedule.roomId}}</span>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="text-left" v-if="schedule.classType==1">组合类型：测电脑</span>
+			<span class="text-left" v-if="schedule.classType==2">组合类型：测评</span>
+			<span class="text-left" v-if="schedule.classType==3">组合类型：试听</span>
+			<span class="text-left" v-if="schedule.classType==4">组合类型：正常</span>
+			<span class="text-left" v-if="schedule.classType==5">组合类型：补课</span>
+			<span class="text-left" v-if="schedule.classType==6">组合类型：公开</span>
+			<span class="text-left" v-if="schedule.classType==7">组合类型：电教</span>
+			<span class="text-left" v-if="schedule.classType==8">组合类型：暂停</span>
+			<span class="text-left" v-if="schedule.classType==9">组合类型：结课</span>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span class="text-left" v-if="null != schedule.classItemName">费用类型:{{schedule.classItemName}}</span>
+			<!--<span class="text-left" v-if="null != schedule.roomStuPasswd">学生密码：{{schedule.roomStuPasswd}}</span>-->
+		</div>
+	   <table class="table table-bordered">
+	   <thead>
+	   <tr>
+		   	<th>课时信息</th>
+		   	<th>课时状态</th>
+		   	<th>学生</th>
+		   	<th>电话</th>
+		   	<th>状态</th>
+		   	<th>消耗</th>
+	   </tr>
+	   </thead>
+	   <tbody class="text-center">
+	   	<tr v-for="(consume,idx) in schedule.studentConsumeList" >
+	   		<td v-if="idx == 0" :rowspan="schedule.studentConsumeList.length" class="col-sm-2">
+	   			<p class="text-left" >{{schedule.lessonName}}</p>
+	   			<p class="text-left" >{{schedule.chapterName}}</p>
+	   			<p class="text-left" >{{schedule | lessonDateFilter}}</p>
+	   			<p class="text-left" >{{schedule | lessontimeFilter}}</p>
+				<p class="text-left">
+					<span class="text-left">上课老师：{{schedule.teacherName}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="text-left">课长：{{schedule.masterteacherName}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="text-left">电教：{{schedule.eteacherName}}</span>
+				</p>
+	   		</td>
+	   		<td v-if="idx == 0" :rowspan="schedule.studentConsumeList.length" class="col-sm-1">
+	   			<p class="text-left" >{{schedule.teachStatus|getTeacherStatus}}</p>
+	   		</td>
+	   		<td>{{consume.name}}</td>
+	   		<td>{{consume.msisdn}}</td>
+	   		<td>{{consume.typeName}}</td>
+	   		<td>扣除{{consume.price}}个太阳花</td>
+	   	</tr>
+	   </tbody>
+	   </table>
+		   <div v-if="schedule.teachStatus == 2" class="grid-btn " >
+		   <!--	<input v-if="schedule.checkStatus ==1" class="btn btn-default" type="button" @click=saveChange(schedule) value="确认" style="margin-left: 85%;">
+		   	<input v-else class="btn btn-default" type="button" value="已确认" disabled style="margin-left: 85%;">-->
+			   <div style="position: relative;width: 100%;height: 40px">
+				   <input v-if="schedule.checkStatus !=1" class="btn btn-default" type="button" value="已确认" style="position: absolute;right: 100px;bottom: 0">
+				   <a v-if="schedule.checkStatus ==1" class="btn btn-primary" @click="update(idx1,schedule)" style="position: absolute;right: 10px;bottom: 0"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+
+			   </div>
+		   </div>
+	</div>
+	</data>
+   <div v-else  class="ui-jqgrid">
+   		<p class="text-left">没有查询到上课记录</p>
+   </div>
+   </div>
+	
+	<div v-show="showType == 2" class="panel panel-default">
+		<div v-if="null != selectConsume" class="ui-jqgrid">
+			<div class="row">
+			   <span class="text-left" v-if="null != selectConsume.lessonName">课程：{{selectConsume.lessonName}}   </span>
+			   &nbsp;&nbsp;&nbsp;&nbsp;
+			   <span class="text-left" v-if="null != selectConsume.className">组合名称：{{selectConsume.className}}({{selectConsume.classItemName}})</span>
+			</div>
+		   <table class="table table-bordered">
+		   <thead>
+		   <tr>
+			   	<th>课时信息</th>
+			   	<th>学生</th>
+			   	<th>电话</th>
+			   	<th>状态</th>
+			   	<th>消耗</th>
+		   </tr>
+		   </thead>
+		   <tbody class="text-center">
+		   	
+		   	<tr v-if="null != selectConsume.studentConsumeList && selectConsume.studentConsumeList.length >0" v-for="(consume,idx) in selectConsume.studentConsumeList" >
+		   		<td v-if="idx == 0" :rowspan="selectConsume.studentConsumeList.length" class="col-sm-2">
+		   			<p class="text-left" >{{selectConsume.chapterName}}</p>
+		   			<p class="text-left" >{{selectConsume | lessonDateFilter}}</p>
+		   			<p class="text-left" >{{selectConsume | lessontimeFilter}}</p>
+		   			<p class="text-left" >上课老师：{{selectConsume.teacherName}}</p>
+		   		</td>
+		   		<td>{{consume.name}}</td>
+		   		<td>{{consume.msisdn}}</td>
+		   		<td>                
+			   		<select class="form-control" v-model="consume.type" placeholder="班级" @change="changeStatus(idx,consume)">
+	                    <option >全部</option>
+	                    <option v-for="item in stuTypeItemArray" :value="item.type">{{item.typeName}}</option>
+	                </select>
+                </td>
+		   		<td>扣除{{consume.price}}个太阳花</td>
+		   	</tr>
+		   </tbody>
+		   </table>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-2 control-label"></div>
+			<div style="width:150px;margin: 10px auto;">
+				<input type="button" class="btn btn-primary" @click="sure" value="确认"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="goBack" value="返回"/>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<script src="${rc.contextPath}/js/consume.js?_${date.systemTime}" charset="utf-8" ></script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TClassDefineMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TClassDefine" >
+    <id column="class_item_id" property="classItemId" jdbcType="INTEGER" />
+    <result column="class_item_name" property="classItemName" jdbcType="VARCHAR" />
+    <result column="student_num" property="studentNum" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="lesson_price" property="lessonPrice" jdbcType="INTEGER" />
+    <result column="absenteeism_price" property="absenteeismPrice" jdbcType="INTEGER" />
+    <result column="leave_price" property="leavePrice" jdbcType="INTEGER" />
+    <result column="try_price" property="tryPrice" jdbcType="INTEGER" />
+    <result column="attend_price" property="attendPrice" jdbcType="INTEGER" />
+    <result column="price_01" property="price01" jdbcType="INTEGER" />
+    <result column="price5" property="price5" jdbcType="INTEGER" />
+    <result column="price6" property="price6" jdbcType="INTEGER" />
+    <result column="price7" property="price7" jdbcType="INTEGER" />
+    <result column="price8" property="price8" jdbcType="INTEGER" />
+    <result column="price9" property="price9" jdbcType="INTEGER" />
+    <result column="price02" property="price02" jdbcType="INTEGER" />
+    <result column="price03" property="price03" jdbcType="INTEGER" />
+    <result column="price10" property="price10" jdbcType="INTEGER" />
+    <result column="price11" property="price11" jdbcType="INTEGER" />
+    <result column="price12" property="price12" jdbcType="INTEGER" />
+    <result column="price13" property="price13" jdbcType="INTEGER" />
+    <result column="price14" property="price14" jdbcType="INTEGER" />
+    <result column="price15" property="price15" jdbcType="INTEGER" />
+    <result column="price16" property="price16" jdbcType="INTEGER" />
+    <result column="price17" property="price17" jdbcType="INTEGER" />
+    <result column="price18" property="price18" jdbcType="INTEGER" />
+    <result column="price19" property="price19" jdbcType="INTEGER" />
+    <result column="price20" property="price20" jdbcType="INTEGER" />
+    <result column="price21" property="price21" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    class_item_id, class_item_name, student_num, add_time, lesson_price, absenteeism_price, 
+    leave_price, try_price, attend_price, price_01, price5, price6, price7, price8, price9, 
+    price02, price03, price10, price11, price12, price13, price14, price15, price16, 
+    price17, price18, price19, price20, price21
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TClassDefineExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_class_define
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  <include refid="MysqlDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_class_define
+    where class_item_id = #{classItemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_class_define
+    where class_item_id = #{classItemId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yoohoo.en.dao.model.TClassDefineExample" >
+    delete from t_class_define
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yoohoo.en.dao.model.TClassDefine" >
+    insert into t_class_define (class_item_id, class_item_name, student_num, 
+      add_time, lesson_price, absenteeism_price, 
+      leave_price, try_price, attend_price, 
+      price_01, price5, price6, 
+      price7, price8, price9, 
+      price02, price03, price10, 
+      price11, price12, price13, 
+      price14, price15, price16, 
+      price17, price18, price19, 
+      price20, price21)
+    values (#{classItemId,jdbcType=INTEGER}, #{classItemName,jdbcType=VARCHAR}, #{studentNum,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{lessonPrice,jdbcType=INTEGER}, #{absenteeismPrice,jdbcType=INTEGER}, 
+      #{leavePrice,jdbcType=INTEGER}, #{tryPrice,jdbcType=INTEGER}, #{attendPrice,jdbcType=INTEGER}, 
+      #{price01,jdbcType=INTEGER}, #{price5,jdbcType=INTEGER}, #{price6,jdbcType=INTEGER}, 
+      #{price7,jdbcType=INTEGER}, #{price8,jdbcType=INTEGER}, #{price9,jdbcType=INTEGER}, 
+      #{price02,jdbcType=INTEGER}, #{price03,jdbcType=INTEGER}, #{price10,jdbcType=INTEGER}, 
+      #{price11,jdbcType=INTEGER}, #{price12,jdbcType=INTEGER}, #{price13,jdbcType=INTEGER}, 
+      #{price14,jdbcType=INTEGER}, #{price15,jdbcType=INTEGER}, #{price16,jdbcType=INTEGER}, 
+      #{price17,jdbcType=INTEGER}, #{price18,jdbcType=INTEGER}, #{price19,jdbcType=INTEGER}, 
+      #{price20,jdbcType=INTEGER}, #{price21,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoohoo.en.dao.model.TClassDefine" >
+    insert into t_class_define
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="classItemId != null" >
+        class_item_id,
+      </if>
+      <if test="classItemName != null" >
+        class_item_name,
+      </if>
+      <if test="studentNum != null" >
+        student_num,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="lessonPrice != null" >
+        lesson_price,
+      </if>
+      <if test="absenteeismPrice != null" >
+        absenteeism_price,
+      </if>
+      <if test="leavePrice != null" >
+        leave_price,
+      </if>
+      <if test="tryPrice != null" >
+        try_price,
+      </if>
+      <if test="attendPrice != null" >
+        attend_price,
+      </if>
+      <if test="price01 != null" >
+        price_01,
+      </if>
+      <if test="price5 != null" >
+        price5,
+      </if>
+      <if test="price6 != null" >
+        price6,
+      </if>
+      <if test="price7 != null" >
+        price7,
+      </if>
+      <if test="price8 != null" >
+        price8,
+      </if>
+      <if test="price9 != null" >
+        price9,
+      </if>
+      <if test="price02 != null" >
+        price02,
+      </if>
+      <if test="price03 != null" >
+        price03,
+      </if>
+      <if test="price10 != null" >
+        price10,
+      </if>
+      <if test="price11 != null" >
+        price11,
+      </if>
+      <if test="price12 != null" >
+        price12,
+      </if>
+      <if test="price13 != null" >
+        price13,
+      </if>
+      <if test="price14 != null" >
+        price14,
+      </if>
+      <if test="price15 != null" >
+        price15,
+      </if>
+      <if test="price16 != null" >
+        price16,
+      </if>
+      <if test="price17 != null" >
+        price17,
+      </if>
+      <if test="price18 != null" >
+        price18,
+      </if>
+      <if test="price19 != null" >
+        price19,
+      </if>
+      <if test="price20 != null" >
+        price20,
+      </if>
+      <if test="price21 != null" >
+        price21,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="classItemId != null" >
+        #{classItemId,jdbcType=INTEGER},
+      </if>
+      <if test="classItemName != null" >
+        #{classItemName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNum != null" >
+        #{studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lessonPrice != null" >
+        #{lessonPrice,jdbcType=INTEGER},
+      </if>
+      <if test="absenteeismPrice != null" >
+        #{absenteeismPrice,jdbcType=INTEGER},
+      </if>
+      <if test="leavePrice != null" >
+        #{leavePrice,jdbcType=INTEGER},
+      </if>
+      <if test="tryPrice != null" >
+        #{tryPrice,jdbcType=INTEGER},
+      </if>
+      <if test="attendPrice != null" >
+        #{attendPrice,jdbcType=INTEGER},
+      </if>
+      <if test="price01 != null" >
+        #{price01,jdbcType=INTEGER},
+      </if>
+      <if test="price5 != null" >
+        #{price5,jdbcType=INTEGER},
+      </if>
+      <if test="price6 != null" >
+        #{price6,jdbcType=INTEGER},
+      </if>
+      <if test="price7 != null" >
+        #{price7,jdbcType=INTEGER},
+      </if>
+      <if test="price8 != null" >
+        #{price8,jdbcType=INTEGER},
+      </if>
+      <if test="price9 != null" >
+        #{price9,jdbcType=INTEGER},
+      </if>
+      <if test="price02 != null" >
+        #{price02,jdbcType=INTEGER},
+      </if>
+      <if test="price03 != null" >
+        #{price03,jdbcType=INTEGER},
+      </if>
+      <if test="price10 != null" >
+        #{price10,jdbcType=INTEGER},
+      </if>
+      <if test="price11 != null" >
+        #{price11,jdbcType=INTEGER},
+      </if>
+      <if test="price12 != null" >
+        #{price12,jdbcType=INTEGER},
+      </if>
+      <if test="price13 != null" >
+        #{price13,jdbcType=INTEGER},
+      </if>
+      <if test="price14 != null" >
+        #{price14,jdbcType=INTEGER},
+      </if>
+      <if test="price15 != null" >
+        #{price15,jdbcType=INTEGER},
+      </if>
+      <if test="price16 != null" >
+        #{price16,jdbcType=INTEGER},
+      </if>
+      <if test="price17 != null" >
+        #{price17,jdbcType=INTEGER},
+      </if>
+      <if test="price18 != null" >
+        #{price18,jdbcType=INTEGER},
+      </if>
+      <if test="price19 != null" >
+        #{price19,jdbcType=INTEGER},
+      </if>
+      <if test="price20 != null" >
+        #{price20,jdbcType=INTEGER},
+      </if>
+      <if test="price21 != null" >
+        #{price21,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yoohoo.en.dao.model.TClassDefineExample" resultType="java.lang.Integer" >
+    select count(*) from t_class_define
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_class_define
+    <set >
+      <if test="record.classItemId != null" >
+        class_item_id = #{record.classItemId,jdbcType=INTEGER},
+      </if>
+      <if test="record.classItemName != null" >
+        class_item_name = #{record.classItemName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentNum != null" >
+        student_num = #{record.studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lessonPrice != null" >
+        lesson_price = #{record.lessonPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.absenteeismPrice != null" >
+        absenteeism_price = #{record.absenteeismPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.leavePrice != null" >
+        leave_price = #{record.leavePrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.tryPrice != null" >
+        try_price = #{record.tryPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.attendPrice != null" >
+        attend_price = #{record.attendPrice,jdbcType=INTEGER},
+      </if>
+      <if test="record.price01 != null" >
+        price_01 = #{record.price01,jdbcType=INTEGER},
+      </if>
+      <if test="record.price5 != null" >
+        price5 = #{record.price5,jdbcType=INTEGER},
+      </if>
+      <if test="record.price6 != null" >
+        price6 = #{record.price6,jdbcType=INTEGER},
+      </if>
+      <if test="record.price7 != null" >
+        price7 = #{record.price7,jdbcType=INTEGER},
+      </if>
+      <if test="record.price8 != null" >
+        price8 = #{record.price8,jdbcType=INTEGER},
+      </if>
+      <if test="record.price9 != null" >
+        price9 = #{record.price9,jdbcType=INTEGER},
+      </if>
+      <if test="record.price02 != null" >
+        price02 = #{record.price02,jdbcType=INTEGER},
+      </if>
+      <if test="record.price03 != null" >
+        price03 = #{record.price03,jdbcType=INTEGER},
+      </if>
+      <if test="record.price10 != null" >
+        price10 = #{record.price10,jdbcType=INTEGER},
+      </if>
+      <if test="record.price11 != null" >
+        price11 = #{record.price11,jdbcType=INTEGER},
+      </if>
+      <if test="record.price12 != null" >
+        price12 = #{record.price12,jdbcType=INTEGER},
+      </if>
+      <if test="record.price13 != null" >
+        price13 = #{record.price13,jdbcType=INTEGER},
+      </if>
+      <if test="record.price14 != null" >
+        price14 = #{record.price14,jdbcType=INTEGER},
+      </if>
+      <if test="record.price15 != null" >
+        price15 = #{record.price15,jdbcType=INTEGER},
+      </if>
+      <if test="record.price16 != null" >
+        price16 = #{record.price16,jdbcType=INTEGER},
+      </if>
+      <if test="record.price17 != null" >
+        price17 = #{record.price17,jdbcType=INTEGER},
+      </if>
+      <if test="record.price18 != null" >
+        price18 = #{record.price18,jdbcType=INTEGER},
+      </if>
+      <if test="record.price19 != null" >
+        price19 = #{record.price19,jdbcType=INTEGER},
+      </if>
+      <if test="record.price20 != null" >
+        price20 = #{record.price20,jdbcType=INTEGER},
+      </if>
+      <if test="record.price21 != null" >
+        price21 = #{record.price21,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_class_define
+    set class_item_id = #{record.classItemId,jdbcType=INTEGER},
+      class_item_name = #{record.classItemName,jdbcType=VARCHAR},
+      student_num = #{record.studentNum,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      lesson_price = #{record.lessonPrice,jdbcType=INTEGER},
+      absenteeism_price = #{record.absenteeismPrice,jdbcType=INTEGER},
+      leave_price = #{record.leavePrice,jdbcType=INTEGER},
+      try_price = #{record.tryPrice,jdbcType=INTEGER},
+      attend_price = #{record.attendPrice,jdbcType=INTEGER},
+      price_01 = #{record.price01,jdbcType=INTEGER},
+      price5 = #{record.price5,jdbcType=INTEGER},
+      price6 = #{record.price6,jdbcType=INTEGER},
+      price7 = #{record.price7,jdbcType=INTEGER},
+      price8 = #{record.price8,jdbcType=INTEGER},
+      price9 = #{record.price9,jdbcType=INTEGER},
+      price02 = #{record.price02,jdbcType=INTEGER},
+      price03 = #{record.price03,jdbcType=INTEGER},
+      price10 = #{record.price10,jdbcType=INTEGER},
+      price11 = #{record.price11,jdbcType=INTEGER},
+      price12 = #{record.price12,jdbcType=INTEGER},
+      price13 = #{record.price13,jdbcType=INTEGER},
+      price14 = #{record.price14,jdbcType=INTEGER},
+      price15 = #{record.price15,jdbcType=INTEGER},
+      price16 = #{record.price16,jdbcType=INTEGER},
+      price17 = #{record.price17,jdbcType=INTEGER},
+      price18 = #{record.price18,jdbcType=INTEGER},
+      price19 = #{record.price19,jdbcType=INTEGER},
+      price20 = #{record.price20,jdbcType=INTEGER},
+      price21 = #{record.price21,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoohoo.en.dao.model.TClassDefine" >
+    update t_class_define
+    <set >
+      <if test="classItemName != null" >
+        class_item_name = #{classItemName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNum != null" >
+        student_num = #{studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lessonPrice != null" >
+        lesson_price = #{lessonPrice,jdbcType=INTEGER},
+      </if>
+      <if test="absenteeismPrice != null" >
+        absenteeism_price = #{absenteeismPrice,jdbcType=INTEGER},
+      </if>
+      <if test="leavePrice != null" >
+        leave_price = #{leavePrice,jdbcType=INTEGER},
+      </if>
+      <if test="tryPrice != null" >
+        try_price = #{tryPrice,jdbcType=INTEGER},
+      </if>
+      <if test="attendPrice != null" >
+        attend_price = #{attendPrice,jdbcType=INTEGER},
+      </if>
+      <if test="price01 != null" >
+        price_01 = #{price01,jdbcType=INTEGER},
+      </if>
+      <if test="price5 != null" >
+        price5 = #{price5,jdbcType=INTEGER},
+      </if>
+      <if test="price6 != null" >
+        price6 = #{price6,jdbcType=INTEGER},
+      </if>
+      <if test="price7 != null" >
+        price7 = #{price7,jdbcType=INTEGER},
+      </if>
+      <if test="price8 != null" >
+        price8 = #{price8,jdbcType=INTEGER},
+      </if>
+      <if test="price9 != null" >
+        price9 = #{price9,jdbcType=INTEGER},
+      </if>
+      <if test="price02 != null" >
+        price02 = #{price02,jdbcType=INTEGER},
+      </if>
+      <if test="price03 != null" >
+        price03 = #{price03,jdbcType=INTEGER},
+      </if>
+      <if test="price10 != null" >
+        price10 = #{price10,jdbcType=INTEGER},
+      </if>
+      <if test="price11 != null" >
+        price11 = #{price11,jdbcType=INTEGER},
+      </if>
+      <if test="price12 != null" >
+        price12 = #{price12,jdbcType=INTEGER},
+      </if>
+      <if test="price13 != null" >
+        price13 = #{price13,jdbcType=INTEGER},
+      </if>
+      <if test="price14 != null" >
+        price14 = #{price14,jdbcType=INTEGER},
+      </if>
+      <if test="price15 != null" >
+        price15 = #{price15,jdbcType=INTEGER},
+      </if>
+      <if test="price16 != null" >
+        price16 = #{price16,jdbcType=INTEGER},
+      </if>
+      <if test="price17 != null" >
+        price17 = #{price17,jdbcType=INTEGER},
+      </if>
+      <if test="price18 != null" >
+        price18 = #{price18,jdbcType=INTEGER},
+      </if>
+      <if test="price19 != null" >
+        price19 = #{price19,jdbcType=INTEGER},
+      </if>
+      <if test="price20 != null" >
+        price20 = #{price20,jdbcType=INTEGER},
+      </if>
+      <if test="price21 != null" >
+        price21 = #{price21,jdbcType=INTEGER},
+      </if>
+    </set>
+    where class_item_id = #{classItemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoohoo.en.dao.model.TClassDefine" >
+    update t_class_define
+    set class_item_name = #{classItemName,jdbcType=VARCHAR},
+      student_num = #{studentNum,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      lesson_price = #{lessonPrice,jdbcType=INTEGER},
+      absenteeism_price = #{absenteeismPrice,jdbcType=INTEGER},
+      leave_price = #{leavePrice,jdbcType=INTEGER},
+      try_price = #{tryPrice,jdbcType=INTEGER},
+      attend_price = #{attendPrice,jdbcType=INTEGER},
+      price_01 = #{price01,jdbcType=INTEGER},
+      price5 = #{price5,jdbcType=INTEGER},
+      price6 = #{price6,jdbcType=INTEGER},
+      price7 = #{price7,jdbcType=INTEGER},
+      price8 = #{price8,jdbcType=INTEGER},
+      price9 = #{price9,jdbcType=INTEGER},
+      price02 = #{price02,jdbcType=INTEGER},
+      price03 = #{price03,jdbcType=INTEGER},
+      price10 = #{price10,jdbcType=INTEGER},
+      price11 = #{price11,jdbcType=INTEGER},
+      price12 = #{price12,jdbcType=INTEGER},
+      price13 = #{price13,jdbcType=INTEGER},
+      price14 = #{price14,jdbcType=INTEGER},
+      price15 = #{price15,jdbcType=INTEGER},
+      price16 = #{price16,jdbcType=INTEGER},
+      price17 = #{price17,jdbcType=INTEGER},
+      price18 = #{price18,jdbcType=INTEGER},
+      price19 = #{price19,jdbcType=INTEGER},
+      price20 = #{price20,jdbcType=INTEGER},
+      price21 = #{price21,jdbcType=INTEGER}
+    where class_item_id = #{classItemId,jdbcType=INTEGER}
+  </update>
+	  <sql id="MysqlDialectSuffix" >
+		<if test="pageHelper != null" >
+		  <![CDATA[ limit #{pageHelper.begin}, #{pageHelper.length}]]>
+		</if>
+	  </sql>
+    <insert id="insertBatch" parameterType="com.yoohoo.en.dao.model.TClassDefine" >
+    insert into t_class_define
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      class_item_id,class_item_name,student_num,add_time,lesson_price,absenteeism_price,leave_price,try_price,attend_price,price_01,price5,price6,price7,price8,price9,price02,price03,price10,prince11,price12,price13,price14,price15,price16
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.classItemId,jdbcType=INTEGER},#{item.classItemName,jdbcType=VARCHAR},#{item.studentNum,jdbcType=INTEGER},#{item.addTime,jdbcType=TIMESTAMP},#{item.lessonPrice,jdbcType=INTEGER},#{item.absenteeismPrice,jdbcType=INTEGER},#{item.leavePrice,jdbcType=INTEGER},#{item.tryPrice,jdbcType=INTEGER},#{item.attendPrice,jdbcType=INTEGER},#{item.price01,jdbcType=INTEGER},#{item.price5,jdbcType=INTEGER},#{item.price6,jdbcType=INTEGER},#{item.price7,jdbcType=INTEGER},#{item.price8,jdbcType=INTEGER},#{item.price9,jdbcType=INTEGER},#{item.price02,jdbcType=INTEGER},#{item.price03,jdbcType=INTEGER},#{item.price10,jdbcType=INTEGER},#{item.price11,jdbcType=INTEGER}, #{item.price12,jdbcType=INTEGER},#{item.price13,jdbcType=INTEGER},#{item.price14,jdbcType=INTEGER},#{item.price15,jdbcType=INTEGER},#{item.price16,jdbcType=INTEGER}
+		,#{item.price17,jdbcType=INTEGER},#{item.price18,jdbcType=INTEGER},#{item.price19,jdbcType=INTEGER},#{item.price20,jdbcType=INTEGER},#{item.price21,jdbcType=INTEGER}
+	  </trim>
+      )
+    </foreach>
+  </insert>
+</mapper>

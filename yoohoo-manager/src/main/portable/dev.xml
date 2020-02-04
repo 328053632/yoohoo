@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+	<!-- 
+	打包参数配置文件，使用此xml配置时，使用以下命令进行打包。
+	mvn clean package -DportableConfig="src/main/portable/dev.xml"
+	替换key和值 
+	-->
+    <config-file path="WEB-INF/classes/applicationContext.xml">
+        <replace xpath="/beans/bean[@id='fastDFSClient']/constructor-arg[@name='connnectString']/@value">114.55.108.78</replace>
+        <replace xpath="/beans/bean[@id='fastDFSClient']//constructor-arg[@name='trackerHttpPort']/@value">8001</replace>
+        <replace xpath="/beans/bean[@id='fastDFSClient']//property[@name='group']/@value">group1</replace>
+    </config-file>
+    <config-file path="WEB-INF/classes/config.properties">
+        <replace key="pushNotifytoTeacherUrl">http://{ip}:8082/web/p/message</replace>
+        <replace key="pushNotifytoStudentUrl">http://{ip}:8081/client/p/message</replace>
+        <!--<replace key="teacher_ws_url">wss://114.55.108.78:9443/web/session/socketClient</replace>-->
+        <replace key="teacher_ws_url">ws://114.55.108.78:8082/web/session/socketClient</replace>
+        <replace key="shangxue_download_url">http://114.55.108.78:8082/web/plugin/Screenshot.crx</replace>
+        <replace key="shangxue_online_url">https://chrome.google.com/webstore/detail/%E5%B0%9A%E5%AD%A6-%E6%99%BA%E6%85%A7%E8%AF%BE%E5%A0%82/klaejhombkedgmboplpepjpmibalpfcl?hl=zh-CN</replace>
+    </config-file>
+</portable-config>

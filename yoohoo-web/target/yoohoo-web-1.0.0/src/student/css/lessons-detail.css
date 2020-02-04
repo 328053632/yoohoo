@@ -1,0 +1,94 @@
+.lesson-detail .base-info {
+    height: 240px;
+    margin-top: 45px;
+    display: flex;
+}
+
+.lesson-detail .base-info .cover,
+.lesson-detail .base-info .info{
+    flex: 1;
+}
+
+.lesson-detail .base-info .cover{
+    display: flex;
+    align-items: center;
+}
+
+.lesson-detail .base-info .cover p{
+    width: 400px;
+    height: 220px;
+    margin: auto;
+    border-radius: 10px;
+    background-color: #FDEFC8;
+    box-shadow: 2px 2px 10px #A2A2A2;
+    text-align: center;
+}
+
+.lesson-detail .base-info .cover img{
+    max-height: 220px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.lesson-detail .base-info .info .title{
+    font-size: 18px;
+    color: #292929;
+}
+
+.lesson-detail .base-info .info .time{
+    font-size: 16px;
+    color: #666666;
+}
+
+.lesson-detail .introduce-line{
+    margin-top: 30px;
+    height: 35px;
+    line-height: 35px;
+    background-color: #D9E9EA;
+    color: #292929;
+    font-size: 18px;
+    position: relative;
+}
+
+.lesson-detail .introduce-line .tip{
+    margin-left: 30px;
+}
+
+.lesson-detail .introduce-line .tip i{
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #62C456;
+    margin: 0 10px;
+}
+
+.lesson-detail .introduce-line .car{
+    width: 80px;
+    height: 20px;
+    display: inline-block;
+    background-image: url("../img/car.png");
+    background-size: 100% 100%;
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+}
+
+.lesson-detail .fit-object{
+    margin: 30px 30px 0;
+    color: #292929;
+    font-size: 18px;
+}
+
+.lesson-detail .introduce{
+    margin: 30px;
+    color: #292929;
+    font-size: 18px;
+}
+
+.lesson-detail .fit-object .content,
+.lesson-detail .introduce .content{
+    text-indent: 1.8rem;
+    color: #666666;
+    font-size: 16px;
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoohoo.en.mquartz.dao.ScheduleJobDao">
+	<select id="queryObject" resultType="com.yoohoo.en.mquartz.entity.ScheduleJobEntity" >
+		select * from SCHEDULE_JOB where job_id = #{value}
+	</select> 
+
+	<select id="queryList" resultType="com.yoohoo.en.mquartz.entity.ScheduleJobEntity" >
+		select * from SCHEDULE_JOB
+		<where>
+			<if test="beanName != null and beanName.trim() != ''">
+				bean_name like concat('%', #{beanName}, '%') 
+			</if>
+		</where>
+		<if test="offset != null and limit != null ">
+		limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(1) from SCHEDULE_JOB 
+		<where>
+			<if test="beanName != null and beanName.trim() != ''">
+				bean_name like concat('%', #{beanName}, '%') 
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yoohoo.en.mquartz.entity.ScheduleJobEntity" useGeneratedKeys="true" keyProperty="jobId">
+		insert into SCHEDULE_JOB
+		(
+			`bean_name`, 
+			`method_name`, 
+			`params`, 
+			`cron_expression`, 
+			`status`, 
+			`remark`, 
+			`create_time`
+		)
+		values
+		(
+			#{beanName}, 
+			#{methodName}, 
+			#{params}, 
+			#{cronExpression}, 
+			#{status}, 
+			#{remark}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yoohoo.en.mquartz.entity.ScheduleJobEntity">
+		update SCHEDULE_JOB 
+		<set> 
+			<if test="beanName != null">`bean_name` = #{beanName}, </if>
+			<if test="methodName != null">`method_name` = #{methodName}, </if>
+			<if test="params != null">`params` = #{params}, </if>
+			<if test="cronExpression != null">`cron_expression` = #{cronExpression}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+		</set>
+		where job_id = #{jobId}
+	</update>
+	
+	<!-- 批量更新状态 -->
+	<update id="updateBatch"> 
+		update SCHEDULE_JOB set status = #{status} where job_id in 
+		<foreach item="jobId" collection="list"  open="(" separator="," close=")">
+			#{jobId}
+		</foreach>
+	</update>
+	
+	<delete id="deleteBatch">
+		delete from SCHEDULE_JOB where job_id in 
+		<foreach item="jobId" collection="array" open="(" separator="," close=")">
+			#{jobId}
+		</foreach>
+	</delete>
+</mapper>

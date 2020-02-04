@@ -1,0 +1,27 @@
+.no-data{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 41px;
+    left: 0;
+    background: #DFFAFB;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+}
+
+.no-data div{
+    margin: auto;
+    text-align: center;
+    color: #666666;
+    font-size: 16px;
+}
+
+.no-data div i {
+    display: block;
+    width: 52px;
+    height: 52px;
+    background-image: url("./img/xiao-lian.png");
+    background-size: 100% 100%;
+    margin: auto auto 20px;
+}

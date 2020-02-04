@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<caches>
+    <!--   学生信息缓存   -->
+	<cache name="STUDENTINFO">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>30</oscache-invalid-time>
+		<memcache-name>STUDENTINFO</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>600</memcache-invalid-time>
+	</cache>
+    <!--   家长信息缓存   -->
+	<cache name="PARENTSINFO">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>300</oscache-invalid-time>
+		<memcache-name>PARENTSINFO</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>30</memcache-invalid-time>
+	</cache>
+	<!--   老师信息缓存   -->
+	<cache name="TEACHERINFO">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>30</oscache-invalid-time>
+		<memcache-name>TEACHERINFO</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>300</memcache-invalid-time>
+	</cache>
+    <!--  班级学生在线信息缓存  -->
+	<cache name="CLASSSTUDENTONLINE-CACHE">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>30</oscache-invalid-time>
+		<memcache-name>CLASSSTUDENTONLINE-CACHE</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>600</memcache-invalid-time>
+	</cache>
+	<!--   学校在线教师信息缓存   -->
+	<cache name="SCHOOLTEACHERONLINE-CACHE">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>300</oscache-invalid-time>
+		<memcache-name>SCHOOLTEACHERONLINE-CACHE</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>300</memcache-invalid-time>
+	</cache>
+	<!--   上课缓存   -->
+	<cache name="CLASSING-CACHE">
+		<!--获取数据的模式 1:memcache;2:oscache;3:all -->
+		<getcaheModel>1</getcaheModel>
+		<!--删除数据的模式 1:memcache;2:oscache;3:all -->
+		<deleteCacheModel>1</deleteCacheModel>
+		<!--更新数据的模式 1:memcache;2:oscache;3:all -->
+		<updateCacheModel>1</updateCacheModel>
+		<!-- 刷新异步模式1:sync;2:async -->
+		<refreshMode>1</refreshMode>
+		<needLock>true</needLock>
+		<!-- 并发控制 -->
+		<maxThread>200</maxThread>
+		<!--支持无效缓存，设置失效时间默 -->
+		<InvalidDataCache>
+			<!--on：打开；off关闭 -->
+			<switchs>off</switchs>
+			<!--单位分钟 -->
+			<invalidTime>30</invalidTime>
+			<supported>true</supported>
+		</InvalidDataCache>
+		<!--oscache配置文件 -->
+		<oscache-file></oscache-file>
+		<!--OScache缓存失效时间，单位分钟 -->
+		<oscache-invalid-time>300</oscache-invalid-time>
+		<memcache-name>CLASSING-CACHE</memcache-name>
+		<!--Memcache缓存失效时间，单位分钟 -->
+		<memcache-invalid-time>30</memcache-invalid-time>
+	</cache>
+</caches>

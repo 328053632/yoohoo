@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TClassScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TClassSchedule" >
+    <id column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="lesson_time" property="lessonTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="eteacher_id" property="eteacherId" jdbcType="INTEGER" />
+    <result column="masterteacher_id" property="masterteacherId" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_teacher_passwd" property="roomTeacherPasswd" jdbcType="VARCHAR" />
+    <result column="room_teacher_url" property="roomTeacherUrl" jdbcType="VARCHAR" />
+    <result column="room_stu_passwd" property="roomStuPasswd" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="date_label" property="dateLabel" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+    <result column="is_upload" property="isUpload" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    schedule_id, class_id, lesson_id, chapter_id, lesson_time, end_time, teacher_id, 
+    eteacher_id, masterteacher_id, room_id, room_teacher_passwd, room_teacher_url, room_stu_passwd, 
+    status, date_label, check_status, is_upload
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TClassScheduleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_class_schedule
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_class_schedule
+    where schedule_id = #{scheduleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_class_schedule
+    where schedule_id = #{scheduleId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yoohoo.en.dao.model.TClassScheduleExample" >
+    delete from t_class_schedule
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yoohoo.en.dao.model.TClassSchedule" >
+    insert into t_class_schedule (schedule_id, class_id, lesson_id, 
+      chapter_id, lesson_time, end_time, 
+      teacher_id, eteacher_id, masterteacher_id, 
+      room_id, room_teacher_passwd, room_teacher_url, 
+      room_stu_passwd, status, date_label, 
+      check_status, is_upload)
+    values (#{scheduleId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{lessonId,jdbcType=INTEGER}, 
+      #{chapterId,jdbcType=INTEGER}, #{lessonTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{teacherId,jdbcType=INTEGER}, #{eteacherId,jdbcType=INTEGER}, #{masterteacherId,jdbcType=INTEGER}, 
+      #{roomId,jdbcType=VARCHAR}, #{roomTeacherPasswd,jdbcType=VARCHAR}, #{roomTeacherUrl,jdbcType=VARCHAR}, 
+      #{roomStuPasswd,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{dateLabel,jdbcType=VARCHAR}, 
+      #{checkStatus,jdbcType=INTEGER}, #{isUpload,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoohoo.en.dao.model.TClassSchedule" useGeneratedKeys="true" keyProperty="scheduleId"   >
+    insert into t_class_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="scheduleId != null" >
+        schedule_id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="lessonId != null" >
+        lesson_id,
+      </if>
+      <if test="chapterId != null" >
+        chapter_id,
+      </if>
+      <if test="lessonTime != null" >
+        lesson_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="eteacherId != null" >
+        eteacher_id,
+      </if>
+      <if test="masterteacherId != null" >
+        masterteacher_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="roomTeacherPasswd != null" >
+        room_teacher_passwd,
+      </if>
+      <if test="roomTeacherUrl != null" >
+        room_teacher_url,
+      </if>
+      <if test="roomStuPasswd != null" >
+        room_stu_passwd,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="dateLabel != null" >
+        date_label,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="isUpload != null" >
+        is_upload,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="scheduleId != null" >
+        #{scheduleId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonId != null" >
+        #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="chapterId != null" >
+        #{chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonTime != null" >
+        #{lessonTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="eteacherId != null" >
+        #{eteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="masterteacherId != null" >
+        #{masterteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTeacherPasswd != null" >
+        #{roomTeacherPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTeacherUrl != null" >
+        #{roomTeacherUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStuPasswd != null" >
+        #{roomStuPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="dateLabel != null" >
+        #{dateLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isUpload != null" >
+        #{isUpload,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yoohoo.en.dao.model.TClassScheduleExample" resultType="java.lang.Integer" >
+    select count(*) from t_class_schedule
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_class_schedule
+    <set >
+      <if test="record.scheduleId != null" >
+        schedule_id = #{record.scheduleId,jdbcType=INTEGER},
+      </if>
+      <if test="record.classId != null" >
+        class_id = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lessonId != null" >
+        lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="record.chapterId != null" >
+        chapter_id = #{record.chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lessonTime != null" >
+        lesson_time = #{record.lessonTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null" >
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.teacherId != null" >
+        teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.eteacherId != null" >
+        eteacher_id = #{record.eteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.masterteacherId != null" >
+        masterteacher_id = #{record.masterteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.roomId != null" >
+        room_id = #{record.roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomTeacherPasswd != null" >
+        room_teacher_passwd = #{record.roomTeacherPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomTeacherUrl != null" >
+        room_teacher_url = #{record.roomTeacherUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomStuPasswd != null" >
+        room_stu_passwd = #{record.roomStuPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.dateLabel != null" >
+        date_label = #{record.dateLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkStatus != null" >
+        check_status = #{record.checkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.isUpload != null" >
+        is_upload = #{record.isUpload,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_class_schedule
+    set schedule_id = #{record.scheduleId,jdbcType=INTEGER},
+      class_id = #{record.classId,jdbcType=INTEGER},
+      lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      chapter_id = #{record.chapterId,jdbcType=INTEGER},
+      lesson_time = #{record.lessonTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      eteacher_id = #{record.eteacherId,jdbcType=INTEGER},
+      masterteacher_id = #{record.masterteacherId,jdbcType=INTEGER},
+      room_id = #{record.roomId,jdbcType=VARCHAR},
+      room_teacher_passwd = #{record.roomTeacherPasswd,jdbcType=VARCHAR},
+      room_teacher_url = #{record.roomTeacherUrl,jdbcType=VARCHAR},
+      room_stu_passwd = #{record.roomStuPasswd,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      date_label = #{record.dateLabel,jdbcType=VARCHAR},
+      check_status = #{record.checkStatus,jdbcType=INTEGER},
+      is_upload = #{record.isUpload,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoohoo.en.dao.model.TClassSchedule" >
+    update t_class_schedule
+    <set >
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonId != null" >
+        lesson_id = #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="chapterId != null" >
+        chapter_id = #{chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonTime != null" >
+        lesson_time = #{lessonTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="eteacherId != null" >
+        eteacher_id = #{eteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="masterteacherId != null" >
+        masterteacher_id = #{masterteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTeacherPasswd != null" >
+        room_teacher_passwd = #{roomTeacherPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTeacherUrl != null" >
+        room_teacher_url = #{roomTeacherUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="roomStuPasswd != null" >
+        room_stu_passwd = #{roomStuPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="dateLabel != null" >
+        date_label = #{dateLabel,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isUpload != null" >
+        is_upload = #{isUpload,jdbcType=INTEGER},
+      </if>
+    </set>
+    where schedule_id = #{scheduleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoohoo.en.dao.model.TClassSchedule" >
+    update t_class_schedule
+    set class_id = #{classId,jdbcType=INTEGER},
+      lesson_id = #{lessonId,jdbcType=INTEGER},
+      chapter_id = #{chapterId,jdbcType=INTEGER},
+      lesson_time = #{lessonTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      teacher_id = #{teacherId,jdbcType=INTEGER},
+      eteacher_id = #{eteacherId,jdbcType=INTEGER},
+      masterteacher_id = #{masterteacherId,jdbcType=INTEGER},
+      room_id = #{roomId,jdbcType=VARCHAR},
+      room_teacher_passwd = #{roomTeacherPasswd,jdbcType=VARCHAR},
+      room_teacher_url = #{roomTeacherUrl,jdbcType=VARCHAR},
+      room_stu_passwd = #{roomStuPasswd,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      date_label = #{dateLabel,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=INTEGER},
+      is_upload = #{isUpload,jdbcType=INTEGER}
+    where schedule_id = #{scheduleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateTeacher">
+    UPDATE t_class_schedule
+    SET teacher_id = #{param1}, eteacher_id=#{param3},masterteacher_id=#{param4}
+    WHERE
+	STATUS = 0 AND class_id = #{param2}
+  </update>
+  <sql id="MysqlDialectSuffix" >
+    <if test="pageHelper != null" >
+      <![CDATA[ limit #{pageHelper.begin}, #{pageHelper.length}]]>
+    </if>
+  </sql>
+  <insert id="insertBatch" parameterType="com.yoohoo.en.dao.model.TClassSchedule" >
+    insert into t_class_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      schedule_id,class_id,lesson_id,chapter_id,lesson_time,end_time,teacher_id,eteacher_id,masterteacher_id,room_id,room_teacher_passwd,room_teacher_url,room_stu_passwd,status,date_label,check_status,is_upload,
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.scheduleId,jdbcType=INTEGER},#{item.classId,jdbcType=INTEGER},#{item.lessonId,jdbcType=INTEGER},#{item.chapterId,jdbcType=INTEGER},#{item.lessonTime,jdbcType=TIMESTAMP},#{item.endTime,jdbcType=TIMESTAMP},#{item.teacherId,jdbcType=INTEGER},#{item.eteacherId,jdbcType=INTEGER},#{item.masterteacherId,jdbcType=INTEGER},#{item.roomId,jdbcType=VARCHAR},#{item.roomTeacherPasswd,jdbcType=VARCHAR},#{item.roomTeacherUrl,jdbcType=VARCHAR},#{item.roomStuPasswd,jdbcType=VARCHAR},#{item.status,jdbcType=INTEGER},#{item.dateLabel,jdbcType=VARCHAR},#{item.checkStatus,jdbcType=INTEGER},#{item.isUpload,jdbcType=INTEGER},
+      </trim>
+      )
+    </foreach>
+  </insert>
+</mapper>

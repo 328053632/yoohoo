@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="yoohoo-bean" />
+        <module name="yoohoo-data" />
+        <module name="yoohoo-manager" />
+        <module name="yoohoo-service" />
+        <module name="yoohoo-util" />
+        <module name="yoohoo-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="yoohoo" target="1.5" />
+      <module name="yoohoo-bean" target="1.7" />
+      <module name="yoohoo-data" target="1.7" />
+      <module name="yoohoo-manager" target="1.8" />
+      <module name="yoohoo-service" target="1.7" />
+      <module name="yoohoo-util" target="8" />
+      <module name="yoohoo-web" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

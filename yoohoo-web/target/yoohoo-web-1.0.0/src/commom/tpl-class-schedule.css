@@ -1,0 +1,75 @@
+.schedule {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-size: 16px;
+}
+
+.schedule .schedule-list {
+    display: flex;
+    display: -webkit-flex;
+    margin: 0 11px;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+
+.schedule .schedule-list::-webkit-scrollbar {
+    width: 0;
+}
+
+.schedule .schedule-list .day {
+    flex: 1;
+}
+
+.schedule .schedule-list .day .dat-date{
+    height: 41px;
+    line-height: 41px;
+    border-top-left-radius: 41px;
+    border-top-right-radius: 41px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.schedule .schedule-list .day .monday {
+    background-color: #62BB9E;
+}
+
+.schedule .schedule-list .day .tuesday {
+    background-color: #ED8D9F;
+}
+
+.schedule .schedule-list .day .wednesday {
+    background-color: #E9AA5F;
+}
+
+.schedule .schedule-list .day .thursday {
+    background-color: #59B7CA;
+}
+
+.schedule .schedule-list .day .friday {
+    background-color: #ED8D9F;
+}
+
+.schedule .schedule-list .day .saturday {
+    background-color: #E9AA5F;
+}
+
+.schedule .schedule-list .day .sunday {
+    background-color: #59B7CA;
+}
+
+.schedule .schedule-list .day .list{
+    border-left: 2px solid #74B02C;
+}
+.schedule .schedule-list .day .border-right{
+    border-right: 2px solid #74B02C;
+}
+
+.bg-1 {
+    background-color: #FFFFFF;
+}
+
+.bg-2 {
+    background-color: #DFFAFB;
+}

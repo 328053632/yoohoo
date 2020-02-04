@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.ScheduleDAO">
+    <resultMap id="ScheduleInfo" type="com.yoohoo.en.bean.ScheduleInfo">
+        <result property="date" column="date" jdbcType="TIMESTAMP"></result>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"></result>
+        <result property="type" column="type" jdbcType="INTEGER"></result>
+        <result property="status" column="status" jdbcType="INTEGER"></result>
+        <result property="classId" column="classId" jdbcType="INTEGER"></result>
+        <result property="scheduleId" column="scheduleId" jdbcType="INTEGER"></result>
+        <result property="lessonName" column="lessonName" jdbcType="VARCHAR"></result>
+        <result property="chapterName" column="chapterName" jdbcType="VARCHAR"></result>
+        <result property="lessonId" column="lesson_id" jdbcType="INTEGER"></result>
+        <result property="chapterId" column="chapter_id" jdbcType="INTEGER"></result>
+    </resultMap>
+
+    <resultMap id="TempLessonInfo" type="com.yoohoo.en.TempLessonInfo">
+        <result column="class_name" property="className" jdbcType="VARCHAR"></result>
+        <result column="begin_date" property="beginTime" jdbcType="TIMESTAMP"></result>
+        <result column="end_date" property="endTime" jdbcType="TIMESTAMP"></result>
+        <result column="title" property="lessonName" jdbcType="VARCHAR"></result>
+        <result column="cover_url" property="coverUrl" jdbcType="VARCHAR"></result>
+        <result column="master_teacher_id" property="masterTeacherId" jdbcType="INTEGER"></result>
+        <result column="teacher_id" property="teacherId" jdbcType="INTEGER"></result>
+        <result column="assistant_id" property="assistantId" jdbcType="INTEGER"></result>
+        <result column="e_teacher_id" property="eteacherId" jdbcType="INTEGER"></result>
+        <result column="lesson_id" property="lessonId" jdbcType="INTEGER"></result>
+        <result column="class_id" property="classId" jdbcType="INTEGER"></result>
+    </resultMap>
+
+    <resultMap id="ChapterInfo" type="com.yoohoo.en.dao.model.ext.ChapterInfo">
+        <result column="title" property="title" jdbcType="VARCHAR"></result>
+        <result column="chapter_id" property="chapterId" jdbcType="INTEGER"></result>
+        <result column="introduce" property="introduce" jdbcType="VARCHAR"></result>
+        <result column="type" property="type" jdbcType="INTEGER"></result>
+        <result column="addtime" property="addTime" jdbcType="TIMESTAMP"></result>
+        <result column="lesson_id" property="lessonId" jdbcType="INTEGER"></result>
+        <result column="status" property="status" jdbcType="INTEGER"></result>
+        <result column="order_num" property="orderNum" jdbcType="INTEGER"></result>
+    </resultMap>
+    <resultMap id="ConsumeLogMap" type="com.yoohoo.en.dao.model.ext.ConsumeLog">
+        <result column="b_type" property="type" jdbcType="INTEGER"></result>
+        <result column="amount" property="amount" jdbcType="INTEGER"></result>
+        <result column="lesson_time" property="startTime" jdbcType="TIMESTAMP"></result>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"></result>
+        <result column="class_name" property="className" jdbcType="VARCHAR"></result>
+        <result column="lessonName" property="lessonName" jdbcType="VARCHAR"></result>
+        <result column="schedule_id" property="scheduleId" jdbcType="VARCHAR"></result>
+        <result column="chapterName" property="chapterName" jdbcType="VARCHAR"></result>
+        <result column="studentName" property="studentName" jdbcType="VARCHAR"></result>
+        <result column="consumeType" property="consumeType" jdbcType="INTEGER"></result>
+        <result column="teacherId" property="teacherId" jdbcType="INTEGER"></result>
+        <result column="teacherName" property="teacherName" jdbcType="VARCHAR"></result>
+        <result column="afterBalance" property="afterBalance" jdbcType="INTEGER"></result>
+        <result column="addTime" property="addTime" jdbcType="TIMESTAMP"></result>
+        <result column="mark" property="mark" jdbcType="VARCHAR"></result>
+        <result column="masterTeacherName" property="masterTeacherName" jdbcType="VARCHAR"></result>
+        <result column="assistantTeacherName" property="assistantTeacherName" jdbcType="VARCHAR"></result>
+        <result column="eTeacherName" property="eTeacherName" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TLessonInfo">
+        <id column="lesson_id" property="lessonId" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="introduce" property="introduce" jdbcType="VARCHAR"/>
+        <result column="cover_url" property="coverUrl" jdbcType="VARCHAR"/>
+        <result column="age_section" property="ageSection" jdbcType="VARCHAR"/>
+        <result column="lesson_type" property="lessonType" jdbcType="INTEGER"/>
+        <result column="times" property="times" jdbcType="INTEGER"/>
+        <result column="addtime" property="addtime" jdbcType="TIMESTAMP"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryList" resultMap="ScheduleInfo">
+      SELECT
+        t1.`type`,
+        t1.`status`,
+        t2.`lesson_time` AS `date`,
+        t2.`end_time`,
+        t2.`class_id` AS classId,
+        t2.`schedule_id` AS scheduleId,
+        t3.`title` AS lessonName,
+        t3.`lesson_id`,
+        t4.`title` AS chapterName,
+        t4.`chapter_id`
+      FROM t_student_lesson_schedule t1
+        LEFT JOIN  t_class_schedule t2 ON t1.`schedule_id` = t2.`schedule_id`
+        LEFT JOIN t_lesson_info t3 ON t3.`lesson_id` = t2.`lesson_id`
+        LEFT JOIN t_lesson_chapter t4 ON t4.`chapter_id` = t2.`chapter_id`
+	  WHERE
+	    t1.`status` in (1,2) AND
+	    t1.`student_id` = #{studentId} AND
+	    t2.`lesson_time` BETWEEN #{stime} AND #{etime}
+	    AND t2.`status` !=0
+    </select>
+    <select id="studentLessonIds" resultType="java.lang.Integer">
+      SELECT
+        DISTINCT lesson_id
+      FROM t_student_lesson_schedule
+      WHERE
+        status in (1,2)
+        AND student_id = #{studentId}
+      ORDER BY `addtime` DESC
+      LIMIT #{start} , #{limit};
+    </select>
+
+    <select id="tempLessonInfos" resultMap="TempLessonInfo">
+        SELECT
+        t1.`class_name`, t1.`begin_date`,
+        t1.`end_date`,t1.`master_teacher_id`,
+        t1.`teacher_id`, t1.`assistant_id`,
+        t1.`e_teacher_id`, t3.`title`, t3.`cover_url`,t1.`lesson_id`, t1.`class_id`
+        FROM t_class t1
+        LEFT JOIN t_class_student_r t2 ON t1.`class_id` = t2.`class_id`
+        LEFT JOIN t_lesson_info t3 ON t3.`lesson_id` = t1.`lesson_id`
+        WHERE
+        t2.`student_id` = #{studentId}
+        AND t1.`lesson_id` in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="chapterInfoList" resultMap="ChapterInfo">
+        SELECT
+            t1.`type`,
+            t1.`status`,
+            t1.`addtime`,
+            t2.`chapter_id`,
+            t2.`title`,
+            t2.`lesson_id`,
+            t2.`introduce`,
+            t2.`order_num`
+        FROM
+            t_student_lesson_schedule t1
+            LEFT JOIN t_lesson_chapter t2 ON t1.`chapter_id` = t2.`chapter_id`
+            LEFT JOIN t_class_schedule t3 ON t3.schedule_id = t1.schedule_id
+        WHERE
+          t1.status in (1,2)
+          AND t1.`lesson_id` = #{lessonId}
+          AND t1.`student_id` = #{studentId}
+          AND t3.`class_id` = #{classId} ORDER BY t2.`order_num`
+    </select>
+
+    <select id="consumeLogList" resultMap="ConsumeLogMap" parameterType="com.yoohoo.en.dao.model.ext.ConsumeExample">
+        SELECT
+        t1.`b_type`,
+        t1.`amount`,
+        t3.`schedule_id` AS scheduleId,
+        t3.`lesson_time`,
+        t3.`end_time`,
+        t4.`class_name`,
+        t5.`title` AS lessonName,
+        t6.`title` AS chapterName,
+        si.`name` AS studentName,
+        t1.type AS consumeType,
+        t3.teacher_id AS teacherId,
+        ti.`name` AS teacherName,
+        t1.after_balance AS afterBalance,
+        t1.addtime AS addTime,
+        t1.mark AS mark,
+        t1.memo AS memo,
+        ti1.`name` AS eTeacherName,
+        ti2.`name` AS masterTeacherName,
+        ti3.`name` AS assistantTeacherName
+        FROM
+        t_student_balance_log t1
+        LEFT JOIN t_student_lesson_schedule t2 ON t1.`log_id` = t2.`log_id`
+        LEFT JOIN t_class_schedule t3 ON t3.`schedule_id` = t2.`schedule_id`
+        LEFT JOIN t_class t4 ON t4.`class_id` = t3.`class_id`
+        LEFT JOIN t_lesson_info t5 ON t5.`lesson_id` = t2.`lesson_id`
+        LEFT JOIN t_lesson_chapter t6 ON t6.`chapter_id` = t2.`chapter_id`
+        LEFT JOIN t_teacher_info ti ON t3.teacher_id = ti.teacher_id
+        LEFT JOIN t_teacher_info ti1 ON ti1.teacher_id = t3.eteacher_id
+        LEFT JOIN t_teacher_info ti2 ON ti2.teacher_id = t3.masterteacher_id
+        LEFT JOIN t_teacher_info ti3 ON ti3.teacher_id = t4.assistant_id
+        LEFT JOIN t_student_info si ON t1.user_id = si.user_id
+        WHERE
+        t1.`status` = 1
+        <if test="type != null">
+            AND t1.`type` = #{type}
+        </if>
+        <if test="teacherId != null">
+            AND t3.teacher_id = #{teacherId}
+        </if>
+        <if test="keyWord != null">
+            AND (ti.`name` LIKE #{keyWord} OR si.`name` LIKE #{keyWord} OR ti1.`name` LIKE #{keyWord} OR ti2.`name` LIKE
+            #{keyWord} OR ti3.`name` LIKE #{keyWord})
+        </if>
+        <if test="lessonId != null">
+            AND t2.lesson_id = #{lessonId}
+        </if>
+        <if test="classItemId != null">
+            AND t4.class_item_id = #{classItemId}
+        </if>
+        <if test="studentId != null">
+            AND t1.`user_id` = #{studentId}
+        </if>
+        <if test="stime != null and etime != null">
+            AND t1.`addtime` BETWEEN #{stime} AND #{etime}
+        </if>
+        <if test="stime != null and etime == null">
+            AND t1.`addtime` &gt; #{stime}
+        </if>
+        <if test="stime == null and etime != null">
+            AND t1.`addtime` &lt; #{etime}
+        </if>
+        
+        <if test="addUserId != null">
+            AND t1.`add_user_id` = #{addUserId}
+        </if>
+        
+        <if test="lessonType != null ">
+            AND t5.`lesson_type` = #{lessonType}
+        </if>
+        ORDER BY t1.log_id desc
+        LIMIT #{start}, #{limit}
+    </select>
+    <select id="countConsumeLogList" resultType="java.lang.Integer"
+            parameterType="com.yoohoo.en.dao.model.ext.ConsumeExample">
+        SELECT
+        count(1)
+        FROM
+        t_student_balance_log t1
+        LEFT JOIN t_student_lesson_schedule t2 ON t1.`log_id` = t2.`log_id`
+        LEFT JOIN t_class_schedule t3 ON t3.`schedule_id` = t2.`schedule_id`
+        LEFT JOIN t_class t4 ON t4.`class_id` = t3.`class_id`
+        LEFT JOIN t_lesson_info t5 ON t5.`lesson_id` = t2.`lesson_id`
+        LEFT JOIN t_lesson_chapter t6 ON t6.`chapter_id` = t2.`chapter_id`
+        LEFT JOIN t_teacher_info ti ON t3.teacher_id = ti.teacher_id
+        LEFT JOIN t_teacher_info ti1 ON ti1.teacher_id = t3.eteacher_id
+        LEFT JOIN t_teacher_info ti2 ON ti2.teacher_id = t3.masterteacher_id
+        LEFT JOIN t_teacher_info ti3 ON ti3.teacher_id = t4.assistant_id
+        LEFT JOIN t_student_info si ON t1.user_id = si.user_id
+        WHERE
+        t1.`status` = 1
+        <if test="type != null">
+            AND t1.`type` = #{type}
+        </if>
+        <if test="teacherId != null">
+            AND t3.teacher_id = #{teacherId}
+        </if>
+        <if test="keyWord != null">
+            AND (ti.`name` LIKE #{keyWord} OR si.`name` LIKE #{keyWord} OR ti1.`name` LIKE #{keyWord} OR ti2.`name` LIKE
+            #{keyWord} OR ti3.`name` LIKE #{keyWord})
+        </if>
+        <if test="lessonId != null">
+            AND t2.lesson_id = #{lessonId}
+        </if>
+        <if test="classItemId != null">
+            AND t4.class_item_id = #{classItemId}
+        </if>
+        <if test="studentId != null">
+            AND t1.`user_id` = #{studentId}
+        </if>
+        <if test="stime != null and etime != null">
+            AND t1.`addtime` BETWEEN #{stime} AND #{etime}
+        </if>
+        <if test="stime != null and etime == null">
+            AND t1.`addtime` &gt; #{stime}
+        </if>
+        <if test="stime == null and etime != null">
+            AND t1.`addtime` &lt; #{etime}
+        </if>
+        
+        <if test="addUserId != null">
+            AND t1.`add_user_id` = #{addUserId}
+        </if>
+        
+        <if test="lessonType != null ">
+            AND t5.`lesson_type` = #{lessonType}
+        </if>
+    </select>
+
+    <select id="queryScheduleList" resultType="com.yoohoo.en.dao.model.ext.TeacherScheduleInfo">
+        SELECT
+          date_label AS dateLabel,
+          lesson_time beginTime,
+          end_time endTime,
+          status,
+          
+        FROM t_class_schedule
+        WHERE
+        <if test="teacherType==1">
+        teacher_id = #{teacherId}
+        </if>
+        <if test="teacherType==2">
+            masterteacher_id = #{teacherId}
+        </if>
+        <if test="teacherType==3">
+            eteacher_id = #{teacherId}
+        </if>
+        AND lesson_time BETWEEN #{stime} AND #{etime}
+        AND t_class_schedule.`status` != 0
+    </select>
+
+    <select id="lessonEndTime" resultType="java.util.Date">
+      SELECT MAX(end_time) FROM t_class_schedule WHERE class_id = #{classId} AND lesson_id = #{lessonId};
+    </select>
+
+    <select id="lessonStartTime" resultType="java.util.Date">
+        SELECT MIN(lesson_time) FROM t_class_schedule WHERE class_id = #{classId} AND lesson_id = #{lessonId};
+    </select>
+
+    <select id="studentLessons" resultMap="BaseResultMap">
+        SELECT
+        DISTINCT l.lesson_id,l.`title`, l.`introduce`, l.lesson_type,l.times ,l.`category_id`,l.cover_url
+        FROM t_student_lesson_schedule s LEFT JOIN t_lesson_info l ON s.`lesson_id` = l.`lesson_id`
+        WHERE
+        s.status IN (1,2)
+        AND s.student_id = #{studentId}
+        <if test="name != '' and name != null">
+            AND l.`title` LIKE CONCAT(#{name},'%')
+        </if>
+        <if test="categoryId != 0">
+          AND l.`category_id` = #{categoryId}
+        </if>
+        <if test="lessonId !=0 and lessonId !=null">
+          AND l.lesson_id=#{lessonId}
+        </if>
+        ORDER BY s.`addtime` DESC
+            LIMIT #{start}, #{limit}
+    </select>
+    <select id="totalStudentLessons" resultType="java.lang.Integer">
+        SELECT
+        COUNT(DISTINCT l.lesson_id)
+        FROM t_student_lesson_schedule s LEFT JOIN t_lesson_info l ON s.`lesson_id` = l.`lesson_id`
+        WHERE
+        s.status IN (1,2) AND s.student_id = #{studentId}
+        <if test="name != '' and name != null">
+            AND l.`title` LIKE CONCAT(#{name},'%')
+        </if>
+        <if test="categoryId != 0">
+            AND l.`category_id` = #{categoryId}
+        </if>
+    </select>
+</mapper>

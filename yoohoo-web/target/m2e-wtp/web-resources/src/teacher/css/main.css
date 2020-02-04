@@ -1,0 +1,78 @@
+﻿/* ==========================================================================
+   Browser Upgrade Prompt
+   ========================================================================== */
+.browserupgrade { margin: 0.2em 0; background: #ccc; color: #000; padding: 0.2em 0; }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+html,
+body { height: 100%; }
+body { color: #000; font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", "微软雅黑", Arial, sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; font-size: 14px; }
+.navbar-brand { margin-right: 20px; padding: 0; }
+.navbar-brand .logo { margin: 7px 0; height: 36px; }
+.page-header { margin-top: 20px; }
+.page-header h1 { font-size: 28px; }
+.form-control-inline { display: inline-block; width: auto; vertical-align: middle; }
+.wrap { margin-bottom: 60px; }
+
+/* home */
+.home { height: 100%; padding-top: 1px; }
+.home-bg { background: url(../img/home-bg.jpg) no-repeat center 0; background-size: cover; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; -ms-background-size: cover; }
+.home-cover { margin-bottom: 20px; padding-bottom: 40px; }
+.home-cover .logo { position: absolute; top: 60px; }
+.home-cover .cover-heading { text-align: center; }
+.home-cover .cover-title-img { margin-top: 170px; }
+.home-cover .cover-main { margin-top: 20px; text-align: center; }
+.home-cover .btn-signin,
+.home-cover .btn-register { height: 50px; padding: 13px 40px; line-height: 24px; font-size: 14px; background-color: #10a3e7; color: #fff; }
+.home-cover .icon { display: inline-block; margin-right: 16px; width: 24px; height: 24px; background-position: 0 0; background-repeat: no-repeat; background-size: 24px; vertical-align: middle; }
+.home-cover .icon-signin { background-image: url(../img/icon-seller.png); }
+.home-cover .icon-register { background-image: url(../img/icon-user.png); }
+.home-cover .extra { margin-top: 20px; font-size: 16px; color: #f5f5f5; }
+.home-cover .extra a { color: #f5f5f5; }
+.signin-form { margin: 0 auto; width: 320px; }
+.signin-form .form-title { font-size: 24px; text-align: center; }
+.signin-form .btn-submit { height: 46px; border-radius: 0; font-size: 22px; }
+.signin-form .capture { width: 100%; cursor: pointer;}
+.signin-form .extra { margin-top: 10px; margin-bottom: 0; padding: 5px 0; text-align: center; }
+.site-navbar { margin-bottom: 0; border-radius: 0; border: none; }
+.site-masthead { margin-bottom: 20px; background: url(../img/banner-01.jpg) no-repeat center center; background-size: cover; height: 160px; }
+label.valid-error { color: red; font-weight: 500; }
+.biz-guide .item { margin-bottom: 20px; min-width: 160px; text-align: center; }
+.op-steps-title { font-size: 26px; text-align: center; }
+.op-steps-title strong { padding: 0 5px; color: #10a3e7; font-size: 36px; font-weight: 500; }
+.op-step { position: relative; margin-bottom: 30px; padding-left: 180px; padding-bottom: 10px; border-bottom: 1px dashed #ddd; }
+.op-step-icon { float: left; display: inline; margin-left: -180px; width: 165px; }
+.op-step-content { padding-top: 5px; }
+.op-step ol { padding-left: 0; list-style-position: inside; }
+.op-step ol > li { margin-bottom: 5px; }
+.op-step1 .panel-heading { background-image: url(../img/insta-1.jpg); }
+.op-step2 .panel-heading { background-image: url(../img/insta-2.jpg); }
+.op-step3 .panel-heading { background-image: url(../img/insta-3.jpg); }
+.op-extra-title { font-size: 16px; }
+.list-pagination { margin: 0; }
+.list-search-form { margin-bottom: 20px; }
+.list-search-form .form-group label { margin-right: 5px; }
+.list-search-form .btn-submit { margin-left: 10px; }
+.list-search-form .amount { margin-left: 10px; color: green; }
+.deposit-form .step { padding: 10px 0; margin-bottom: 10px; font-size: 16px; }
+.deposit-example .panel-body { height: 600px; overflow-x: hidden; overflow-y: auto; }
+.faq-list { padding-left: 10px; }
+.faq-list .a { margin-bottom: 10px; }
+.biz-alert strong { color: red; font-weight: 500; }
+.form-biz { padding: 20px 0; }
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer { z-index: 999; position: fixed; bottom: 0; width: 100%; font-size: 12px; background-color: #222; color: #fff; }
+.footer-text { margin: 0; padding: 10px 0; }
+.footer-text a { color: #fff; }
+.home .footer-text { font-size: 14px; text-align: center; }
+
+.page-number{WIDTH: 80px;
+    display: inline;
+    margin-left: 20px;
+    border-color: #ddd;
+    color: #23527c;}
+.op-steps-download { font-size: 26px; margin-top: 40px;text-align: center; }

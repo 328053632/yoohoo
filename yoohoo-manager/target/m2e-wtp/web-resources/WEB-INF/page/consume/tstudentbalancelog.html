@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div >
+		<div class="grid-btn">
+			<div class="grid-btn">
+	            <div class="form-group col-md-2">
+	                <select class="form-control" placeholder="消费记录类型" id="cm_type">
+	                    <option value="" >所有类型</option>
+	                    <option v-for="item in typeArray" :value="item.key">{{item.value}}</option>
+	                </select>
+	            </div>
+	            <div class="form-group col-md-2">
+	                <select class="form-control" placeholder="课程" id="lesson_id">
+	                    <option value="" >全部课程</option>
+	                    <option v-for="item in lessonArray" :value="item.lessonId">{{item.title}}</option>
+	                </select>
+	            </div>
+	  			<div class="form-group col-md-2">
+	                <select class="form-control" placeholder="班级" id="class_item_id">
+	                    <option value="">全部班级</option>
+	                    <option v-for="item in classItemArray" :value="item.classItemId">{{item.classItemName}}</option>
+	                </select>
+	            </div>
+	            <div class="form-group col-md-2">
+	                <input type="text" id="start-date-str" class="form-control form_date" placeholder="开始时间">
+	            </div>
+	            <div class="form-group col-md-2">
+	                <input type="text" id="end-date-str" class="form-control form_date" placeholder="结束时间">
+	            </div>
+	            
+	            <div class="form-group col-md-2">
+	                <input type="text" id="key-word" class="form-control" placeholder="学生或教师名称">
+	            </div>
+	            <a class="btn btn-default" @click="reload">查询</a>
+			</div>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+</div>
+
+<script src="${rc.contextPath}/js/tstudentbalancelog.js?_${date.systemTime}"></script>
+</body>
+</html>

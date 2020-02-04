@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.LessonDao">
+  <resultMap id="ClassResultMap" type="com.yoohoo.en.dao.model.TClass" >
+    <id column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="class_item_id" property="classItemId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="master_teacher_id" property="masterTeacherId" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="assistant_id" property="assistantId" jdbcType="INTEGER" />
+    <result column="e_teacher_id" property="eTeacherId" jdbcType="INTEGER" />
+    <result column="student_num" property="studentNum" jdbcType="INTEGER" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_admin" property="lastUpdateAdmin" jdbcType="INTEGER" />
+  </resultMap>
+  
+    <resultMap id="StudentLessonScheduleResultMap" type="com.yoohoo.en.dao.model.TStudentLessonSchedule" >
+    <id column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="log_id" property="logId" jdbcType="INTEGER" />
+    <result column="lesson_time" property="lessonTime" jdbcType="TIMESTAMP" />
+    <result column="addtime" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="r_id" property="rId" jdbcType="INTEGER" />
+    <result column="leave_time" property="leaveTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="TeacherLessonPeriodInfo" type="com.yoohoo.en.dao.model.ext.TeacherLessonPeriodInfo" >
+    <id column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="lesson_time" property="lessonTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="eteacher_id" property="eteacherId" jdbcType="INTEGER" />
+    <result column="masterteacher_id" property="masterteacherId" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_teacher_passwd" property="roomTeacherPasswd" jdbcType="VARCHAR" />
+    <result column="room_teacher_url" property="roomTeacherUrl" jdbcType="VARCHAR" />
+    <result column="room_stu_passwd" property="roomStuPasswd" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="lesson_name" property="lessonName" jdbcType="VARCHAR" />
+    <result column="chapter_name" property="chapterName" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <resultMap id="LessonInfoExtMap" type="com.yoohoo.en.dao.model.ext.TLessonChapterExt" >
+        <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+        <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="queryStudentLesson" resultMap="ClassResultMap">
+		SELECT 
+			c.*
+		FROM
+			t_class_student_r csr,
+			t_class c
+		WHERE
+			c.class_id = csr.class_id
+		AND csr.student_id = #{studentId}
+    </select>
+    
+    <select id="querytryLessonChapters" resultMap="StudentLessonScheduleResultMap">
+		SELECT
+			l.*
+		FROM
+			t_student_lesson_schedule l
+		WHERE
+			l.`status` != 0
+		AND l.type IN (3, 4, 5)
+		AND l.student_id = #{studentId}
+    </select>
+    
+    <select id="queryTeacherLessonSchedule" resultMap="TeacherLessonPeriodInfo">
+		SELECT
+			cs.*, li.title lesson_name,
+			lc.title chapter_name,
+			c.class_name,
+			t.`name` teacher_name
+		FROM
+			t_class_schedule cs,
+			t_lesson_info li,
+			t_lesson_chapter lc,
+			t_class c,
+			t_teacher_info t
+		WHERE
+			cs.chapter_id = lc.chapter_id
+		AND cs.lesson_id = li.lesson_id
+		AND cs.class_id = c.class_id
+		AND cs.teacher_id = t.teacher_id
+		AND cs.teacher_id = #{teacherId}
+		AND cs.date_label=#{dateStr}
+		AND cs.`status`!=0
+		ORDER BY
+			cs.lesson_time ASC
+    </select>
+
+    <select id="queryLessonChapterListNotClassSchedule" resultMap="TeacherLessonPeriodInfo">
+        SELECT
+            lc.chapter_id,
+            lc.lesson_id,
+            c.class_id,
+            c.teacher_id
+        FROM
+            t_lesson_chapter lc,
+            t_class c
+        WHERE
+            lc.lesson_id = c.lesson_id
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                t_class_schedule cs
+            WHERE
+                lc.chapter_id = cs.chapter_id
+            AND lc.lesson_id = cs.lesson_id
+            AND c.class_id = cs.class_id
+        )
+        AND lc.lesson_id =#{lessonId}
+    </select>
+
+    <select id="queryLessonChapterLearnPath" resultMap="LessonInfoExtMap">
+
+                SELECT
+                    sls.chapter_id,
+                    sls.lesson_id
+                FROM
+                    t_student_lesson_schedule sls
+                WHERE
+                  sls.student_id = #{studentId}
+
+    </select>
+    <!--查询课长当前课程信息-->
+    <select id="querymasterTeacherLessonSchedule" resultMap="TeacherLessonPeriodInfo">
+      SELECT
+			cs.*, li.title lesson_name,
+			lc.title chapter_name,
+			c.class_name,
+			t.`name` teacher_name
+		FROM
+			t_class_schedule cs,
+			t_lesson_info li,
+			t_lesson_chapter lc,
+			t_class c,
+			t_teacher_info t
+		WHERE
+			cs.chapter_id = lc.chapter_id
+		AND cs.lesson_id = li.lesson_id
+		AND cs.class_id = c.class_id
+		AND cs.masterteacher_id = t.teacher_id
+		AND cs.masterteacher_id = #{teacherId}
+		AND cs.date_label=#{dateStr}
+		AND cs.`status`!=0
+		ORDER BY
+			cs.lesson_time ASC
+    </select>
+    <!--查询电教当前课程信息-->
+    <select id="queryeTeacherLessonSchedule" resultMap="TeacherLessonPeriodInfo">
+        SELECT
+			cs.*, li.title lesson_name,
+			lc.title chapter_name,
+			c.class_name,
+			t.`name` teacher_name
+		FROM
+			t_class_schedule cs,
+			t_lesson_info li,
+			t_lesson_chapter lc,
+			t_class c,
+			t_teacher_info t
+		WHERE
+			cs.chapter_id = lc.chapter_id
+		AND cs.lesson_id = li.lesson_id
+		AND cs.class_id = c.class_id
+		AND cs.teacher_id = t.teacher_id
+		AND cs.eteacher_id = #{teacherId}
+		AND cs.date_label=#{dateStr}
+		AND cs.`status`!=0
+		ORDER BY
+			cs.lesson_time ASC
+    </select>
+</mapper>

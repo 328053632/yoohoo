@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>消息表</title>
+#parse("sys/header.html")
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/frame.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/message.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2" style="width: 220px; margin-bottom: 0;">
+				<label>类型:</label>
+				<div style="width: 150px; display: inline-block;">
+					<select class="form-control" v-model="queryArgs.type">
+						<option value="">全部</option>
+						<!--<option value="1">申请报名</option>-->
+						<option value="2">申请请假</option>
+						<option value="3">申请旁听</option>
+						<option value="4">申请试听</option>
+						<option value="5">申请测评</option>
+						<option value="6">申请补课</option>
+                        <option value="7">申请换时间</option>
+                        <option value="9">申请授课</option>
+                        <option value="10">申请开发课程</option>
+						<!--<option value="8">申请插班</option>-->
+					</select>
+				</div>
+			</div>
+			<div class="form-group col-sm-2" style="width: 220px; margin-bottom: 0;">
+				<label>状态:</label>
+				<div style="width: 150px; display: inline-block;">
+					<select class="form-control"  v-model="queryArgs.status">
+						<option value="">全部</option>
+						<option value="1">已读</option>
+						<option value="0">未读</option>
+					</select>
+				</div>
+			</div>
+            <div class="form-group col-sm-2" style="width: 185px; margin-bottom: 0;">
+                <input type="text" class="form-control" id="start_form_date" placeholder="开始时间">
+            </div>
+            <div class="form-group col-sm-2" style="width: 185px; margin-bottom: 0;">
+                <input type="text" class="form-control" id="end_form_date" placeholder="结束时间">
+            </div>
+        </div>
+
+        <div>
+			<a class="btn btn-default" @click="query">搜索</a>
+			<a class="btn btn-default" @click="reset">重置</a>
+		</div>
+        <div class="grid-btn" style="margin-top: 10px; margin-left: 20px;">
+            #if($shiro.hasPermission("tmessage:update"))
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;标记已读</a>
+            #end
+            #if($shiro.hasPermission("tmessage:delete"))
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            #end
+        </div>
+	    <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+	<div class="frame-border" v-show="viewWindowShow">
+		<span class="close" title="关闭" @click="closeViewFrame"></span>
+		<div class="frame-content">
+           <div v-if="tMessage.mType == 1">
+               <p>
+                   <span class="title">申请报名</span>
+                   <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                   <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+                   <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                   <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                   <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+                   <span><label>推荐人号码:</label> {{viewMessageInfo.recommendPhone}}</span>
+               </p>
+           </div>
+           <div v-if="tMessage.mType == 2">
+               <p>
+               <span class="title">申请请假</span>
+               <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+               <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+               <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+               <span><label>申请课节:</label> {{viewMessageInfo.chapterName}}</span>
+               <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+               </p>
+           </div>
+           <div v-if="tMessage.mType == 3">
+               <p>
+                   <span class="title">申请旁听</span>
+                   <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                   <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+                   <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                   <span><label>申请课节:</label> {{viewMessageInfo.chapterName}}</span>
+                   <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                   <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+                   <span><label>班级类型:</label> {{viewMessageInfo.className}}</span>
+                   <span><label>申请的老师：</label>{{viewMessageInfo.teacherName}}</span>
+                   <span><label>申请人建议：</label>{{viewMessageInfo.suggest}}</span>
+                   <!--<span><label></label></span>-->
+                   <!--<span><label></label></span>-->
+
+               </p>
+           </div>
+           <div v-if="tMessage.mType == 4">
+               <p>
+                   <span class="title">申请试听</span>
+                   <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                   <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+                   <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                   <span><label>申请课节:</label> {{viewMessageInfo.chapterName}}</span>
+                   <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                   <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+                   <span v-if="viewMessageInfo.grade"><label>年级:</label> {{viewMessageInfo.grade}}</span>
+                   <span><label>班级类型:</label> {{viewMessageInfo.className}}</span>
+                   <span><label>申请的老师：</label>{{viewMessageInfo.teacherName}}</span>
+                   <span><label>申请人建议：</label>{{viewMessageInfo.suggest}}</span>
+               </p>
+           </div>
+           <div v-if="tMessage.mType == 5">
+               <p>
+                   <span class="title">申请测评</span>
+                   <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                   <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+                   <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                   <span><label>申请课节:</label> {{viewMessageInfo.chapterName}}</span>
+                   <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                   <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+                   <span v-if="viewMessageInfo.grade"><label>年级:</label> {{viewMessageInfo.grade}}</span>
+                   <span><label>班级类型:</label> {{viewMessageInfo.className}}</span>
+                   <span><label>申请的老师：</label>{{viewMessageInfo.teacherName}}</span>
+                   <span><label>申请人建议：</label>{{viewMessageInfo.suggest}}</span>
+               </p>
+           </div>
+           <div v-if="tMessage.mType == 6 || tMessage.mType == 7">
+               <p>
+                   <span class="title">申请补课</span>
+                   <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                   <span><label>申请人号码:</label>{{viewMessageInfo.applyPhone}}</span>
+                   <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                   <span><label>申请课节:</label> {{viewMessageInfo.chapterName}}</span>
+                   <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                   <span><label>申请时间:</label> {{viewMessageInfo.lessonTime}}</span>
+                   <span><label>班级类型:</label> {{viewMessageInfo.className}}</span>
+                   <span><label>申请的老师：</label>{{viewMessageInfo.teacherName}}</span>
+                   <span><label>申请人建议：</label>{{viewMessageInfo.suggest}}</span>
+               </p>
+           </div>
+
+            <div v-if="tMessage.mType == 9 || tMessage.mType == 10">
+                <p>
+                    <span class="title" v-if="tMessage.mType == 9">申请授课</span>
+                    <span class="title" v-if="tMessage.mType == 10">申请开发课程</span>
+                    <span><label>申请人:</label> {{viewMessageInfo.name}}</span>
+                    <span><label>申请人号码:</label> {{viewMessageInfo.applyPhone}}</span>
+                    <span><label>申请课程:</label> {{viewMessageInfo.lessonName}}</span>
+                    <span><label>申请日期:</label> {{viewMessageInfo.lessonDate}}</span>
+                    <span><label>课程名字:</label> {{viewMessageInfo.lessonName}}</span>
+                </p>
+            </div>
+		</div>
+	</div>
+</div>
+<script src="${rc.contextPath}/js/tmessage.js?_${date.systemTime}"></script>
+</body>
+</html>

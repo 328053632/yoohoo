@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TStudentInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TStudentInfo" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="INTEGER" />
+    <result column="earb_balance" property="earbBalance" jdbcType="INTEGER" />
+    <result column="present_balance" property="presentBalance" jdbcType="INTEGER" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="msisdn" property="msisdn" jdbcType="VARCHAR" />
+    <result column="passwd" property="passwd" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="reg_status" property="regStatus" jdbcType="VARCHAR" />
+    <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+    <result column="from_admin" property="fromAdmin" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="area" property="area" jdbcType="INTEGER" />
+    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_admin" property="lastUpdateAdmin" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, `name`, en_name, balance, earb_balance, present_balance, birthday, msisdn, 
+    passwd, `status`, reg_status, reg_time, from_admin, last_update_time, last_update_admin,province,city,area,wechat,type
+  </sql>
+  <select id="selectByExampleXml" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TStudentInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_student_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="MysqlDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKeyXml" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_student_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKeyXml" parameterType="java.lang.Long" >
+    delete from t_student_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExampleXml" parameterType="com.yoohoo.en.dao.model.TStudentInfoExample" >
+    delete from t_student_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insertSelectiveXml" parameterType="com.yoohoo.en.dao.model.TStudentInfo" useGeneratedKeys="true" keyProperty="userId" >
+    insert into t_student_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="earbBalance != null" >
+        earb_balance,
+      </if>
+      <if test="presentBalance != null" >
+        present_balance,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="msisdn != null" >
+        msisdn,
+      </if>
+      <if test="passwd != null" >
+        passwd,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="regStatus != null" >
+        reg_status,
+      </if>
+      <if test="regTime != null" >
+        reg_time,
+      </if>
+      <if test="fromAdmin != null" >
+        from_admin,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        last_update_admin,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="wechat != null" >
+        wechat,
+      </if>
+      <if test="type != null" >
+        type
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="earbBalance != null" >
+        #{earbBalance,jdbcType=INTEGER},
+      </if>
+      <if test="presentBalance != null" >
+        #{presentBalance,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="msisdn != null" >
+        #{msisdn,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null" >
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="regStatus != null" >
+        #{regStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromAdmin != null" >
+        #{fromAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        #{lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+         #{province,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+         #{city,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+         #{area,jdbcType=INTEGER},
+      </if>
+      <if test="wechat != null" >
+         #{wechat,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        #{type}
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExampleXml" parameterType="com.yoohoo.en.dao.model.TStudentInfoExample" resultType="java.lang.Integer" >
+    select count(*) from t_student_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelectiveXml" parameterType="map" >
+    update t_student_info
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enName != null" >
+        en_name = #{record.enName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.balance != null" >
+        balance = #{record.balance,jdbcType=INTEGER},
+      </if>
+      <if test="record.earbBalance != null" >
+        earb_balance = #{record.earbBalance,jdbcType=INTEGER},
+      </if>
+      <if test="record.presentBalance != null" >
+        present_balance = #{record.presentBalance,jdbcType=INTEGER},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msisdn != null" >
+        msisdn = #{record.msisdn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.passwd != null" >
+        passwd = #{record.passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.regStatus != null" >
+        reg_status = #{record.regStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regTime != null" >
+        reg_time = #{record.regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.fromAdmin != null" >
+        from_admin = #{record.fromAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastUpdateTime != null" >
+        last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdateAdmin != null" >
+        last_update_admin = #{record.lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      
+      <if test="record.province != null" >
+        province = #{record.province},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area},
+      </if>
+      <if test="record.wechat != null" >
+        wechat = #{record.wechat},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type}
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleXml" parameterType="map" >
+    update t_student_info
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      en_name = #{record.enName,jdbcType=VARCHAR},
+      balance = #{record.balance,jdbcType=INTEGER},
+      earb_balance = #{record.earbBalance,jdbcType=INTEGER},
+      present_balance = #{record.presentBalance,jdbcType=INTEGER},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      msisdn = #{record.msisdn,jdbcType=VARCHAR},
+      passwd = #{record.passwd,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      reg_status = #{record.regStatus,jdbcType=VARCHAR},
+      reg_time = #{record.regTime,jdbcType=TIMESTAMP},
+      from_admin = #{record.fromAdmin,jdbcType=INTEGER},
+      last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_admin = #{record.lastUpdateAdmin,jdbcType=INTEGER},
+      province = #{record.province},
+      city = #{record.city},
+      area = #{record.area},
+      wechat = #{record.wechat},
+      type = #{record.type}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelectiveXml" parameterType="com.yoohoo.en.dao.model.TStudentInfo" >
+    update t_student_info
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="earbBalance != null" >
+        earb_balance = #{earbBalance,jdbcType=INTEGER},
+      </if>
+      <if test="presentBalance != null" >
+        present_balance = #{presentBalance,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="msisdn != null" >
+        msisdn = #{msisdn,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null" >
+        passwd = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="regStatus != null" >
+        reg_status = #{regStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        reg_time = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromAdmin != null" >
+        from_admin = #{fromAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        last_update_admin = #{lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area},
+      </if>
+      <if test="record.wechat != null" >
+        wechat = #{record.wechat},
+      </if>
+      <if test="record.wechat != null" >
+        type = #{record.type}
+      </if>
+      
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyXml" parameterType="com.yoohoo.en.dao.model.TStudentInfo" >
+    update t_student_info
+    set `name` = #{name,jdbcType=VARCHAR},
+      en_name = #{enName,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=INTEGER},
+      earb_balance = #{earbBalance,jdbcType=INTEGER},
+      present_balance = #{presentBalance,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      msisdn = #{msisdn,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      reg_status = #{regStatus,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      from_admin = #{fromAdmin,jdbcType=INTEGER},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_admin = #{lastUpdateAdmin,jdbcType=INTEGER},
+      province = #{record.province},
+      city = #{record.city},
+      area = #{record.area},
+      wechat = #{record.wechat},
+      type = #{record.type}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <sql id="MysqlDialectSuffix" >
+    <if test="pageHelper != null" >
+      <![CDATA[ limit #{pageHelper.begin}, #{pageHelper.length}]]>
+    </if>
+  </sql>
+  <insert id="insertBatchXml" parameterType="com.yoohoo.en.dao.model.TStudentInfo" >
+    insert into t_student_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,name,en_name,balance,earb_balance,present_balance,birthday,msisdn,passwd,status,reg_status,reg_time,from_admin,last_update_time,last_update_admin,province,city,area,wechat,type
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.userId,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.enName,jdbcType=VARCHAR},#{item.balance,jdbcType=INTEGER},#{item.earbBalance,jdbcType=INTEGER},#{item.presentBalance,jdbcType=INTEGER},#{item.birthday,jdbcType=VARCHAR},#{item.msisdn,jdbcType=VARCHAR},#{item.passwd,jdbcType=VARCHAR},#{item.status,jdbcType=INTEGER},#{item.regStatus,jdbcType=VARCHAR},#{item.regTime,jdbcType=TIMESTAMP},#{item.fromAdmin,jdbcType=INTEGER},#{item.lastUpdateTime,jdbcType=TIMESTAMP},#{item.lastUpdateAdmin,jdbcType=INTEGER},
+      #{item.province,jdbcType=INTEGER}, #{item.city,jdbcType=INTEGER}, 
+      #{item.area,jdbcType=INTEGER}, #{item.wechat,jdbcType=VARCHAR}, #{item.type})
+      </trim>
+      )
+    </foreach>
+  </insert>
+</mapper>

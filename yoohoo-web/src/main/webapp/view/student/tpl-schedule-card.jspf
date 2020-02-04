@@ -1,0 +1,602 @@
+<%@ page pageEncoding="UTF-8" %>
+<script type="text/x-template" id="tpl-poohoo-schedule-card" style="position: relative">
+    <div class="schedule-card">
+        <div class="schedule-info" :class="(finish || affirm || tempScheduleInfo.joinStatus == 1) ? 'finish' : ''" >
+            <div style="max-width: 8rem;">
+                <%--学生端课表显示的数据
+                课程名
+                课节名
+                上课时间--%>
+                <span class="sp1">{{tempScheduleInfo.lessonName}}</span>
+                <span class="sp1" :title="tempScheduleInfo.chapterName">{{tempScheduleInfo.chapterName}}</span>
+                <span class="sp1">{{tempScheduleInfo.date | lessonDateFilter}}</span>
+            </div>
+            <i class="icon2 bu-ke" v-if="tempScheduleInfo.joinStatus===-1" @click="joinClassroom()">等待</i>
+            <%--<i class="icon2 bu-ke" v-if="tempScheduleInfo.joinStatus===-1" @click="joinClassroom()">未开始</i>--%>
+            <i class="icon bu-ke" v-if="inClass" @click="joinClassroom()">上课</i>
+            <i class="icon1 bu-ke" v-if="inClass||tempScheduleInfo.joinStatus===-1"  @click="PreviewBook()" >预习</i>
+            <%--<i class="icon1 bu-ke" v-if="inClass||tempScheduleInfo.joinStatus===-1"  @click="PreviewBook()" >预习课件</i>--%>
+          <%-- <i class="icon1 bu-ke" v-if="inClass" @click="parentsRoom()" >家长巡课</i>--%>
+            <span v-else>
+                <%--<i class="icon qing-jia" v-show="showIconQingjia">请假</i>--%>
+                <i class="icon shi-ting" v-show="showIconShiting">试听</i>
+                <i class="icon que-ke" v-show="showIconQueke">缺课</i>
+                <i class="icon bu-ke" v-show="showIconBuke">补课</i>
+                <i class="icon ping-ce" v-show="showIconPingce">测评</i>
+                <i class="icon pang-ting" v-show="showIconPangting">旁听</i>
+                <i class="icon pang-ting" v-show="showIconchabang">插班</i>
+                <i class="icon wan-cheng" v-show="showIconWancheng">完成</i>
+                <i class="icon wan-cheng" v-show="finish">结束</i>
+            </span>
+            <div class="diandiandian"
+                 v-show="showDianDianDian"
+                 @click="showMenu($event)">
+                <span>申请</span>
+                <%--<i></i><i></i><i></i>--%>
+            </div>
+            <div class="menu-list" v-show="showApplyFrame" @mouseleave="showApplyFrame=false">
+                <%--<span @click="applyBuke($event)" v-if="showIconQueke || showIconQingjia">申请补课</span>--%>
+                <span @click="applyLeave($event)">申请请假</span>
+                <span @click="applyBuke($event)">申请补课</span>
+                <span @click="applyteacher($event)">申请换时间</span>
+            </div>
+           <%-- <div id="KJYX" @mouseleave="hidChapterMenu"   v-show="KJYXshowChapterMenu"  :style="'position: absolute;background-color: #62C456;;z-index: 900;' + tipStyle12">
+                <div class="ynname">{{tempScheduleInfo.lessonName}}</div>
+                <div class="menus">
+                    <div class="yxoption" v-for="(item, inx) in YXbooknamelist" @click="Openbook(item)" >
+                       {{item.fileName}}
+                    </div>
+                </div>
+            </div>--%>
+        </div>
+
+        <poohoo-recommend-win
+                v-show="showRecommendWindow"
+                :text="'老师排课很辛苦哦～确定要请假吗？'"
+                @ok-fun="okFunction"
+                @no-fun="noFunction">
+        </poohoo-recommend-win>
+    </div>
+</script>
+<script>
+   /* $("#KJYX").mouseleave(function() {
+        $("KJYX").css("display", "none");
+    });*/
+    Vue.filter('lessonDateFilter', function (value) {
+        if (!value) {
+            return "";
+        }
+        // 返回处理后的值
+        var time = new Date(value);
+        var hour = time.getHours();
+        var minutes = time.getMinutes();
+        return (hour < 10 ? '0' + hour : hour) + ":" + (minutes < 10 ? '0' + minutes : minutes);
+    });
+
+    Vue.component('poohoo-schedule-card', {
+        template: '#tpl-poohoo-schedule-card',
+        props: ['scheduleInfo'],
+        data: function () {
+            return {
+                lessonType: {
+                    queKe: 0,       //缺课
+                    zhengChang: 1,  //正常
+                    qingJia: 2,     //请假
+                    qingJia2: 7,    //请假
+                    pangTing: 3,    //旁听
+                    shiTing: 4,     //试听
+                    pingCe: 5,      //评测
+                    buKe: 6,         //补课
+                    chabang:7        //插班
+                },
+                tempScheduleInfo: {},
+                showRecommendWindow: false,
+                applyScheduleId: null,
+                showApplyFrame: false,
+                KJYXshowChapterMenu:false,
+                tipStyle12:"",
+                YXbooknamelist:[],
+                YXurl:"",
+                bklessonarray:[],
+                hslessonarray:[]
+            }
+        },
+        watch: {
+            'scheduleInfo': function (val, oldVal) {
+                this.tempScheduleInfo = val;
+            }
+        },
+        computed: {
+            affirm : function(){
+                // 课程是否已经确认
+                return this.tempScheduleInfo.type == this.lessonType.zhengChang && this.tempScheduleInfo.status == 2;
+            },
+            finish: function (){
+                // 课程已结束但是还未确认
+                return (this.tempScheduleInfo.type == this.lessonType.zhengChang
+                    && this.tempScheduleInfo.status == 1 && this.tempScheduleInfo.joinStatus == 1);
+            },
+            inClass: function(){
+                // 正在上课
+                return this.tempScheduleInfo.joinStatus == 0;
+            },
+            showIconQingjia: function () {
+                return (this.tempScheduleInfo.type == this.lessonType.qingJia
+                    || this.tempScheduleInfo.type == this.lessonType.qingJia2);
+            },
+            showIconShiting: function () {
+                return this.tempScheduleInfo.type == this.lessonType.shiTing;
+            },
+            showIconQueke: function () {
+                return this.tempScheduleInfo.type == this.lessonType.queKe;
+            },
+            showIconBuke: function () {
+                return this.tempScheduleInfo.type == this.lessonType.buKe;
+            },
+            showIconPingce: function () {
+                return this.tempScheduleInfo.type == this.lessonType.pingCe;
+            },
+            showIconPangting: function () {
+                return this.tempScheduleInfo.type == this.lessonType.pangTing;
+            },
+             showIconchabang:function() {/*插班*/
+                return this.tempScheduleInfo.type == this.lessonType.chabang;
+             }
+             ,
+            showIconWancheng: function () {
+                return (this.tempScheduleInfo.type == this.lessonType.zhengChang && this.tempScheduleInfo.status == 2);
+            },
+            showDianDianDian: function () {
+                return ((this.tempScheduleInfo.joinStatus == -1
+                    && this.tempScheduleInfo.type != this.lessonType.qingJia
+                    && this.tempScheduleInfo.type != this.lessonType.qingJia2
+                    && this.tempScheduleInfo.type != this.lessonType.queKe)
+                    || this.showIconQueke
+                    || this.showIconQingjia);
+            }
+        },
+        created: function () {
+            this.tempScheduleInfo = this.scheduleInfo;
+        },
+        methods: {
+            applyLeave: function (e) {
+                this.showApplyFrame = false;
+                this.showRecommendWindow = true;
+                e.stopPropagation();
+            },
+            applyBuke: function (e) {
+                var _this = this;
+                var s = this.tempScheduleInfo.lessonId;
+                $.ajax({
+                    url: contextPath + '/stu/user/getChapterListByLessonId ',
+                    type:"GET",
+                    data: {
+                        lessonId: this.tempScheduleInfo.lessonId
+                    },
+                    async: false,
+                    dataType:"json",
+                    success: function (resp) {
+                        if (resp.code==0){
+                            _this.bklessonarray=resp.data.lessonChapterList;
+                        }else {
+                            message.error("加载出现问题, 请稍后重试");
+                            return;
+                        }
+                    },
+                    error:function() {
+                        message.error("加载出现问题, 请稍后重试");
+                        return;
+                    }
+                });
+                var chapter = {
+                    name:"申请补课",
+                    type:6,
+                    title: this.tempScheduleInfo.chapterName,
+                    lessonId: this.tempScheduleInfo.lessonId,
+                    chapterId: this.tempScheduleInfo.chapterId,
+                    lessonarray:_this.bklessonarray,
+                };
+                this.$parent.applyChapter = chapter;
+                this.showApplyFrame = false;
+                this.$parent.$refs.applyRemediationWin.show();
+                e.stopPropagation();
+            },
+            applyteacher:function(e) {//申请换时间
+                var s = this.tempScheduleInfo.lessonId;
+                var _this = this;
+                $.ajax({
+                    url: contextPath + '/stu/user/getChapterListByLessonId ',
+                    type:"GET",
+                    data: {
+                          lessonId: this.tempScheduleInfo.lessonId
+                    },
+                    dataType:"json",
+                    async: false,
+                    success: function (resp) {
+                        if (resp.code==0){
+                            _this.hslessonarray=resp.data.lessonChapterList;
+                        }else {
+                            message.error("加载出现错误, 请稍后重试");
+                            return;
+                        }
+                    },
+                    error:function() {
+                        message.error("加载出现错误, 请稍后重试");
+                        return;
+                    }
+                });
+                var chapter = {
+                    name:"申请换时间",
+                    type:7,
+                    title: this.tempScheduleInfo.chapterName,
+                    lessonId: this.tempScheduleInfo.lessonId,
+                    chapterId: this.tempScheduleInfo.chapterId,
+                    lessonarray:_this.hslessonarray,
+                };
+                this.$parent.applyChapter = chapter;
+                this.showApplyFrame = false;
+                this.$parent.$refs.applyRemediationWin.show();
+                e.stopPropagation();
+            }
+            ,
+            okFunction: function () {
+                this.showRecommendWindow = false;
+                var me = this;
+                AjaxClient.post({
+                    url: contextPath + '/stu/user/applyLeave',
+                    data: {scheduleId: this.tempScheduleInfo.scheduleId},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            message.info("您的申请已提交!");
+                            me.tempScheduleInfo.type = me.lessonType.qingJia;
+                        } else if (resp.code == '10000') {
+                            this.toLogin();
+                            return;
+                        } else {
+                            message.error("申请提交异常, 请稍后重试");
+                        }
+                    }
+                });
+            },
+            noFunction: function () {
+                this.showRecommendWindow = false;
+            },
+            hideAllMenu: function () {
+                var result = false;
+                for (var i = 0, len = this.menuFlag.length; i < len; i++) {
+                    if (this.menuFlag[i]) {
+                        Vue.set(this.menuFlag, i, false);
+                        result = true;
+                    }
+                }
+                return result;
+            },
+            joinClassroom: function () {
+                var scheduleId = this.tempScheduleInfo.scheduleId;
+                var type = this.tempScheduleInfo.type;
+                var status = this.tempScheduleInfo.status;
+                var joinStatus = this.tempScheduleInfo.joinStatus;
+
+                if (!scheduleId) {
+                    return;
+                }
+
+                if (joinStatus == -1) {
+                    message.info("该课堂还未开始");
+                    return;
+                }
+                if (joinStatus == 1) {
+                    // message.info("该课堂已结束");
+                    return;
+                }
+                AjaxClient.get({
+                    url: contextPath + "/stu/user/joinClassRoomUrl",
+                    data: {scheduleId: scheduleId},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            var url = resp.data.classUrl;
+                            if (!url) {
+                                message.info("该课堂还未开始");
+                                return;
+                            }
+                            if(resp.message == "1"){
+                                message.info("学习能量（太阳花）是负数啦！不能进教室呢！须在线充值或联系客服！");
+                                // window.alert("太阳花已经没有啦，无法上课呢")
+                                return;
+                            }
+                            if(resp.message == "2"){
+                                layer.alert( '您的学习能量(太阳花）快耗尽！<br/>为不影响后面的课程，记得在线充值或联系客服！',
+                                    {
+                                        icon: 6,closeBtn: 0 },
+                                    function (index) {
+                                        layer.close(index);
+                                        location.href = url;
+                                    }
+                                );
+                                // window.alert("太阳花不足，请及时充值")
+                                // window.open(url);
+                            }
+                            window.open(url);
+                        } else if (resp.code == '10000') {
+                            this.toLogin();
+                            return;
+                        }
+                    }
+                });
+            },
+           /* parentsRoom:function(){
+                var scheduleId = this.tempScheduleInfo.scheduleId;
+                var type = this.tempScheduleInfo.type;
+                var status = this.tempScheduleInfo.status;
+                var joinStatus = this.tempScheduleInfo.joinStatus;
+
+                if (!scheduleId) {
+                    return;
+                }
+
+                if (joinStatus == -1) {
+                    message.info("该课堂还未开始");
+                    return;
+                }
+                if (joinStatus == 1) {
+                    // message.info("该课堂已结束");
+                    return;
+                }
+                AjaxClient.get({
+                    url: contextPath + "/stu/user/joinParentsClassRoomUrl",
+                    data: {scheduleId: scheduleId},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            var url = resp.data.classUrl;
+                            if (!url) {
+                                message.info("该课堂还未开始");
+                                return;
+                            }
+                            if(resp.message == "1"){
+                                window.alert("您好！您的太阳花为负能量，不能进入教室，请尽快在本站充值中心补充太阳花能。")
+                                return;
+                            }
+                            if(resp.message == "2"){
+                                window.alert("您好！您的太阳花学习能量已低于1000，未不影响学习成长，请在本站充值中心补充太阳花能。")
+                                window.open(url);
+                            }
+                            window.open(url);
+                        } else if (resp.code == '10000') {
+                            this.toLogin();
+                            return;
+                        }
+                    }
+                });
+            },*/
+            showMenu: function (e) {
+                this.showApplyFrame = !this.showApplyFrame;
+                e.stopPropagation();
+            },
+            toLogin: function () {
+                window.open(contextPath + "/student/views/login");
+                /*location.href = contextPath + "/student/views/login";*/
+            },
+            hidChapterMenu:function(){
+              this.KJYXshowChapterMenu=false
+            },
+            PreviewBook:function () {
+                var me =this;
+                var cardId = 2;
+                var tempScheduleInfonid=me.tempScheduleInfo.chapterId;
+                layer.open({
+                type: 2,
+                title: '预习课件',
+                maxmin: false,
+                fix: false,
+                move: false,
+                shadeClose: true, //点击遮罩关闭层
+                area : ['400px' , '500px'],
+                content: '/view/teacher/Teacherkejain.jsp?id='+tempScheduleInfonid+"&cardid"+cardId
+                });
+            },
+             Openbook:function(item) {
+                var _this = this;
+                var as= item.fileUrl;
+                var index1 = as.lastIndexOf(".");
+                var index2 = as.length;
+                var postf = as.substring(index1, index2); //后缀名
+                var way = 1;
+                if(postf=='.doc'||postf=='.docx'||postf=='.ppt'||postf=='.ppts'||postf=='.xls'||postf=='.xlsx'||postf=='.pptx'){
+                    way =2;
+                }
+                var url =contextPath + "/student/views/OpenBook?valus="+as+"&way="+way;
+                 /*location.href = contextPath + "/student/views/OpenBook?valus="+as+"&way="+way;*/
+               window.open(url)
+
+             }
+
+        }
+    });
+</script>
+
+<style>
+    #KJYX{
+        border-radius: 4px;
+        box-shadow: 5px 5px 5px #888888;
+    }
+    .ynname{
+        font-size: 16px;
+        width: 150px;
+        height: 40px;
+        margin: 50px 20px 0px 20px;
+       /* padding-bottom: 5px;*/
+        text-align: center;
+        word-break:break-all;
+        line-height: 40px;
+        border-bottom: 1px dashed #64C558;
+        border-radius: 4px;
+    }
+    .yxoption{
+        border: 1px solid #FFF;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 4px;
+        cursor:pointer
+    }
+
+    .schedule-card {
+        font-size: 13px;
+    }
+
+    .schedule-card .finish{
+        color: #999999;
+    }
+
+    .schedule-card .schedule-info {
+        height: 160px;
+        width: 100%;
+        display: block;
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .schedule-card .schedule-info .sp1 {
+        width: 90%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin: .1rem 5%;
+    }
+
+    .schedule-card .schedule-info .diandiandian {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+    }
+    .schedule-card .schedule-info .diandiandian span{
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 36px;
+        font-size: 14px;
+        color: #FFFFFF;
+        text-align: center;
+        background-color: #EF7336;
+    }
+
+
+    .schedule-card .schedule-info .diandiandian i {
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: #1C2149;
+        margin-left: 2px;
+    }
+
+    .schedule-card .schedule-info .menu-list {
+        position: absolute;
+        top: 30px;
+        right: 5px;
+
+        background-color: #ffffff;
+        width: 100px;
+        box-shadow: 0 0 5px #1C2149;
+        border-radius: 3px;
+        padding: 5px;
+    }
+
+    .schedule-card .schedule-info .menu-list span {
+        display: block;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+
+    }
+
+    .schedule-card .schedule-info .menu-list span:hover{
+        border-top: 1px solid #62C456;
+        border-bottom: 1px solid #62C456;
+        color: #62C456;
+    }
+
+    .schedule-card .schedule-info div {
+        margin: auto;
+    }
+
+    .schedule-card .schedule-info span {
+        display: block;
+        text-align: center;
+
+    }
+
+    .schedule-card .schedule-info .icon {
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 36px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        font-size: 14px;
+        color: #ffffff;
+        text-align: center;
+    }
+   .schedule-card .schedule-info .icon1 {
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 120px;
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        font-size: 13px;
+        color: #ffffff;
+        text-align: center;
+    }
+    .schedule-card .schedule-info .icon2 {
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 36px;
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        font-size: 10px;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .schedule-card .schedule-info .wan-cheng {
+        background-color: #ABB2B1;
+    }
+
+    .schedule-card .schedule-info .qing-jia {
+        background-color: #EF7336;
+    }
+
+    .schedule-card .schedule-info .shi-ting {
+        background-color: #38ABE9;
+    }
+
+    .schedule-card .schedule-info .que-ke {
+        background-color: #F03A3A;
+    }
+
+    .schedule-card .schedule-info .bu-ke {
+        background-color: #62C456;
+        cursor:pointer
+    }
+
+    .schedule-card .schedule-info .ping-ce {
+        background-color: #6F78F4;
+    }
+
+    .schedule-card .schedule-info .pang-ting {
+        background-color: #4BB4B0;
+    }
+</style>

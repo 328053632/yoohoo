@@ -1,0 +1,326 @@
+<%@ page pageEncoding="UTF-8" %>
+<script type="text/x-template" id="tpl-poohoo-schedule-item">
+    <div class="day-list">
+        <div :class="dateClass">{{time}}</div>
+        <div class="list" :class="borderClass + ' ' + bgClass">
+            <div class="schedule-info" v-for="(item, inx) in scheduleList"
+                 @click="joinClassroom(item.scheduleId, item.type, item.status, item.joinStatus)">
+                <div style="max-width: 8rem;">
+                    <span class="sp1">{{item.lessonName}}</span>
+                    <span class="sp1" :title="item.chapterName">{{item.chapterName}}</span>
+                    <span class="sp1">{{item.date | lessonDateFilter}}</span>
+                </div>
+                <i class="icon qing-jia" v-show="item.type == lessonType.qingJia">请假</i>
+                <i class="icon shi-ting" v-show="item.type == lessonType.shiTing">试听</i>
+                <i class="icon que-ke" v-show="item.type == lessonType.queKe">缺课</i>
+                <i class="icon bu-ke" v-show="item.type == lessonType.buKe">补课</i>
+                <i class="icon ping-ce" v-show="item.type == lessonType.pingCe">测评</i>
+                <i class="icon pang-ting" v-show="item.type == lessonType.pangTing">旁听</i>
+               <%-- <i class="icon pang-ting" v-show="item.type == lessonType.chabang">插班</i>--%><%--插班新加--%>
+                <i class="icon wan-cheng" v-show="item.type == lessonType.zhengChang && item.status == 2">完成</i>
+                <i class="icon wan-cheng" v-show="item.type == lessonType.zhengChang && item.status == 1 && item.joinStatus==1">结束</i>
+                <div class="diandiandian" v-show="item.joinStatus == -1" @click="showMenu(inx, $event)">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+                <div class="menu-list" v-show="menuFlag[inx]">
+            <span @click="applyLeave(inx, item.scheduleId, $event)">申请请假</span>
+
+        </div>
+        </div>
+        </div>
+        <poohoo-recommend-win
+                v-show="showRecommendWindow"
+                :text="'老师排课很辛苦哦～确定要请假吗？'"
+                @ok-fun="okFunction"
+                @no-fun="noFunction">
+        </poohoo-recommend-win>
+    </div>
+</script>
+<script>
+    Vue.filter('lessonDateFilter', function (value) {
+        if(!value){
+            return "";
+        }
+        // 返回处理后的值
+        var time = new Date(value);
+        var hour = time.getHours();
+        var minutes = time.getMinutes();
+        return (hour < 10 ? '0' + hour : hour) + ":" + (minutes < 10 ? '0' + minutes : minutes);
+    });
+
+    Vue.component('poohoo-schedule-item', {
+        template: '#tpl-poohoo-schedule-item',
+        props: ['dateClass', 'borderClass', 'bgClass', 'time', 'scheduleList'],
+        data: function () {
+            return {
+                lessonType: {
+                    queKe: 0,
+                    zhengChang: 1,
+                    qingJia: 2,
+                    pangTing: 3,
+                    shiTing: 4,
+                    pingCe: 5,
+                    buKe: 6,
+                    chabang:7
+                },
+                showRecommendWindow: false,
+                menuFlag: [],
+                applyScheduleId: null
+            }
+        },
+        created: function () {
+        },
+        methods: {
+            applyLeave: function (inx, scheduleId, e) {
+                Vue.set(this.menuFlag, inx, false);
+                this.showRecommendWindow = true;
+                this.applyScheduleId = scheduleId;
+                e.stopPropagation();
+            },
+            okFunction: function () {
+                this.showRecommendWindow = false;
+                AjaxClient.post({
+                    url: contextPath + '/stu/user/applyLeave',
+                    data: {scheduleId: this.applyScheduleId},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            message.info("您的申请已提交!");
+                        } else if (resp.code == '10000') {
+                            this.toLogin();
+                            return;
+                        } else {
+                            message.error("申请提交异常, 请稍后重试");
+                        }
+                    }
+                });
+            },
+            noFunction: function () {
+                this.showRecommendWindow = false;
+            },
+            hideAllMenu: function () {
+                var result = false;
+                for (var i = 0, len = this.menuFlag.length; i < len; i++) {
+                    if (this.menuFlag[i]) {
+                        Vue.set(this.menuFlag, i, false);
+                        result = true;
+                    }
+                }
+                return result;
+            },
+            joinClassroom: function (scheduleId, type, status, joinStatus) {
+                if (this.hideAllMenu() || !scheduleId) {
+                    return;
+                }
+                if (joinStatus == -1) {
+                    message.info("该课堂还未开始");
+                    return;
+                }
+                if (joinStatus == 1) {
+                    message.info("该课堂已结束");
+                    return;
+                }
+                AjaxClient.get({
+                    url: contextPath + "/stu/user/joinClassRoomUrl",
+                    data: {scheduleId: scheduleId},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            var url = resp.data.classUrl;
+                            if (!url) {
+                                message.info("该课堂还未开始");
+                                return;
+                            }
+                            window.open(url);
+                        } else if (resp.code == '10000') {
+                            this.toLogin();
+                            return;
+                        }
+                    }
+                });
+            },
+            showMenu: function (inx, e) {
+                Vue.set(this.menuFlag, inx, !this.menuFlag[inx]);
+                e.stopPropagation();
+            },
+            toLogin: function () {
+                window.open(contextPath + "/student/views/login");
+               /* location.href = contextPath + "/student/views/login";*/
+            }
+        }
+    });
+</script>
+
+<style>
+    .border-left {
+        border-left: 2px solid #74B02C;
+    }
+
+    .day-list .list{
+        font-size: 13px;
+    }
+
+    .day-list .list .schedule-info {
+        height: 160px;
+        width: 100%;
+        display: block;
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .day-list .list .schedule-info .sp1 {
+        width: 90%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin: .1rem 5%;
+    }
+
+    .day-list .list .schedule-info .diandiandian {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        cursor: pointer;
+    }
+
+    .day-list .list .schedule-info .diandiandian i {
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: #1C2149;
+    }
+
+    .day-list .list .schedule-info .menu-list {
+        position: absolute;
+        top: 30px;
+        right: 5px;
+        cursor: pointer;
+        background-color: #ffffff;
+        width: 100px;
+        box-shadow: 0 0 5px #1C2149;
+        border-radius: 3px;
+        padding: 5px;
+    }
+
+    .day-list .list .schedule-info .menu-list span {
+        display: block;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        cursor: pointer;
+    }
+
+    .day-list .list .schedule-info div {
+        margin: auto;
+    }
+
+    .day-list .list .schedule-info span {
+        display: block;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .day-list .list .schedule-info .icon {
+        display: block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 36px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        font-size: 14px;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .day-list .list .schedule-info .wan-cheng,
+    .day-list .list .schedule-info .qing-jia {
+        background-color: #ABB2B1;
+    }
+
+    .day-list .list .schedule-info .shi-ting {
+        background-color: #38ABE9;
+    }
+
+    .day-list .list .schedule-info .que-ke {
+        background-color: #F03A3A;
+    }
+
+    .day-list .list .schedule-info .bu-ke {
+        background-color: #62C456;
+    }
+
+    .day-list .list .schedule-info .ping-ce {
+        background-color: #EF7336;
+    }
+
+    .day-list .list .schedule-info .pang-ting {
+        background-color: #4BB4B0;
+    }
+
+    .schedule .schedule-list .day-list {
+        flex: 1;
+    }
+
+    .schedule .schedule-list .day-list .list {
+        border-right: 2px solid #74B02C;
+        margin: 0;
+        padding: 0;
+    }
+
+    .schedule .schedule-list .day-list .monday,
+    .schedule .schedule-list .day-list .tuesday,
+    .schedule .schedule-list .day-list .wednesday,
+    .schedule .schedule-list .day-list .thursday,
+    .schedule .schedule-list .day-list .friday,
+    .schedule .schedule-list .day-list .saturday,
+    .schedule .schedule-list .day-list .sunday {
+        height: 41px;
+        line-height: 41px;
+        border-top-left-radius: 41px;
+        border-top-right-radius: 41px;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    .schedule .schedule-list .day-list .monday {
+        background-color: #62BB9E;
+    }
+
+    .schedule .schedule-list .day-list .tuesday {
+        background-color: #ED8D9F;
+    }
+
+    .schedule .schedule-list .day-list .wednesday {
+        background-color: #E9AA5F;
+    }
+
+    .schedule .schedule-list .day-list .thursday {
+        background-color: #59B7CA;
+    }
+
+    .schedule .schedule-list .day-list .friday {
+        background-color: #ED8D9F;
+    }
+
+    .schedule .schedule-list .day-list .saturday {
+        background-color: #E9AA5F;
+    }
+
+    .schedule .schedule-list .day-list .sunday {
+        background-color: #59B7CA;
+    }
+
+    .bg-1 {
+        background-color: #FFFFFF;
+    }
+
+    .bg-2 {
+        background-color: #DFFAFB;
+    }
+</style>

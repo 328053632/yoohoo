@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:v-bind="http://schemas.xmlsoap.org/wsdl/">
+
+<head>
+    <title>班级管理</title>
+    #parse("sys/header.html")
+    <style type="text/css">
+        #class-edit table td,
+        #class-schedule-edit table td {
+            height: 50px;
+            line-height: 50px;
+            padding: 0 12px;
+        }
+
+        .stu-schedule {
+            height: 100%;
+            position: relative;
+            border: 1px solid #00a7d0;
+        }
+
+        .stu-schedule .stu-add,
+        .stu-schedule .stu-show {
+            padding: 0 10px;
+            margin-top: 10px;
+        }
+
+        .stu-schedule .stu-add select {
+            height: 35px;
+            width: 400px;
+            margin-right: 5px;
+            border-radius: 5px;
+            padding-left: 5px;
+        }
+
+        .stu-schedule .stu-show span {
+            display: inline-block;
+            border-radius: 5px;
+            background-color: #00a7d0;
+            color: #ffffff;
+            padding: 5px;
+            margin: 10px 10px 0 0;
+        }
+
+        .stu-schedule .stu-button {
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            bottom: 10px;
+        }
+
+        .week {
+            margin-top: -42px;
+            position: absolute;
+            margin-left: 145px;
+        }
+
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList === 1">
+        <div class="grid-btn">
+            <div class="form-group col-md-2">
+                <select class="form-control" v-model="q.lessonId" placeholder="课程">
+                    <option value="0">全部课本</option>
+                    <option v-for="item in lessonArray" :value="item.lessonId">{{item.title}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <select class="form-control" v-model="q.classType" placeholder="课程类型">
+                    <option value="0">全部组合类型</option>
+                    <option value="1">测电脑</option>
+                    <option value="2">测评</option>
+                    <option value="3">试听</option>
+                    <option value="4">正常</option>
+                    <option value="5">补课</option>
+                    <option value="6">公开</option>
+                    <option value="7">电教</option>
+                    <option value="8">暂停</option>
+                    <option value="9">结课</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <select class="form-control" v-model="q.consumeType" placeholder="费用类型">
+                    <option value="0">全部费用类型</option>
+                    <option v-for="item in consumeTypeArray" :value="item.classItemId">{{item.classItemName}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" id="beginDate" class="form-control form_date date-yyyymmdd" placeholder="开始时间" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" id="endDate" class="form-control form_date date-yyyymmdd" placeholder="结束时间" readonly>
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" v-model="q.className" class="form-control" placeholder="组合名称">
+            </div>
+            <div class="form-group col-md-2">
+                <input type="text" v-model="q.teacherName" class="form-control" placeholder="教师名称">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            #if($shiro.hasPermission("tclass:save"))
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            #end #if($shiro.hasPermission("tclass:update"))
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            #end
+            <a class="btn btn-primary" @click="setSchedule"><i class="fa fa-pencil-square-o"></i>&nbsp;课程表</a>
+            <!--#if($shiro.hasPermission("tclass:delete"))-->
+            <!--<a class="btn btn-primary" ><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+            <!--#end-->
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="showList === 2" class="panel panel-default" id="class-edit">
+        <div class="panel-heading">{{title}}</div>
+        <table>
+            <tr>
+                <td>组合名称</td>
+                <td><input type="text" class="form-control" v-model="tClass.className"></td>
+                <td>费用类型</td>
+                <td>
+                    <select class="form-control" v-model="tClass.classItemId" @change="changeClassItem" :disabled="!!tClass.classId">
+                        <option v-for="item in classItemArray" :value="item.classItemId">{{item.classItemName}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>课本</td>
+                <td>
+                    <select class="form-control" v-model="tClass.lessonId" :disabled="!!tClass.classId">
+                        <option v-for="item in lessonArray" :value="item.lessonId">{{item.title}}</option>
+                    </select>
+                </td>
+                <td>建班时间</td>
+                <td><input type="text" id="classBeginDate" class="form-control form_date date-yyyymmddhhmiss" readonly/></td>
+            </tr>
+            <tr>
+                <td>课长</td>
+                <td>
+                    <select class="form-control" v-model="tClass.masterTeacherId">
+                        <option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                </td>
+                <td>上课老师</td>
+                <td>
+                    <select class="form-control" v-model="tClass.teacherId">
+                        <option v-for="item in teacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>助教</td>
+                <td>
+                    <select class="form-control" v-model="tClass.assistantId">
+                        <option v-for="item in AssistTeacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                </td>
+                <td>电教</td>
+                <td>
+                    <select class="form-control" v-model="tClass.eTeacherId">
+                        <option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>班级类型</td>
+                <td>
+                    <select class="form-control" v-model="tClass.classType">
+                        <option value="1">测电脑</option>
+                        <option value="2">测评</option>
+                        <option value="3">试听</option>
+                        <option value="4">正常</option>
+                        <option value="5">补课</option>
+                        <option value="6">公开</option>
+                        <option value="7">电教</option>
+                        <option value="8">暂停</option>
+                        <option value="9">结课</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" /> &nbsp;&nbsp;
+                    <input type="button" class="btn btn-warning" @click="reload" value="返回" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div v-show="showList === 3" class="panel panel-default" id="class-schedule-edit">
+        <div class="panel-heading">{{title}}
+         &nbsp; &nbsp; &nbsp; &nbsp;<span>课本：{{zkechengneirong.lessonName}}</span>
+            &nbsp; &nbsp; &nbsp; &nbsp;<span>组合类型：{{zkechengneirong.classType}}</span>
+            &nbsp; &nbsp; &nbsp; &nbsp;<span>费用类型：{{zkechengneirong.classItem}}</span>
+        </div>
+        <table>
+            <tr>
+                <td>课节</td>
+                <td>具体日期</td>
+                <td>具体时间</td>
+                <td>上课老师</td>
+                <td>课长</td>
+                <td>电教</td>
+                <td>状态</td>
+                <td>操作</td>
+            </tr>
+            <tr v-for="(classSchedule,idx) in classScheduleArray">
+                <td>{{classSchedule.chapterName}}</td>
+                <td>
+                    <input :class="dateChoseIsActive(classSchedule.checkStatus)" type="text" :id="'lessonTime' + idx" :data-inx="idx" data-type="0" v-model="classSchedule.lessonTimeStr" class="form-control form_date" placeholder="上课日期" readonly :disabled="classSchedule.status != 0">
+                    <span class="week">{{classSchedule.lessonTimeStr|toWeekDay}}</span>
+
+                </td>
+                <td>
+                    <select class="form-control" verify-data="请选择" :id="'endTime' + idx" type="text" :data-inx="idx" data-type="0" readonly v-model="classSchedule.lessonTimeS" :disabled="classSchedule.status != 0" @change="selectteacher(classSchedule.lessonTimeStr,classSchedule.lessonTimeS)">
+                        <option value="">请选择具体时间</option>
+                        <option value="07:00-07:25">07:00 - 07:25</option>
+                        <option value="07:30-07:55">07:30 - 07:55</option>
+                        <option value="08:00-08:25">08:00 - 08:25</option>
+                        <option value="08:30-08:55">08:30 - 08:55</option>
+                        <option value="09:00-09:25">09:00 - 09:25</option>
+                        <option value="09:30-09:55">09:30 - 09:55</option>
+                        <option value="10:00-10:25">10:00 - 10:25</option>
+                        <option value="10:30-10:55">10:30 - 10:55</option>
+                        <option value="11:00-11:25">11:00 - 11:25</option>
+                        <option value="11:30-11:55">11:30 - 11:55</option>
+                        <option value="12:00-12:25">12:00 - 12:25</option>
+                        <option value="12:30-12:55">12:30 - 12:55</option>
+                        <option value="13:00-13:25">13:00 - 13:25</option>
+                        <option value="13:30-13:55">13:30 - 13:55</option>
+                        <option value="14:00-14:25">14:00 - 14:25</option>
+                        <option value="14:30-14:55">14:30 - 14:55</option>
+                        <option value="15:00-15:25">15:00 - 15:25</option>
+                        <option value="15:30-15:55">15:30 - 15:55</option>
+                        <option value="16:00-16:25">16:00 - 16:25</option>
+                        <option value="16:30-16:55">16:30 - 16:55</option>
+                        <option value="17:00-17:25">17:00 - 17:25</option>
+                        <option value="17:30-17:55">17:30 - 17:55</option>
+                        <option value="18:00-18:25">18:00 - 18:25</option>
+                        <option value="18:30-18:55">18:30 - 18:55</option>
+                        <option value="19:00-19:25">19:00 - 19:25</option>
+                        <option value="19:30-19:55">19:30 - 19:55</option>
+                        <option value="20:00-20:25">20:00 - 20:25</option>
+                        <option value="20:30-20:55">20:30 - 20:55</option>
+                        <option value="21:00-21:25">21:00 - 21:25</option>
+                        <option value="21:30-21:55">21:30 - 21:55</option>
+                    </select>
+
+                </td>
+                <td>
+                    <!--是否确认checkStatus 1未确认，2已确认-->
+                    <!--新加-->
+                    <!-- status状态：0-未发布；1-已发布；2-已结束-->
+                    <select id="seleteacherid"  class="form-control" v-model="classSchedule.teacherId" placeholder="上课老师" v-if="classSchedule.status==0">
+                    <!--<select id="seleteacherid"  class="form-control" placeholder="上课老师" v-if="classSchedule.status==0">-->
+                        <option v-for="item in selectteacherArray" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.teacherId" placeholder="上课老师" v-if="classSchedule.status==1" disabled>
+                        <option v-for="item in teacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.teacherId" placeholder="上课老师" v-if="classSchedule.status==2" disabled>
+                        <option v-for="item in teacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+
+                </td>
+                <td>
+                    <select class="form-control" v-model="classSchedule.masterteacherId" placeholder="课长" v-if="classSchedule.status==0">
+                        <option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.masterteacherId" placeholder="课长" disabled v-if="classSchedule.status==1">
+                        <option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.masterteacherId" placeholder="课长" disabled v-if="classSchedule.status==2">
+                        <option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <!--<select class="form-control" v-model="classSchedule.masterteacherId" placeholder="课长" v-if="classSchedule.checkStatus != 2">-->
+                        <!--<option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>-->
+                    <!--</select>-->
+                    <!--<select class="form-control" v-model="classSchedule.masterteacherId" placeholder="课长" disabled v-else>-->
+                        <!--<option v-for="item in ClassteacherArrayList" :value="item.teacherId">{{item.name}}</option>-->
+                    <!--</select>-->
+                </td>
+                <td>
+                    <select class="form-control" v-model="classSchedule.eteacherId" placeholder="电教" v-if="classSchedule.status==0">
+                        <option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.eteacherId" placeholder="电教" disabled v-if="classSchedule.status==1">
+                        <option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <select class="form-control" v-model="classSchedule.eteacherId" placeholder="电教" disabled v-if="classSchedule.status==2">
+                        <option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>
+                    </select>
+                    <!--<select class="form-control" v-model="classSchedule.eteacherId" placeholder="电教" v-if="classSchedule.checkStatus != 2">-->
+                        <!--<option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>-->
+                    <!--</select>-->
+                    <!--<select class="form-control" v-model="classSchedule.eteacherId" placeholder="电教" disabled v-else>-->
+                        <!--<option v-for="item in TelephoneteacherArrayList" :value="item.teacherId">{{item.name}}</option>-->
+                    <!--</select>-->
+                </td>
+                <td>
+                    {{ classSchedule | classScheduleStr}}
+                </td>
+                <td class="bt_assist">
+                    <data v-if="classSchedule.checkStatus != 2"><!--是否确认过-->
+                        <!-- status状态：0-未发布；1-已发布；2-已结束-->
+                        <template  v-if="classSchedule.status == 0">
+                            <input type="button" class="btn btn-primary" @click="saveSchedule(classSchedule, idx)" value="保存"/>
+                            <input type="button" class="btn btn-warning" @click="showStuSchedule(1, idx)" value="正常"/>
+                            <!--classScheduleArray[i].classItemId-->
+                            <input v-if="classSchedule.classItemId!=1"  type="button" class="btn btn-warning" @click="showStuSchedule(7, idx)" value="插班"/>
+                           <!-- <span>{{classSchedule.classItemId}}</span>-->
+                        </template>
+                        <template  v-if="classSchedule.status != 0">
+                            <input type="button" class="btn btn-primary" @click="updateTime(classSchedule, idx)" value="取消"/>
+                            <input type="button" class="btn btn-primary" @click="VideoReplay(classSchedule, idx)" value="回放"/>
+                            <input type="button" id="isUploadBtn" class="btn btn-warning" @click="uploadFile(classSchedule, idx)" v-model="classSchedule.isUploadFile"/>
+                        </template>
+                    </data>
+                    <data v-if="classSchedule.checkStatus==2">
+                        <input type="button" class="btn btn-primary" @click="VideoReplay(classSchedule, idx)" value="回放"/>
+                    </data>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <input type="button" class="btn btn-warning" @click="reload" value="返回" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="stu-schedule" id="stuSchedule" v-show="showStuFlag">
+        <!--<div class="stu-add" v-show="classScheduleStatus === 1">-->
+        <div class="stu-add" v-show="classScheduleStatus === 0">
+            <input type="hidden" id="stuSchType"><!--区分正常和插班-->
+            <select id="stuSchId">
+                <!--添加加的学生-->
+                <option v-for="stu in studentArray" :value="stu.userId">{{stu.name}}</option>
+            </select>
+            <a class="btn btn-primary" @click="addStuSchedule">添加</a>
+        </div>
+        <div class="stu-show">
+            <span v-for="(item,idx) in stuScheduleArray">{{item.studentName}}&nbsp;&nbsp;<i class="fa fa-times-circle" @click="delStuSchedule(idx)" v-show="classScheduleStatus === 0"></i></span>
+        </div>
+        <!-- <div class="stu-button" v-show="classScheduleStatus === 1">-->
+        <div class="stu-button" v-show="classScheduleStatus === 0">
+            <input type="button" class="btn btn-primary" @click="saveBatchStuSchedule" value="保存" />&nbsp;&nbsp;
+            <input type="button" class="btn btn-warning" @click="closeStuSchedule" value="取消" />
+        </div>
+    </div>
+</div>
+<script src="${rc.contextPath}/js/tclass.js?_${date.systemTime}" charset="utf-8"></script>
+</body>
+
+</html>

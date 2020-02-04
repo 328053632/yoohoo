@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!-- classPathEntry:数据库的JDBC驱动,换成你自己的驱动位置 -->
+	<classPathEntry location="mysql-connector-java-5.1.30.jar" />
+ 
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+	
+	<property name="autoDelimitKeywords" value="true"/>
+	<property name="beginningDelimiter" value="`"/>
+	<property name="endingDelimiter" value="`"/>  
+	
+ <!-- 生成mapper的 
+  		<plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
+ 			<property name="targetPackage" value="conf"></property>
+ 			<property name="targetProject" value="result\resources"></property>
+ 		</plugin>
+ -->
+ 	<!-- 自定义序列化 -->
+	<plugin type="org.ihansen.mbp.extend.CustomSerializablePlugin"></plugin>
+
+	<!-- oracle/mysql/sqlserver方言插件 -->
+	<plugin type="org.ihansen.mbp.extend.CustomPlugin">
+		<property name="pageHelperClass" value="com.yoohoo.en.dao.PageHelper"/>
+		<property name="dbType" value="MYSQL"/>
+	</plugin>
+
+
+<!-- 去除自动生成的注释 
+ -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+ 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://112.74.167.122:3306/yoohoo_en" userId="xx_dev" password="!QAZ2wsx">
+		</jdbcConnection>
+
+
+		<javaTypeResolver >
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+ 
+		<!-- targetProject:自动生成代码的位置 -->
+		<javaModelGenerator targetPackage="com.yoohoo.en.dao.model" targetProject="..\yoohoo-data\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+
+		<sqlMapGenerator targetPackage="com.yoohoo.en.dao.sql"  targetProject="..\yoohoo-data\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.yoohoo.en.dao.mapper"  targetProject="..\yoohoo-data\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
+		<!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 
+			通过SQL找出所有需要生成SQL的TABLE记录
+			SELECT
+				CONCAT(
+					"<table tableName=\"",
+					t.t_name,
+					"\" >",
+					IFNULL(
+						(
+							SELECT
+								CONCAT(
+									"<generatedKey column=\"",
+									SS.COLUMN_NAME,
+									"\" sqlStatement=\"JDBC\"/>"
+								) AS xx
+							FROM
+								COLUMNS AS SS
+							WHERE
+								SS.EXTRA = 'auto_increment'
+							AND t.t_name = SS.TABLE_NAME
+							AND SS.TABLE_SCHEMA = 'yoohoo_en'
+						),
+						''
+					),
+					"</table>"
+				) AS dd
+			FROM
+				(
+					SELECT DISTINCT
+						TABLE_NAME AS t_name
+					FROM
+						COLUMNS
+					WHERE
+						TABLE_SCHEMA = 'yoohoo_en'
+				) AS t
+		-->
+<!--
+<table tableName="qrtz_blob_triggers" ></table>
+<table tableName="qrtz_calendars" ></table>
+<table tableName="qrtz_cron_triggers" ></table>
+<table tableName="qrtz_fired_triggers" ></table>
+<table tableName="qrtz_job_details" ></table>
+<table tableName="qrtz_locks" ></table>
+<table tableName="qrtz_paused_trigger_grps" ></table>
+<table tableName="qrtz_scheduler_state" ></table>
+<table tableName="qrtz_simple_triggers" ></table>
+<table tableName="qrtz_simprop_triggers" ></table>
+<table tableName="qrtz_triggers" ></table>
+<table tableName="schedule_job" ><generatedKey column="job_id" sqlStatement="JDBC"/></table>
+<table tableName="schedule_job_log" ><generatedKey column="log_id" sqlStatement="JDBC"/></table>
+<table tableName="sys_config" ><generatedKey column="id" sqlStatement="JDBC"/></table>
+<table tableName="sys_menu" ><generatedKey column="menu_id" sqlStatement="JDBC"/></table>
+<table tableName="sys_role" ><generatedKey column="role_id" sqlStatement="JDBC"/></table>
+<table tableName="sys_role_menu" ><generatedKey column="id" sqlStatement="JDBC"/></table>
+<table tableName="sys_user" ><generatedKey column="user_id" sqlStatement="JDBC"/></table>
+<table tableName="sys_user_role" ><generatedKey column="id" sqlStatement="JDBC"/></table>
+<table tableName="t_category_info" ><generatedKey column="id" sqlStatement="JDBC"/></table>
+<table tableName="t_class" ><generatedKey column="class_id" sqlStatement="JDBC"/></table>
+<table tableName="t_class_define" ><generatedKey column="class_item_id" sqlStatement="JDBC"/></table>
+<table tableName="t_class_schedule" ><generatedKey column="schedule_id" sqlStatement="JDBC"/></table>
+<table tableName="t_class_student_r" ></table>
+<table tableName="t_lesson_chapter" ><generatedKey column="chapter_id" sqlStatement="JDBC"/></table>
+<table tableName="t_lesson_info" ><generatedKey column="lesson_id" sqlStatement="JDBC"/></table>
+<table tableName="t_message" ><generatedKey column="m_id" sqlStatement="JDBC"/></table>
+<table tableName="t_operation_log" ><generatedKey column="operate_id" sqlStatement="JDBC"/></table>
+<table tableName="t_student_balance_log" ><generatedKey column="log_id" sqlStatement="JDBC"/></table>
+<table tableName="t_student_info" ><generatedKey column="user_id" sqlStatement="JDBC"/></table>
+<table tableName="t_student_learn_path" ><generatedKey column="path_id" sqlStatement="JDBC"/></table>
+<table tableName="t_student_lesson_schedule" ><generatedKey column="record_id" sqlStatement="JDBC"/></table>
+<table tableName="t_talkcloud_event" ><generatedKey column="event_id" sqlStatement="JDBC"/></table>
+<table tableName="t_talkcloud_user_event" ><generatedKey column="event_id" sqlStatement="JDBC"/></table>
+<table tableName="t_teacher_info" ><generatedKey column="teacher_id" sqlStatement="JDBC"/></table>
+<table tableName="t_verifycode" ></table>
+<table tableName="test_gen" ><generatedKey column="user_id" sqlStatement="JDBC"/></table>
+-->
+<table tableName="t_student_learn_path" ><generatedKey column="path_id" sqlStatement="JDBC"/></table>
+	</context>
+
+</generatorConfiguration>

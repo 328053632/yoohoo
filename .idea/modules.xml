@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/yoohoo.iml" filepath="$PROJECT_DIR$/yoohoo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-bean/yoohoo-bean.iml" filepath="$PROJECT_DIR$/yoohoo-bean/yoohoo-bean.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-data/yoohoo-data.iml" filepath="$PROJECT_DIR$/yoohoo-data/yoohoo-data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-manager/yoohoo-manager.iml" filepath="$PROJECT_DIR$/yoohoo-manager/yoohoo-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-service/yoohoo-service.iml" filepath="$PROJECT_DIR$/yoohoo-service/yoohoo-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-util/yoohoo-util.iml" filepath="$PROJECT_DIR$/yoohoo-util/yoohoo-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yoohoo-web/yoohoo-web.iml" filepath="$PROJECT_DIR$/yoohoo-web/yoohoo-web.iml" />
+    </modules>
+  </component>
+</project>

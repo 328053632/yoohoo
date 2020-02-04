@@ -1,0 +1,110 @@
+<%@ page pageEncoding="UTF-8" %>
+<script type="text/x-template" id="tpl-poohoo-recommend-win">
+    <div class="recommend-win">
+        <div class="re-win-content">
+            <div class="title">
+                <span>{{text}}</span>
+            </div>
+            <div class="btns">
+                <div>
+                    <span class="ok-btn" @click="noFun">{{noText ? noText : '取消'}}</span>
+                    <span class="no-btn" @click="okFun">{{okText ? okText : '确定'}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script>
+    Vue.component('poohoo-recommend-win', {
+        template: '#tpl-poohoo-recommend-win',
+        props: ['text', 'okText', 'noText'],
+        data: function () {
+            return {}
+        },
+        created: function () {
+
+        },
+        methods: {
+            noFun: function () {
+                this.$emit('no-fun');
+            },
+            okFun: function () {
+                this.$emit('ok-fun');
+            }
+        }
+    });
+</script>
+<style>
+    .recommend-win {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        font-size: 16px;
+        color: #292929;
+        z-index: 10;
+    }
+
+    .recommend-win .re-win-content {
+        width: 460px;
+        height: 180px;
+        margin: auto;
+        border-radius: 18px;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recommend-win .re-win-content .title {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .recommend-win .re-win-content .title span{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .recommend-win .re-win-content .btns {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .recommend-win .re-win-content .btns div{
+        width: 100%;
+        text-align: center;
+    }
+
+
+    .recommend-win .re-win-content .btns .ok-btn {
+        display: inline-block;
+        width: 114px;
+        height: 42px;
+        line-height: 42px;
+        border: 1px solid #62C456;
+        color: #62C456;
+        border-radius: 4px;
+        text-align: center;
+        margin: 10px;
+        cursor: pointer;
+    }
+
+    .recommend-win .re-win-content .btns .no-btn{
+        display: inline-block;
+        width: 114px;
+        height: 42px;
+        line-height: 42px;
+        background-color: #62C456;
+        color: #292929;
+        border-radius: 4px;
+        text-align: center;
+        margin: 10px;
+        cursor: pointer;
+    }
+</style>

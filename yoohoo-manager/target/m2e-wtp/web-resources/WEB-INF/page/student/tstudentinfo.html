@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>学生信息表</title>
+	<style>
+		.chapter-list {
+			display: inline-block;
+			padding: 10px 30px;
+		}
+		.zchapter{
+			width: 147px;
+			height: 40px;
+			border-radius: 4px;
+			float: left;
+			cursor: pointer;
+			margin: 0 2px 5px 0;
+			background-image: url('../../../statics/css/icon/lesson-1.png');
+			background-size: 100% 100%;
+		}
+		.zchapterlight{
+			width: 147px;
+			height: 40px;
+			border-radius: 4px;
+			float: left;
+			cursor: pointer;
+			margin: 0 2px 5px 0;
+			background-image: url('../../../statics/css/icon/lesson-0.png');
+			background-size: 100% 100%;
+		}
+		.zchapter >span {
+			line-height: 40px;
+			max-width: 120px;
+			text-align: left;
+			height: 40px;
+			margin: 0px 10px;
+			display: block;
+			font-size: 16px;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.zchapterlight >span {
+			line-height: 40px;
+			max-width: 120px;
+			text-align: left;
+			height: 40px;
+			margin: 0px 10px;
+			display: block;
+			font-size: 16px;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	</style>
+#parse("sys/header.html")
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="windowFlag == 1">
+		<div class="grid-btn">
+            <div class="form-group col-md-2">
+                <select class="form-control" v-model="q.classItemId" placeholder="课程">
+                    <option value="">全部</option>
+                    <option v-for="item in classItemArray" :value="item.classItemId">{{item.classItemName}}</option>
+                </select>
+            </div>
+			<div class="form-group col-md-3 col-sm-4">
+				<input type="text" v-model="q.studentName" class="form-control" placeholder="英文名或手机号码或中文名" >
+			</div>
+            <a class="btn btn-default" @click="query">查询</a>
+			#if($shiro.hasPermission("tstudentinfo:save"))
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			#end
+			#if($shiro.hasPermission("tstudentinfo:update"))
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			#end #if($shiro.hasPermission("tstudentinfo:updateBind"))
+			<a class="btn btn-primary" @click="updateAdmin"><i class="fa fa-pencil-square-o"></i>&nbsp;修改绑定子管理员</a>
+			#end
+			#if($shiro.hasPermission("tstudentinfo:delete"))
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			#end
+			#if($shiro.hasPermission("tstudentinfo:recharge"))
+			<a class="btn btn-primary" @click="recharge"><i class="fa fa-trash-o"></i>&nbsp;充值</a>
+			#end
+			<a class="btn btn-primary" @click="lightLearnPath"><i class="fa fa-expeditedssl"></i>&nbsp;点亮学习路径</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="windowFlag ==2" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group" :class="errors.has('name')? 'has-error' :''">
+			   	<div class="col-sm-2 control-label">英文名+学号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" name="name" 
+			      	v-validate="'required'" 
+			      	:aria-invalid="errors.has('name')"
+			      	v-model="tStudentInfo.name" placeholder="英文名+学号"/>
+			      	<span v-show="errors.has('name')"  class="help-block">{{ errors.first('name') }}</span>
+			    </div>
+			</div>
+			<div class="form-group" :class="errors.has('msisdn')? 'has-error' :''">
+			   	<div class="col-sm-2 control-label">手机号码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" name="msisdn"
+			      	v-validate="{required:true,regex: /^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/}" 
+			      	:aria-invalid="errors.has('msisdn')"
+			      	v-model="tStudentInfo.msisdn" placeholder="手机号码"/>
+			      	<span v-show="errors.has('msisdn')"  class="help-block">{{ errors.first('msisdn') }}</span>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">登陆密码</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tStudentInfo.passwd" placeholder="登陆密码"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">中文名</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tStudentInfo.enName" placeholder="中文名"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">生日</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="tStudentInfo.birthday" placeholder="生日" id="student-birthday"/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">备注</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none; "></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	
+   <div v-show="windowFlag == 3" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">充值类型</div>
+			   	<div class="col-sm-10">
+	                <select class="form-control" v-model="reChargeType" placeholder="充值类型" id="recharge_type">
+	                    <option v-for="i in reChargeTypeArray" :value="i.item">{{i.name}}</option>
+	                </select>
+			    </div>
+			</div>
+			<div class="form-group" :class="errors.has('amount')? 'has-error' :''">
+			   	<div class="col-sm-2 control-label">充值太阳花数量</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" name="amount" 
+			      	v-validate="{required:true,regex: /^[-]?[0-9]*[1-9][0-9]*$/ ,max:6 }" 
+			      	:aria-invalid="errors.has('amount')"
+			      	v-model="amount" placeholder="太阳花数量" lazy />
+			      	<span v-show="errors.has('amount')"  class="help-block">{{ errors.first('amount') }}</span>
+			    </div>
+			</div>
+			<div class="form-group" :class="errors.has('remark')? 'has-error' :''">
+			   	<div class="col-sm-2 control-label">备注</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="remark" name="remark"
+			      	v-validate="'required|min:5|max:120'" 
+			      	:aria-invalid="errors.has('remark')"
+			       placeholder="备注" lazy />
+			       
+			     <span v-show="errors.has('remark')"  class="help-block">{{ errors.first('remark') }}</span>  
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="doRecharge" value="充值"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="doBack" value="取消"/>
+			</div>
+		</form>
+	</div>
+	
+	<div v-show="windowFlag == 4">
+		<div class="grid-btn">
+			<input type="button" class="btn btn-warning" @click="doBack" value="返回"/>
+		</div>
+	    <table id="jqGridRecharge"></table>
+	    <div id="jqGridRechargePager"></div>
+    </div>
+	<div v-show="windowFlag == 5">
+		<div class="grid-btn">
+			<input type="button" class="btn btn-warning" @click="doBack" value="返回"/>
+		</div>
+		<div v-if="null != lessonPaths && lessonPaths.length > 0">
+			<div class="row" v-for="(lesson ,index)  in  lessonPaths">
+				<h4>{{lesson.title}}</h4>
+				<div class="grid-btn">
+					<div class="form-group" v-if="null != lesson.chapterList && lesson.chapterList.length > 0">
+						<list v-for="(chapter,idx) in lesson.chapterList">
+							<button v-if="chapter.light" type="button" class="btn btn-success" @click="unLight(lesson,chapter)" >{{chapter.title}}</button>
+							<button v-else type="button" class="btn btn-default" @click="doLight(lesson,chapter)">{{chapter.title}}</button>
+						</list>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div v-show="windowFlag == 6" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">系统子管理员</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="tStudentInfo.addUserId">
+						<option v-for="item in subAdminList" :value="item.userId">{{item.username}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="updateBind" value="确定" /> &nbsp;&nbsp;
+				<input type="button" class="btn btn-warning" @click="reload" value="返回" />
+			</div>
+		</form>
+	</div>
+
+	<!--<div v-show="windowFlag == 7" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">教师</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="tStudentInfo.addUserId">
+						<option v-for="item in teacherList" :value="item.teacherId">{{item.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="updateBind" value="确定" /> &nbsp;&nbsp;
+				<input type="button" class="btn btn-warning" @click="reload" value="返回" />
+			</div>
+		</form>
+	</div>-->
+	<!--<div v-show="windowFlag == 5">-->
+		<!--<div class="grid-btn">-->
+			<!--<input type="button" class="btn btn-warning" @click="doBack" value="返回"/>-->
+		<!--</div>-->
+		<!--<div v-if="null != lessonPaths && lessonPaths.length > 0">-->
+            <!--<div class="row" v-for="(lesson ,index)  in  lessonPaths">-->
+                <!--<h4>{{lesson.title}}</h4>-->
+                <!--<div class="grid-btn">-->
+                     <!--<div class="form-group" v-if="null != lesson.chapterList && lesson.chapterList.length > 0">-->
+                         <!--<list v-for="(chapter,idx) in lesson.chapterList">-->
+							<!--<div v-if="chapter.light" class="zchapterlight">-->
+								<!--<span>-->
+									<!--{{chapter.title}}-->
+								<!--</span>-->
+							<!--</div>-->
+							 <!--<div v-else="chapter.light" class="zchapter">-->
+								<!--<span>-->
+									<!--{{chapter.title}}-->
+								<!--</span>-->
+							 <!--</div>-->
+                         <!--</list>-->
+                    <!--</div>-->
+                <!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+</div>
+
+<script src="${rc.contextPath}/js/tstudentinfo.js?_${date.systemTime}"></script>
+</body>
+</html>

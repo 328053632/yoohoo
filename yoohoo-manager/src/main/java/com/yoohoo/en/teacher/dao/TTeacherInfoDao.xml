@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoohoo.en.teacher.dao.TTeacherInfoDao">
+
+	<select id="queryObject" resultType="com.yoohoo.en.teacher.entity.TTeacherInfoEntity">
+		select * from t_teacher_info where teacher_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.yoohoo.en.teacher.entity.TTeacherInfoEntity">
+		select *, 
+		(select u.username from sys_user u where u.user_id=t.add_user_id) subAdminName,
+		(select r.role_name from sys_user_role ur,sys_role r where ur.role_id=r.role_id and ur.user_id=t.add_user_id) subAdminRoleName from t_teacher_info t
+		<where>
+			<if test="status != null">`status` = #{status}</if>
+
+			<if test="name !=null">
+				and `name` like concat('%',#{name},'%') 
+			</if>
+
+			<if test="addUserId !=null">
+				and `add_user_id` = #{addUserId}
+			</if>
+		</where>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryIdList" resultType="long">
+		select teacher_id from t_teacher_info 
+		<where>
+			`status` = 1
+			<if test="addUserId !=null">
+				and `add_user_id` = #{addUserId}
+			</if>
+		</where>
+	</select>
+
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_teacher_info 
+		<where>
+			<if test="status != null">`status` = #{status}</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yoohoo.en.teacher.entity.TTeacherInfoEntity" useGeneratedKeys="true" keyProperty="teacherId">
+		insert into t_teacher_info
+		(
+			`account`, 
+			`password`, 
+			`name`, 
+			`en_name`, 
+			`phone`, 
+			`job_number`, 
+			`email`, 
+			`country`, 
+			`position`, 
+			`address`, 
+			`create_time`, 
+			`update_time`, 
+			`status`,
+			`teacher_image`,
+			`sex`,
+			`position_type`,
+			`teacherAge`,
+			`educational`,
+			`evaluation`,
+			`introduce`,
+			`teacher_video`,
+			`addtime`,
+			`add_user_id`,
+			`update_user_id`
+		)
+		values
+		(
+			#{account}, 
+			#{password}, 
+			#{name}, 
+			#{enName}, 
+			#{phone}, 
+			#{jobNumber}, 
+			#{email}, 
+			#{country}, 
+			#{position}, 
+			#{address}, 
+			#{createTime}, 
+			#{updateTime}, 
+			#{status},
+			#{teacherImage},
+			#{sex},
+			#{positionType},
+			#{teacherAge},
+			#{educational},
+			#{evaluation},
+			#{introduce},
+			#{teacherVideo},
+			#{addtime},
+			#{addUserId},
+			#{updateUserId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yoohoo.en.teacher.entity.TTeacherInfoEntity">
+		update t_teacher_info
+		<set>
+			<if test="account != null">`account` = #{account}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="enName != null">`en_name` = #{enName}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="jobNumber != null">`job_number` = #{jobNumber}, </if>
+			<if test="email != null">`email` = #{email}, </if>
+			<if test="country != null">`country` = #{country}, </if>
+			<if test="position != null">`position` = #{position}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="teacherImage != null">`teacher_image` = #{teacherImage},</if>
+			<if test="sex != null">`sex` = #{sex},</if>
+			<if test="positionType != null">`position_type` = #{positionType},</if>
+			<if test="teacherAge != null">`teacherAge` = #{teacherAge},</if>
+			<if test="educational != null">`educational` = #{educational},</if>
+			<if test="evaluation != null">`evaluation` = #{evaluation},</if>
+			<if test="introduce != null">`introduce` = #{introduce},</if>
+			<if test="updateUserId != null">`update_user_id` = #{updateUserId},</if>
+			<if test="addUserId != null">`add_user_id` = #{addUserId},</if>
+			<if test="headImage != null">`head_image` = #{headImage}</if>
+		</set>
+		where teacher_id = #{teacherId}
+	</update>
+	<delete id="delete">
+		delete from t_teacher_info where teacher_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_teacher_info where teacher_id in 
+		<foreach item="teacherId" collection="array" open="(" separator="," close=")">
+			#{teacherId}
+		</foreach>
+	</delete>
+
+</mapper>

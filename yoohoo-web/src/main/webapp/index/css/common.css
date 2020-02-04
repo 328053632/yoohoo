@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+/* Global Elements */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td{padding:0; margin:0; color:#333; font-family:Arial,"Microsoft YaHei",Verdana,Sans-Serif;}
+body{font-size:12px; background:#fff;}
+div{ display:block}
+input:required, input:valid, input:invalid, textarea:required, textarea:valid, textarea:invalid{outline:0 none;}
+table {border-collapse:collapse; border-spacing:0}
+fieldset, img{border:0; display:block}
+address, caption, cite, code, dfn, em, th, var{font-weight:normal; font-style:normal}
+ol, ul, li{list-style:none outside none;}
+caption, th{text-align:left}
+h1, h2, h3, h4, h5, h6 {font-weight:normal; font-size:100%}
+q:before, q:after {content: ''}
+a {color:#333; text-decoration:none; }
+a:hover{color:#f40; text-decoration:underline; }
+.clearfix:before,.clearfix:after {display: table;content:'';}
+.clearfix:after {clear: both;}
+.clearfix { *zoom:1;}
+.fl{float:left !important}
+.fr{float:right !important}
+.fix{display:block;}
+.fix:after{content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.w{width:1200px; margin:0 auto;}
+
+.mar_no{ margin-bottom:0 !important}
+.w{width:1200px; margin:0 auto;}
+.title{width:1200px; margin:120px auto 0 auto; height:70px;}
+.title.bg01{ background:url(../images/bk02_title.png) no-repeat center center;}
+.title.bg02{ background:url(../images/bk03_title.png) no-repeat center center;}
+.title.bg03{ background:url(../images/bk04_title.png) no-repeat center center;}
+.title.bg04{ background:url(../images/bk05_title.png) no-repeat center center; margin:90px auto 0 auto !important;}
+.title.bg05{ background:url(../images/bk06_title.png) no-repeat center center;}
+.title.bg06{ background:url(../images/bk07_title.png) no-repeat center center;}
+.title.bg07{ background:url(../images/bk08_title.png) no-repeat center center;}
+.title.bg08{ background:url(../images/bk09_title.png) no-repeat center center;}
+.title.bg09{ background:url(../images/bk10_title.png) no-repeat center center; margin:90px auto 0 auto !important;}
+
+.about_title{width:1200px; margin:120px auto 0 auto; height:70px;}
+.about_title.bg01{ background:url(../images/about_bk01_title.png) no-repeat center center;}
+.about_title.bg02{ background:url(../images/about_bk02_title.png) no-repeat center center;}
+
+.class_title{width:1200px; margin:120px auto 0 auto; height:70px;}
+.class_title.bg01{ background:url(../images/class_bk01_title.png) no-repeat center center;}
+.class_title.bg02{ background:url(../images/class_bk02_title.png) no-repeat center center;}
+.class_title.bg03{ background:url(../images/class_bk03_title.png) no-repeat center center;}
+.class_title.bg04{ background:url(../images/class_bk04_title.png) no-repeat center center; margin:80px auto 0 auto !important;}
+.class_title.bg05{ background:url(../images/class_bk05_title.png) no-repeat center center;}
+.class_title.bg06{ background:url(../images/class_bk06_title.png) no-repeat center center;}
+.class_title.bg07{ background:url(../images/class_bk07_title.png) no-repeat center center;}
+.class_title.bg08{ background:url(../images/class_bk08_title.png) no-repeat center center;}
+.class_title.bg09{ background:url(../images/class_bk09_title.png) no-repeat center center;}
+

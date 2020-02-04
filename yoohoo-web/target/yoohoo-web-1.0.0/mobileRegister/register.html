@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+	<title>注册</title>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="js/jquery.md5.js"></script>
+	<script src="js/layer/layer.js"></script>
+	<script src="js/ajax-utils.js"></script>
+	<style>
+		html{font-size: 16px;}
+		*{margin: 0;padding: 0;}
+		.hide{display: none;}
+		input{-webkit-appearance: none;}
+		body{background: url("images/bg.jpg") no-repeat #12bf7d;background-size: cover;}
+		.input {
+			position: relative;
+			margin: 1rem auto;
+			padding-left: 2.4rem;
+			width: 100%;
+			height: 2.8rem;
+			border-radius: 50px;
+			background-color: #f1f1f1;
+			box-sizing: border-box;
+		}
+		.input input{
+			width: 80%;
+			height: 2.8rem;
+			line-height: 2;
+			font-size: 1rem;
+			background-color: transparent;
+			border: transparent;
+		}
+		.code input{width: 4rem;}
+		.get-code,.wait-code{
+			width: 6rem;
+			position: absolute;
+			right: 0;
+			top: .8rem;
+			font-size: 0.8rem;
+			padding-left: 1rem;
+			color: #35a573;
+		}
+		.get-code:after{
+			content: "";
+			position: absolute;
+			left:0;
+			top: .2rem;
+			height: 0.8rem;
+			width: 1px;
+			background-color: #ddd;
+		}
+		.wait-code{
+			color: #ccc;
+		}
+		.input .icon{
+			position: absolute;
+			top: 0.5rem;
+			left: 1rem;
+			width: 1rem;
+			height: 1.7rem;
+			background: url("images/mobile.png") no-repeat;
+			background-size: cover;
+		}
+		.input .icon.password_icon{
+			top: 0.8rem;
+			width: 1.1rem;
+			height: 1.2rem;
+			background-image: url("images/password.png");
+		}
+		.input .icon.code_icon{
+			top: 0.8rem;
+			width: 1.1em;
+			height: 1.2rem;
+			background-image: url("images/code.png");
+		}
+		.register-content{
+			position: absolute;
+			top:50%;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60%;
+		}
+		.register-btn{
+			position: relative;
+			margin-top: 2rem;
+			width: 100%;
+			height: 3rem;
+			font-size: 0.8rem;
+			text-align: center;
+			line-height: 3.5;
+			color: #c49504;
+		}
+		.button img{
+			position: absolute;
+			top: 0;
+			left:0;
+			height: 3rem;
+			width: 100%;
+			z-index: -1;
+		}
+	</style>
+</head>
+<body>
+<div id="app">
+	<div class="register-content">
+		<div class="input">
+			<span class="icon mobile_icon"></span>
+			<input id="msisdn" type="text" placeholder="输入手机号码" v-model="accountInfo.msisdn"/>
+		</div>
+		<div class="input">
+			<span class="icon password_icon"></span>
+			<input :type="showPassword ? 'text' : 'password'" placeholder="输入密码" v-model="accountInfo.password"/>
+		</div>
+		<div class="input code" >
+			<span class="icon code_icon"></span>
+			<input id="verifyCode" type="text" placeholder="短信验证" v-model="accountInfo.code"/>
+			<span class="get-code" :class="sendCodeWait ? 'wait':''" @click="getCode()">获取验证码</span>
+			<span class="wait-code hide" >重新发送(<b>60</b>s)</span>
+		</div>
+		<div class="login">
+			<button class="register-btn" :class="registerCanDo ? '' : 'register-brn-not-click'" @click="doRegister" src="images/button.png">注册送300太阳花</button>
+		</div>
+	</div>
+
+</div>
+</body>
+
+</script><script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            accountInfo: {
+                msisdn: '',
+                password: '',
+                code: ''
+            },
+            showPassword: false,
+            codeMessage: '获取验证码',
+            sendCodeWait: false,
+            tipMessage:{
+                yan_zheng_ma_wu_xiao: '验证码无效, 请重新发送',
+                fu_wu_qi_error: '服务器异常, 稍后重试!',
+				zhu_ce_cheng_gong:'注册成功，稍后会有工作人员联系您，生活愉快！'
+            },
+            // 4试听 5测试
+            applyType:4
+        },
+        computed: {
+            registerCanDo: function () {
+                if (!this.accountInfo.msisdn || !this.accountInfo.password || !this.accountInfo.code) {
+                    return false;
+                }
+                return true;
+            }
+        },
+        created: function () {
+
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            doRegister: function () {
+                if (!this.registerCanDo) {
+                    return;
+                }
+                var me = this;
+                AjaxClient.post({
+                    url: '/stu/user/register',
+                    data: {
+                        msisdn: me.accountInfo.msisdn,
+                        password: $.md5(me.accountInfo.password),
+                        code: me.accountInfo.code
+                    },
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            // location.href = "/student/views/addChild";
+                            message.info(me.tipMessage.zhu_ce_cheng_gong);
+                        } else if (resp.code == '20003') {
+                            // 验证码无效
+                            message.warn(me.tipMessage.yan_zheng_ma_wu_xiao);
+                        } else {
+                            // 注册失败
+                            message.error(me.tipMessage.fu_wu_qi_error);
+                        }
+                    }
+                });
+            },
+            applyAudition: function (applyType) {
+                this.applyType=applyType;
+                this.$refs.applyAudition.show();
+            },
+            getCode: function () {
+                if (codeWait.time > 0) {
+                    return;
+                }
+                if (!this.accountInfo.msisdn) {
+                    layer.tips('请输入', '#msisdn');
+                    return;
+                }
+                var me = this;
+                AjaxClient.get({
+                    url: '/stu/user/sendVerification',
+                    data: {phone: this.accountInfo.msisdn,type:1},
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            codeWait.start();
+                        } else if (resp.code == '20005')
+                        {
+                            message.error(resp.message);
+                        } else {
+                            message.error(me.tipMessage.fu_wu_qi_error);
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+    var codeWait = {
+        time: 0,
+        start: function () {
+            if (app.sendCodeWait) {
+                return;
+            }
+            this.time = 60;
+            app.sendCodeWait = true;
+            app.codeMessage = this.time + "s后重新获取";
+            this.timeOut();
+        },
+        end: function () {
+            app.sendCodeWait = false;
+            app.codeMessage = "获取验证码";
+        },
+        timeOut: function () {
+            setTimeout(function () {
+                codeWait.time--;
+                app.codeMessage = codeWait.time + "s后重新获取";
+                if (codeWait.time >= 0) {
+                    codeWait.timeOut();
+                } else {
+                    codeWait.end();
+                }
+            }, 1 * 1000);
+        }
+    };
+
+</script>
+
+</html>

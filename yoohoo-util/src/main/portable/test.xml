@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+	<!-- 
+	打包参数配置文件，使用此xml配置时，使用以下命令进行打包。
+	mvn clean package -DportableConfig="src/main/portable/test.xml"
+	替换key和值 
+	-->
+    <config-file path="public-config.properties">
+        <replace key="fastdfs.default">http://112.74.167.122:8090</replace>
+        <replace key="fastdfs.group1">http://112.74.167.122:8090</replace>
+        <replace key="skip.sendsms">true</replace>
+    </config-file>
+    <config-file path="cache/memcache_config/memcachedAllConfig.xml">
+        <replace xpath="/config/pool[@id='POOL01_SD']/addressList">172.18.0.1:11211</replace>
+    </config-file>
+</portable-config>

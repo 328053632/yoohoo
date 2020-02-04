@@ -1,0 +1,70 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@include file="tpl-apply-remediation.jspf"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/src/commom/tpl-my-lesson-detail.css?version=${_dt}">
+<script type="text/x-template" id="tpl-my-lesson-detail">
+    <div class="my-lesson-detail" v-if="lesson.chapterList.length > 0">
+        <div class="left">
+            <div class="cover">
+                <img :src="prefix + lesson.coverUrl"/>
+                <i class="fu-fei" v-if="lesson.type == 0"></i>
+                <i class="shi-ting" v-if="lesson.type == 1"></i>
+            </div>
+        </div>
+        <div class="right">
+            <div class="line-1">
+                <span class="semester">{{lesson.lessonName}}</span><span class="time-quantum">{{lesson.timeQuantum}}</span>
+            </div>
+            <div class="line-2">
+                <span>班级: <label>{{lesson.className}}</label></span>
+                <span>班主任: <label>{{lesson.headTeacher}}</label></span>
+                <span>教师: <label>{{lesson.teacher}}</label></span>
+                <span>助教: <label>{{lesson.assistant}}</label></span>
+                <span>电教: <label>{{lesson.electrified}}</label></span>
+            </div>
+            <div class="chapter-list">
+                <span v-for="(item, inx) in lesson.chapterList"
+                      :class="(item.status == 2 && item.type == 1) ? 'finish' : ''">
+                    <label class="chapter-title" :title="item.title">
+                        {{item.title}}
+                    </label>
+                    <i class="leave" v-if="item.type == 2 || item.type == 7" @click="showMenu(inx)">请假</i>
+                    <i class="absent" v-if="item.type == 0" @click="showMenu(inx)">缺课</i>
+                    <span class="apply-remediation" v-show="applyMenu[inx]"
+                          @click="applyRemediation(inx)">申请补课</span>
+                </span>
+            </div>
+        </div>
+        <poohoo-apply-remediation ref="applyRemediationWin" :apply-chapter="applyChapter" :inx="inx"></poohoo-apply-remediation>
+    </div>
+</script>
+<script>
+    Vue.component('my-lesson-detail', {
+        template: '#tpl-my-lesson-detail',
+        props: ['lesson', 'prefix', 'inx'],
+        data: function(){
+            return {
+                applyMenu: [],
+                applyInfo:{},
+                applyChapter:{}
+            }
+        },
+        created: function(){
+
+        },
+        methods: {
+            showMenu: function (inx) {
+                Vue.set(this.applyMenu, inx, !this.applyMenu[inx]);
+            },
+            applyRemediation: function (inx) {
+                this.applyChapter = this.lesson.chapterList[inx];
+                this.applyInfo = {
+                    classId: this.lesson.classId,
+                    lessonId: this.lesson.lessonId,
+                    chapterId: this.lesson.chapterList[inx].chapterId
+                };
+                Vue.set(this.applyMenu, inx, false);
+                this.$refs.applyRemediationWin.show();
+            }
+        }
+    });
+</script>

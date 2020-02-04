@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.TClassMapper" >
+  <resultMap id="BaseResultMap" type="com.yoohoo.en.dao.model.TClass" >
+    <id column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="class_item_id" property="classItemId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="master_teacher_id" property="masterTeacherId" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="assistant_id" property="assistantId" jdbcType="INTEGER" />
+    <result column="e_teacher_id" property="eTeacherId" jdbcType="INTEGER" />
+    <result column="student_num" property="studentNum" jdbcType="INTEGER" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_admin" property="lastUpdateAdmin" jdbcType="INTEGER" />
+    <result column="class_type" property="classType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    class_id, class_name, class_item_id, lesson_id, begin_date, end_date, master_teacher_id, 
+    teacher_id, assistant_id, e_teacher_id, student_num, last_update_time, last_update_admin, 
+    class_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yoohoo.en.dao.model.TClassExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_class
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+	 <include refid="MysqlDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_class
+    where class_id = #{classId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_class
+    where class_id = #{classId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yoohoo.en.dao.model.TClassExample" >
+    delete from t_class
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yoohoo.en.dao.model.TClass" >
+    insert into t_class (class_id, class_name, class_item_id, 
+      lesson_id, begin_date, end_date, 
+      master_teacher_id, teacher_id, assistant_id, 
+      e_teacher_id, student_num, last_update_time, 
+      last_update_admin, class_type, addtime, add_user_id, update_time, update_user_id)
+    values (#{classId,jdbcType=INTEGER}, #{className,jdbcType=VARCHAR}, #{classItemId,jdbcType=INTEGER}, 
+      #{lessonId,jdbcType=INTEGER}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{masterTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{assistantId,jdbcType=INTEGER}, 
+      #{eTeacherId,jdbcType=INTEGER}, #{studentNum,jdbcType=INTEGER}, #{lastUpdateTime,jdbcType=TIMESTAMP}, 
+      #{lastUpdateAdmin,jdbcType=INTEGER}, #{classType,jdbcType=INTEGER}, 
+      #{addtime,jdbcType=TIMESTAMP}, #{addUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoohoo.en.dao.model.TClass" useGeneratedKeys="true" keyProperty="classId" >
+    insert into t_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="className != null" >
+        class_name,
+      </if>
+      <if test="classItemId != null" >
+        class_item_id,
+      </if>
+      <if test="lessonId != null" >
+        lesson_id,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="masterTeacherId != null" >
+        master_teacher_id,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="assistantId != null" >
+        assistant_id,
+      </if>
+      <if test="eTeacherId != null" >
+        e_teacher_id,
+      </if>
+      <if test="studentNum != null" >
+        student_num,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        last_update_admin,
+      </if>
+      <if test="classType != null" >
+        class_type,
+      </if>
+      <if test="addUserId != null" >
+        add_user_id
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="classItemId != null" >
+        #{classItemId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonId != null" >
+        #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="masterTeacherId != null" >
+        #{masterTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="assistantId != null" >
+        #{assistantId,jdbcType=INTEGER},
+      </if>
+      <if test="eTeacherId != null" >
+        #{eTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="studentNum != null" >
+        #{studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        #{lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="classType != null" >
+        #{classType,jdbcType=INTEGER},
+      </if>
+      <if test="addUserId != null" >
+        #{addUserId}
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yoohoo.en.dao.model.TClassExample" resultType="java.lang.Integer" >
+    select count(*) from t_class
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_class
+    <set >
+      <if test="record.classId != null" >
+        class_id = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.className != null" >
+        class_name = #{record.className,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classItemId != null" >
+        class_item_id = #{record.classItemId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lessonId != null" >
+        lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="record.beginDate != null" >
+        begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endDate != null" >
+        end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.masterTeacherId != null" >
+        master_teacher_id = #{record.masterTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.teacherId != null" >
+        teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.assistantId != null" >
+        assistant_id = #{record.assistantId,jdbcType=INTEGER},
+      </if>
+      <if test="record.eTeacherId != null" >
+        e_teacher_id = #{record.eTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.studentNum != null" >
+        student_num = #{record.studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.lastUpdateTime != null" >
+        last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdateAdmin != null" >
+        last_update_admin = #{record.lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="record.classType != null" >
+        class_type = #{record.classType,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_class
+    set class_id = #{record.classId,jdbcType=INTEGER},
+      class_name = #{record.className,jdbcType=VARCHAR},
+      class_item_id = #{record.classItemId,jdbcType=INTEGER},
+      lesson_id = #{record.lessonId,jdbcType=INTEGER},
+      begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      master_teacher_id = #{record.masterTeacherId,jdbcType=INTEGER},
+      teacher_id = #{record.teacherId,jdbcType=INTEGER},
+      assistant_id = #{record.assistantId,jdbcType=INTEGER},
+      e_teacher_id = #{record.eTeacherId,jdbcType=INTEGER},
+      student_num = #{record.studentNum,jdbcType=INTEGER},
+      last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_admin = #{record.lastUpdateAdmin,jdbcType=INTEGER},
+      class_type = #{record.classType,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoohoo.en.dao.model.TClass" >
+    update t_class
+    <set >
+      <if test="className != null" >
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="classItemId != null" >
+        class_item_id = #{classItemId,jdbcType=INTEGER},
+      </if>
+      <if test="lessonId != null" >
+        lesson_id = #{lessonId,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="masterTeacherId != null" >
+        master_teacher_id = #{masterTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="assistantId != null" >
+        assistant_id = #{assistantId,jdbcType=INTEGER},
+      </if>
+      <if test="eTeacherId != null" >
+        e_teacher_id = #{eTeacherId,jdbcType=INTEGER},
+      </if>
+      <if test="studentNum != null" >
+        student_num = #{studentNum,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateAdmin != null" >
+        last_update_admin = #{lastUpdateAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="classType != null" >
+        class_type = #{classType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where class_id = #{classId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoohoo.en.dao.model.TClass" >
+    update t_class
+    set class_name = #{className,jdbcType=VARCHAR},
+      class_item_id = #{classItemId,jdbcType=INTEGER},
+      lesson_id = #{lessonId,jdbcType=INTEGER},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      master_teacher_id = #{masterTeacherId,jdbcType=INTEGER},
+      teacher_id = #{teacherId,jdbcType=INTEGER},
+      assistant_id = #{assistantId,jdbcType=INTEGER},
+      e_teacher_id = #{eTeacherId,jdbcType=INTEGER},
+      student_num = #{studentNum,jdbcType=INTEGER},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_admin = #{lastUpdateAdmin,jdbcType=INTEGER},
+      class_type = #{classType,jdbcType=INTEGER}
+    where class_id = #{classId,jdbcType=INTEGER}
+  </update>
+    <sql id="MysqlDialectSuffix" >
+    <if test="pageHelper != null" >
+      <![CDATA[ limit #{pageHelper.begin}, #{pageHelper.length}]]>
+    </if>
+  </sql>
+    <insert id="insertBatch" parameterType="com.yoohoo.en.dao.model.TClass" >
+    insert into t_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      class_id,class_name,class_item_id,lesson_id,begin_date,end_date,master_teacher_id,teacher_id,assistant_id,e_teacher_id,student_num,last_update_time,last_update_admin,class_type,
+    </trim>
+    values
+    <foreach collection="list" index="index" item="item" separator="," >
+      (
+      <trim suffixOverrides="," >
+        #{item.classId,jdbcType=INTEGER},#{item.className,jdbcType=VARCHAR},#{item.classItemId,jdbcType=INTEGER},#{item.lessonId,jdbcType=INTEGER},#{item.beginDate,jdbcType=TIMESTAMP},#{item.endDate,jdbcType=TIMESTAMP},#{item.masterTeacherId,jdbcType=INTEGER},#{item.teacherId,jdbcType=INTEGER},#{item.assistantId,jdbcType=INTEGER},#{item.eTeacherId,jdbcType=INTEGER},#{item.studentNum,jdbcType=INTEGER},#{item.lastUpdateTime,jdbcType=TIMESTAMP},#{item.lastUpdateAdmin,jdbcType=INTEGER},#{item.classType,jdbcType=INTEGER}
+      </trim>
+      )
+    </foreach>
+  </insert>
+  <select id="selectTeacherName" parameterType="java.lang.Long" resultType="String">
+    select
+    tt.name
+    from t_class tc
+    left join t_teacher_info tt on tt.teacher_id = tc.assistant_id
+      where tc.class_id = #{classId}
+  </select>
+    <select id="queryList" resultType="com.yoohoo.en.dao.model.ext.TClassExt">
+    SELECT
+      tc.class_id,
+      tc.class_name,
+      tc.begin_date,
+      tc.student_num,
+      tc.class_type,
+      td.class_item_name	AS classItem,
+      tl.title AS lessonName,
+      tt.name AS masterTeacher,
+      tt1.name AS teacher,
+      tt2.name AS assistant,
+      tt3.name AS eTeacher
+      FROM
+      t_class tc
+      LEFT JOIN t_class_define td ON tc.class_item_id=td.class_item_id
+      LEFT JOIN t_lesson_info tl ON tc.lesson_id=tl.lesson_id
+      LEFT JOIN t_teacher_info tt ON tc.master_teacher_id=tt.teacher_id
+      LEFT JOIN t_teacher_info tt1 ON tc.teacher_id=tt1.teacher_id
+      LEFT JOIN t_teacher_info tt2 ON tc.assistant_id = tt2.teacher_id
+      LEFT JOIN t_teacher_info tt3 ON tc.e_teacher_id = tt3.teacher_id
+      WHERE
+      1=1
+      <if test=" lessonId !=null and lessonId !=0 " >
+        AND tc.`lesson_id`=#{lessonId}
+      </if>
+      <if test="classItemId !=null and classItemId !=0">
+        AND  tc.`class_item_id`=#{classItemId}
+      </if>
+      <if test=" classType!=null and classType !=0">
+        AND  tc.`class_type`=#{classType}
+      </if>
+      <if test="className!=null">
+        AND  tc.`class_name` like #{className}
+      </if>
+      <if test="beginDate !=null and endDate !=null">
+        AND  tc.`begin_date` BETWEEN #{beginDate} AND #{endDate}
+      </if>
+      <if test="beginDate !=null and endDate ==null">
+        AND  tc.`begin_date` > #{beginDate}
+      </if>
+      <if test="endDate !=null  and beginDate ==null">
+        AND #{endDate} >  tc.`begin_date`
+      </if>
+      
+      
+      <if test=" addUserId !=null and addUserId !=0 " >
+        AND tc.`add_user_id`=#{addUserId}
+      </if>
+      
+      
+      <if test="teacherName !=null">
+        AND (tt.`name` LIKE #{teacherName} OR tt1.`name` LIKE #{teacherName} OR tt2.`name` LIKE #{teacherName} OR tt3.`name` LIKE #{teacherName})
+      </if>
+      ORDER BY tc.`last_update_time` DESC
+      limit #{star},#{limit}
+    </select>
+  <select id="queryTotal" resultType="java.lang.Integer">
+    SELECT
+    count(*)
+    FROM
+    t_class tc
+    LEFT JOIN t_class_define td ON tc.class_item_id=td.class_item_id
+    LEFT JOIN t_lesson_info tl ON tc.lesson_id=tl.lesson_id
+    LEFT JOIN t_teacher_info tt ON tc.master_teacher_id=tt.teacher_id
+    LEFT JOIN t_teacher_info tt1 ON tc.teacher_id=tt1.teacher_id
+    LEFT JOIN t_teacher_info tt2 ON tc.assistant_id = tt2.teacher_id
+    LEFT JOIN t_teacher_info tt3 ON tc.e_teacher_id = tt3.teacher_id
+    WHERE
+    1=1
+    <if test=" lessonId !=null and lessonId !=0 " >
+      AND tc.`lesson_id`=#{lessonId}
+    </if>
+    <if test="classItemId !=null and classItemId !=0">
+      AND  tc.`class_item_id`=#{classItemId}
+    </if>
+    <if test=" classType!=null and classType !=0">
+      AND  tc.`class_type`=#{classType}
+    </if>
+    <if test="className!=null">
+      AND  tc.`class_name` like #{className}
+    </if>
+    <if test="beginDate !=null and endDate !=null">
+      AND  tc.`begin_date` BETWEEN #{beginDate} AND #{endDate}
+    </if>
+    <if test="beginDate !=null and endDate ==null">
+      AND  tc.`begin_date` > #{beginDate}
+    </if>
+    <if test="endDate !=null  and beginDate ==null">
+      AND #{endDate} > tc.`begin_date`
+    </if>
+      
+      
+      <if test=" addUserId !=null and addUserId !=0 " >
+        AND tc.`add_user_id`=#{addUserId}
+      </if>
+      
+    <if test="teacherName !=null">
+      AND (tt.`name` LIKE #{teacherName} OR tt1.`name` LIKE #{teacherName} OR tt2.`name` LIKE #{teacherName} OR tt3.`name` LIKE #{teacherName})
+    </if>
+  </select>
+</mapper>

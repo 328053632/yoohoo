@@ -1,0 +1,283 @@
+<%@ page pageEncoding="UTF-8" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/src/commom/tpl-calendar.css?version=${_dt}">
+<script type="text/x-template" id="tpl-poohoo-calendar">
+    <div class="calendar">
+        <div class="top">
+            <span><i class="left" @click="lastMonth"></i></span>
+            <span @click="toThisMonth">{{dateLabel}}</span>
+            <span><i class="right" @click="nextMonth"></i></span>
+        </div>
+        <div class="title">
+            <span>周一</span>
+            <span>周二</span>
+            <span>周三</span>
+            <span>周四</span>
+            <span>周五</span>
+            <span>周六</span>
+            <span>周日</span>
+        </div>
+        <div class="date-table">
+            <div class="row" v-for="week in month">
+                <span v-for="day in week"
+                      :class="(day.day == dateInfo.day && day.month == dateInfo.month && day.year == dateInfo.year) ?
+                        'cur' : ((day.month == (date.getMonth()+1) && day.year == date.getFullYear()) ? '' : 'no-this-month')"
+                      :date-key="day.year+'-'+ (day.month > 9 ? day.month : '0'+day.month) + '-' + (day.day > 9 ? day.day : '0'+day.day)"
+                      @click="selectDay(day.day, day.month, day.year)">
+                    <label class="day">{{day.day}}</label>
+                    <label class="count">{{day.countLabel}}</label>
+                </span>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('poohoo-calendar', {
+        template: '#tpl-poohoo-calendar',
+        props: [],
+        data: function () {
+            return {
+                dateLabel: '',
+                date: new Date(),
+                today: new Date(),// 今天日期
+                dateInfo: {},
+                month: [
+                    [{}, {}, {}, {}, {}, {}, {}],
+                    [{}, {}, {}, {}, {}, {}, {}],
+                    [{}, {}, {}, {}, {}, {}, {}],
+                    [{}, {}, {}, {}, {}, {}, {}],
+                    [{}, {}, {}, {}, {}, {}, {}],
+                    [{}, {}, {}, {}, {}, {}, {}]
+                ]
+            }
+        },
+        created: function () {
+            this.todayInfo();
+            this.computeMonth();
+            this.selectDay(this.dateInfo.day, this.dateInfo.month, this.dateInfo.year);
+        },
+        methods: {
+            loadData: function () {
+                if (!!this.month[0][0].day && !!this.month[5][6].day) {
+                    var startTime = this.dateInfo2dateLabel(this.month[0][0]);
+                    var endTime = this.dateInfo2dateLabel(this.month[5][6]);
+                    var me = this;
+                    $.ajax({
+                        url: contextPath + "/teach/user/lessonCountOfDay",
+                        data: {
+                            startTime: startTime,
+                            endTime: endTime
+                        },
+                        type: 'GET',
+                        dataType: 'JSON',
+                        success: function (resp) {
+                            if (resp.code == '0') {
+                                var data = resp.data.data;
+                                for (var i = 0, len = data.length; i < len; i++) {
+                                    for (var j = 0, mlen = me.month.length; j < mlen; j++) {
+                                        me.fillText(j, data[i].dateLabel, data[i].count);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            fillText: function (inx, label, count) {
+                for (var i = 0, len = this.month[inx].length; i < len; i++) {
+                    if (this.dateInfo2dateLabel(this.month[inx][i]) == label) {
+                        Vue.set(this.month[inx][i], 'countLabel', count + "节课");
+                    }
+                }
+            },
+            todayInfo: function () {
+                var date = this.date.getDate();
+                var month = this.date.getMonth() + 1;
+                var year = this.date.getFullYear();
+                this.dateInfo = {
+                    day: date,
+                    month: month,
+                    year: year
+                };
+                this.dateLabel = year + "年" + month + "月";
+            },
+            /**
+             *
+             * 复制日期
+             */
+            copyDate: function (date) {
+                var tempDate = new Date();
+                tempDate.setFullYear(date.getFullYear());
+                tempDate.setMonth(date.getMonth());
+                tempDate.setDate(date.getDate());
+                return tempDate;
+            },
+            computeMonth: function () {
+                var date = this.firstDate();
+                for (var i = 0; i < 6; i++) {
+                    var week = new Array();
+                    for (var j = 0; j < 7; j++) {
+                        week.push(this.createDay(date));
+                        date.setDate(date.getDate() + 1);
+                    }
+                    Vue.set(this.month, i, week);
+                }
+                this.loadData();
+            },
+            /*** 获取上个开始展示日期*/
+            firstDate: function () {
+                var date = this.copyDate(this.date);
+                date.setDate(1);
+                var lastMonthDate = this.lastMonthDate(date);
+                switch (date.getDay()) {
+                    case 1:
+                        // 月的第一天是周一, 显示上个月最后七天
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate((monthDays + 1) - 7);
+                        return lastMonthDate;
+                    case 2:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays);
+                        return lastMonthDate;
+                    case 3:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays - 1);
+                        return lastMonthDate;
+                    case 4:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays - 2);
+                        return lastMonthDate;
+                    case 5:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays - 3);
+                        return lastMonthDate;
+                    case 6:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays - 4);
+                        return lastMonthDate;
+                    case 0:
+                        var monthDays = this.monthDays(lastMonthDate);
+                        lastMonthDate.setDate(monthDays - 5);
+                        return lastMonthDate;
+                }
+            },
+            /**
+             * 获取上个月时间, 日期为上个月最后一天
+             * @param date
+             * @returns {Date}
+             */
+            lastMonthDate: function (date) {
+                var temp = this.copyDate(date);
+                temp.setMonth(date.getMonth() - 1);
+                temp.setDate(this.monthDays(temp));
+                return temp;
+            },
+            createDay: function (date) {
+                return {
+                    day: date.getDate(),
+                    countLabel: '',
+                    today: this.today.getDate() == date.getDate(),
+                    month: date.getMonth() + 1,
+                    year: date.getFullYear()
+                }
+            },
+            monthDays: function (date) {
+                var temp = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                return temp.getDate();
+            },
+            lastMonth: function () {
+                var date = this.date;
+                this.date.setMonth(date.getMonth() - 1);
+                this.computeMonth()
+                this.dateLabel = this.date.getFullYear() + "年" + (this.date.getMonth()+1) + "月";
+            },
+            nextMonth: function () {
+                var date = this.date;
+                this.date.setMonth(date.getMonth() + 1);
+                this.computeMonth()
+                this.dateLabel = this.date.getFullYear() + "年" + (this.date.getMonth()+1) + "月";
+            },
+            toThisMonth: function () {
+                this.date = this.copyDate(this.today);
+                this.todayInfo();
+                this.computeMonth()
+                this.dateLabel = this.date.getFullYear() + "年" + (this.date.getMonth() + 1) + "月";
+            },
+            selectDay: function (day, month, year) {
+                var computed = false;
+                if (year != this.dateInfo.year || month != this.dateInfo.month) {
+                    computed = true;
+                }
+                this.date.setFullYear(parseInt(year));
+                this.date.setMonth(parseInt(month) - 1);
+                this.date.setDate(day);
+                this.todayInfo();
+                if (computed) {
+                    this.computeMonth();
+                }
+                var time = year + "-" + (parseInt(month) > 9 ? month : '0' + month) + "-" + (parseInt(day) > 9 ? day : '0' + day);
+                this.$emit('change-date', time);
+            },
+            dateInfo2dateLabel: function (info) {
+                if (!info) {
+                    return "";
+                }
+                var year = info.year;
+                var month = info.month;
+                var day = info.day;
+                return year + "-" + (parseInt(month) > 9 ? month : '0' + month) + "-" + (parseInt(day) > 9 ? day : '0' + day);
+            }
+        }
+    });
+
+    var NumberUtil = {
+        chnUnitChar : ["", "十", "百", "千"],
+        chnUnitSection : ["", "万", "亿", "万亿", "亿亿"],
+        chnNumChar : ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"],
+        SectionToChinese: function(section){
+            var strIns = '', chnStr = '';
+            var unitPos = 0;
+            var zero = true;
+            while (section > 0) {
+                var v = section % 10;
+                if (v === 0) {
+                    if (!zero) {
+                        zero = true;
+                        chnStr = this.chnNumChar[v] + chnStr;
+                    }
+                } else {
+                    zero = false;
+                    strIns = this.chnNumChar[v];
+                    strIns += this.chnUnitChar[unitPos];
+                    chnStr = strIns + chnStr;
+                }
+                unitPos++;
+                section = Math.floor(section / 10);
+            }
+            return chnStr;
+        },
+        NumberToChinese : function(num){
+            var unitPos = 0;
+            var strIns = '', chnStr = '';
+            var needZero = false;
+
+            if (num === 0) {
+                return this.chnNumChar[0];
+            }
+
+            while (num > 0) {
+                var section = num % 10000;
+                if (needZero) {
+                    chnStr = this.chnNumChar[0] + chnStr;
+                }
+                strIns = this.SectionToChinese(section);
+                strIns += (section !== 0) ? this.chnUnitSection[unitPos] : this.chnUnitSection[0];
+                chnStr = strIns + chnStr;
+                needZero = (section < 1000) && (section > 0);
+                num = Math.floor(num / 10000);
+                unitPos++;
+            }
+            return chnStr;
+        }
+    };
+</script>

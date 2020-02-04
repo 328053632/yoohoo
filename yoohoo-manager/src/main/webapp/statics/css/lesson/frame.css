@@ -1,0 +1,69 @@
+.frame-border{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+}
+
+
+.form-groupChapter {
+    margin-bottom: 50px;
+}
+
+
+.frame-border .frame-content{
+    width: 620px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.frame-border .close{
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url("../icon/close.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+
+.frame-borderFile{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+}
+
+.frame-borderFile .frame-content{
+    padding-top: 30px;
+    width: 700px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.frame-borderFile .close{
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url("../icon/close.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}

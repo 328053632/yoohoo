@@ -1,0 +1,123 @@
+.consume-log .title {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    background-color: #D9E9EA;
+    color: #292929;
+    font-size: 20px;
+}
+
+.consume-log .content {
+    height: 70%;
+    width: 100%;
+    margin-top: 50px;
+    overflow-y: auto;
+}
+
+.consume-log .content .top-bar {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.consume-log .content .top-bar .m-item {
+    flex: 1;
+}
+
+.consume-log .content .top-bar .m-item:nth-child(1) {
+    text-align: left;
+    margin-left: 30px;
+}
+
+.consume-log .content .top-bar .m-item:nth-child(2) {
+    text-align: right;
+    margin-right: 30px;
+}
+
+.consume-log .content .top-bar .m-item span{
+    position: relative;
+    display: inline-block;
+}
+
+.consume-log .content .top-bar .m-item span i{
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background-image: url("../img/calendar.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: 7px;
+    right: 10px;
+}
+
+.consume-log .content .content-table{
+    font-size: 16px;
+    color: #1A2148;
+}
+
+.consume-log .content .content-table .row{
+    width: 100%;
+    height: 40px;
+    display: flex;
+}
+
+.consume-log .content .content-table .row span{
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: #1A2148;
+    padding-left: 5px;
+    width: 95%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.consume-log .content .content-table .bg1{
+    background-color: #ffffff;
+}
+
+.consume-log .content .content-table .bg2{
+    background-color: #DFFAFB;
+}
+
+.consume-log .content .content-table .head span{
+    background-color: #B0D7D8;
+}
+
+.consume-log .content .content-table .mg-r{
+    margin-right: 2px;
+}
+
+.consume-log .content .content-table .column-5{
+    flex: 1;
+}
+
+.consume-log .content .content-table .column1{
+    flex: 1;
+}
+
+.consume-log .content .content-table .column1-4{
+    flex: 1.2;
+}
+.consume-log .content .content-table .column1-back{
+    flex: 0.8;
+
+}
+.consume-log .content .content-table .column2{
+    flex: 1.5;
+}
+
+.consume-log .content .content-table .no-data{
+    text-align: center;
+    height: 100px;
+    line-height: 100px;
+}
+

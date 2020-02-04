@@ -1,0 +1,175 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<style lang="scss" scoped>
+<!--
+.btn-group {
+  min-width: 160px;
+  height: 42px;
+  position: relative;
+/*   margin: 10px 1px; */
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn-group a:hover {
+  text-decoration: none;
+}
+
+.dropdown-toggle {
+  padding: 10px;
+  text-transform: none;
+  font-weight: 300;
+  margin-bottom: 7px;
+  border: 0;
+  background-color: #FFFFFF;
+  float: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+.dropdown-toggle:hover {
+  background: #FFFFFF;
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+
+.dropdown-menu > li > a {
+  padding: 10px 10px 10px 46px;
+  display: block;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #333333;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.dropdown-menu > li > a:hover {
+  color: #62C456;
+}
+
+.dropdown-menu > li {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  border-bottom: solid #FFF 1px ;
+  border-top: solid #FFF 1px ;
+}
+
+.dropdown-menu > li:hover {
+	background-image: url("/src/student/img/dg.png");
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	border-bottom: solid #64C558 1px ;
+	border-top: solid #64C558 1px ;
+}
+
+.dropdown-menu > li > img {
+    width: 16px;
+    float: left;
+    height: 12px;
+    margin: 15px 1px auto 29px;
+    position: absolute;
+    display: none;
+}
+
+.dropdown-menu > li:hover  > img{
+	display: block;
+}
+
+.caret {
+  display: relative;
+  width: 0;
+  position: relative;
+  top: 10px;
+  height: 0;
+  margin-left: 2px;
+  width:16px;
+  height:9px;
+  vertical-align: middle;
+  float: right;
+}
+[v-cloak] {
+	display: none;
+}
+-->
+</style>
+<script type="text/x-template" id="tpl-input-select">
+    <div class="btn-group" v-cloak>
+        <div @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined" v-cloak>
+          {{ selectedOption.name }}
+          <img class="caret" v-if="!showMenu" src="/src/student/img/select-down.png">
+		  <img class="caret" v-else="!showMenu" src="/src/student/img/select-up.png">
+        </div>
+
+        <div @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name === undefined">
+         	 请选择
+          <img class="caret" v-if="!showMenu" src="/src/student/img/select-down.png">
+		  <img class="caret" v-else="!showMenu" src="/src/student/img/select-up.png">
+        </div>
+
+        <ul class="dropdown-menu" :class="{ 'hide' : !showMenu}">
+            <li v-for="option in options">
+				<img  src="/src/student/img/dg.png">
+                <a href="javascript:void(0)" @click="updateOption(option)" >
+                    {{ option.name }}
+                </a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Vue.component('input-select', {
+        template: '#tpl-input-select',
+        data() {
+            return {
+                selectedOption: {
+                  name: '',
+                },
+                showMenu: false,
+            }
+        },
+        props: [
+            'options',
+            'selected'
+        ],
+        mounted() {
+            for(var i=0;i<this.options.length;i++)
+           	{
+            	if(this.selected == this.options[i].key)
+            	this.selectedOption = this.options[i];
+           	}
+        },
+        methods: {
+            updateOption(option) {
+                this.selectedOption = option;
+                this.selected=option.key;
+                this.showMenu = false;
+                this.$emit('select-change', this.selected);
+            },
+            toggleMenu() {
+              this.showMenu = !this.showMenu;
+            }
+        }
+    });
+</script>

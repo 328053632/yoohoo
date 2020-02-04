@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoohoo.en.dao.mapper.ConsumeDao">
+  <resultMap id="StudentConsumeInfoMap" type="com.yoohoo.en.dao.model.ext.StudentConsumeInfo" >
+    <id column="student_id" property="studentId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="msisdn" property="msisdn" jdbcType="VARCHAR" />
+    <result column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ConsumePackInfoMap" type="com.yoohoo.en.dao.model.ext.ConsumePackInfo" >
+    <id column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="lesson_id" property="lessonId" jdbcType="INTEGER" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="lesson_time" property="lessonTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_teacher_passwd" property="roomTeacherPasswd" jdbcType="VARCHAR" />
+    <result column="room_teacher_url" property="roomTeacherUrl" jdbcType="VARCHAR" />
+    <result column="room_stu_passwd" property="roomStuPasswd" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="date_label" property="dateLabel" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="INTEGER" />
+    <result column="chapter_name" property="chapterName" jdbcType="VARCHAR" />
+    <result column="lessonTimeStr" property="lessonTimeStr" jdbcType="VARCHAR" />
+    <result column="endTimeStr" property="endTimeStr" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="class_item_name" property="classItemName" jdbcType="VARCHAR" />
+    <result column="class_item_id" property="classItemId" jdbcType="INTEGER" />
+    <result column="lesson_name" property="lessonName" jdbcType="VARCHAR" />
+    <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+    <result column="eteacher_name" property="eteacherName" jdbcType="VARCHAR" />
+    <result column="masterteacher_name" property="masterteacherName" jdbcType="VARCHAR" />
+  </resultMap>
+     <select id="queryClassConsumeList" resultMap="StudentConsumeInfoMap">
+		SELECT
+			csr.student_id,
+			si.`name`,
+			si.en_name,
+			si.msisdn
+		FROM
+			t_class c,
+			t_class_student_r csr,
+			t_student_info si
+		WHERE
+			c.class_id = csr.class_id
+		AND csr.status != 0
+		AND csr.student_id = si.user_id
+		AND c.class_id = #{classId}
+    </select>
+    
+    <select id="queryStudentConsumeByScheduleId" resultMap="StudentConsumeInfoMap">
+		SELECT
+			sls.student_id,
+			si.`name`,
+			si.en_name,
+			si.msisdn,
+			sls.schedule_id,
+		    sls.record_id,
+			sls.`status`,
+			sls.type,
+			sbl.amount,
+			sbl.mark,
+			sbl.memo
+		FROM
+			t_student_lesson_schedule sls
+		LEFT JOIN t_student_balance_log sbl ON (
+			sls.schedule_id = sbl.schedule_id
+			AND sls.record_id = sbl.record_id
+		)
+		LEFT JOIN t_student_info si ON sls.student_id = si.user_id 
+		WHERE sls.schedule_id = #{scheduleId} and sls.`status` > 0
+    </select>
+    
+    <select id="queryClassScheduleExtByCondition" resultMap="ConsumePackInfoMap">
+		SELECT
+			cs.schedule_id,
+			cs.class_id,
+			cs.lesson_id,
+			cs.chapter_id,
+			cs.lesson_time,
+			cs.end_time,
+			cs.teacher_id,
+			cs.room_id,
+			cs.room_teacher_passwd,
+			cs.room_teacher_url,
+			cs.room_stu_passwd,
+			cs.`status`,
+			cs.date_label,
+			cs.check_status,
+			lc.title chapter_name,
+
+			DATE_FORMAT(
+				cs.lesson_time,
+				'%Y.%m.%d %H:%i'
+			) lessonTimeStr,
+			DATE_FORMAT(
+				cs.end_time,
+				'%Y.%m.%d %H:%i'
+			) endTimeStr,
+			c.class_name,
+			cd.class_item_id,
+			cd.class_item_name,
+			li.title lesson_name,
+			ti.`name` teacher_name,
+			ti1.`name` eteacher_name,
+			ti2.`name` masterteacher_name
+		FROM
+			t_class_schedule cs,
+			t_class c,
+			t_class_define cd,
+			t_lesson_chapter lc,
+			t_lesson_info li,
+			t_teacher_info ti,
+			t_teacher_info ti1,
+			t_teacher_info ti2
+		WHERE
+			cs.class_id = c.class_id
+		AND cs.teacher_id = ti.teacher_id
+		AND cs.eteacher_id = ti1.teacher_id
+		AND cs.masterteacher_id = ti2.teacher_id
+		AND c.class_item_id = cd.class_item_id
+		AND cs.chapter_id = lc.chapter_id
+		AND cs.lesson_id = lc.lesson_id
+		AND cs.lesson_id = li.lesson_id
+		AND cs.`status` != 0
+	    <if test="dateStr != null" >
+	      AND cs.date_label = #{dateStr}
+	    </if>
+	    <if test="lessonId != null" >
+	      AND cs.lesson_id = #{lessonId}
+	    </if>
+	    <if test="classId != null" >
+	      AND cs.class_id = #{classId}
+	    </if>
+	    <if test="classItemId != null" >
+	      AND cd.class_item_id =  #{classItemId}
+	    </if>
+	    <if test="addUserId != null" >
+	      AND c.add_user_id =  #{addUserId}
+	    </if>
+	   /* ORDER BY lc.lesson_id,lc.order_num*/
+		ORDER BY  cs.lesson_time desc
+    </select>
+	<update id="changeStudentBlance" >
+		update t_student_info 
+		<if test="null == rechargeType or rechargeType == 10">
+			set `balance` =IFNULL(`balance`,0) + #{amount}
+		</if>
+		<if test="rechargeType == 11">
+			set `balance` =IFNULL(`balance`,0) + #{amount}, `present_balance` =IFNULL(`present_balance`,0) + #{amount}
+		</if>
+		<if test="rechargeType == 12">
+			set `balance` =IFNULL(`balance`,0) + #{amount}, `earb_balance` =IFNULL(`earb_balance`,0) + #{amount}
+		</if>
+		where user_id = #{userId}
+	</update>
+</mapper>

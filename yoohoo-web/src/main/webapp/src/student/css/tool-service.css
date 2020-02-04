@@ -1,0 +1,90 @@
+#toolApp .contact-us-menu{
+    position: fixed;
+    height: 50px;
+    top: 240px;
+    right: 10px;
+    z-index: 15;
+}
+
+#toolApp .contact-us-menu div{
+    float: left;
+}
+
+#toolApp .contact-us-menu .contact-us{
+    width: 50px;
+    height: 50px;
+    background-image: url("../img/contact-us.png");
+    background-size: 100% 100%;
+}
+
+#toolApp .contact-us-menu .contact-us-content{
+    width: 140px;
+    height: 58px;
+    background-color: #83D07A;
+    margin-right: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    position: relative;
+}
+
+#toolApp .qq-service-menu{
+    position: fixed;
+    height: 50px;
+    top: 300px;
+    right: 10px;
+    z-index: 15;
+}
+
+#toolApp .qq-service-menu .qq-service-content{
+    width: 140px;
+    height: 58px;
+    background-color: #83D07A;
+    margin-right: 20px;
+    color: #ffffff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    position: relative;
+}
+
+#toolApp .qq-service-menu div{
+    float: left;
+}
+
+#toolApp .qq-service-menu .qq-service{
+    width: 50px;
+    height: 50px;
+    background-image: url("../img/qq-service.png");
+    background-size: 100% 100%;
+}
+
+#toolApp .qq-service-menu .qq-service-content i,
+#toolApp .contact-us-menu .contact-us-content i{
+    position: absolute;
+    top: 20px;
+    right: -13px;
+    width: 13px;
+    height: 16px;
+    background-image: url("../img/triangle.png");
+    background-size: 100% 100%;
+}
+
+
+#toolApp .pay-service-menu{
+    position: fixed;
+    height: 50px;
+    top: 360px;
+    right: 10px;
+    z-index: 15;
+}
+
+#toolApp .pay-service-menu .pay-service{
+    width: 50px;
+    height: 50px;
+    background-image: url("../img/pay_img.jpg");
+    background-size: 100% 100%;
+}

@@ -1,0 +1,27 @@
+<%@ page pageEncoding="UTF-8" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/src/commom/tpl-no-data.css?version=${_dt}">
+<script type="text/x-template" id="tpl-poohoo-no-data">
+    <div class="no-data">
+        <div>
+            <i></i>
+            <span>{{text}}</span>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('poohoo-no-data', {
+        template: '#tpl-poohoo-no-data',
+        props: ['text'],
+        data: function () {
+            return {
+
+            }
+        },
+        created: function(){
+        },
+        mounted: function(){
+        },
+        methods: {}
+    });
+</script>

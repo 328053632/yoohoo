@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+	<!-- 
+	打包参数配置文件，使用此xml配置时，使用以下命令进行打包。
+	mvn clean package -DportableConfig="src/main/portable/test.xml"
+	替换key和值 
+	-->
+	<!--  
+    <config-file path="WEB-INF/classes/applicationContext.xml">
+        <replace xpath="/beans/bean[@id='fastDFSClient']/constructor-arg[@name='connnectString']/@value">172.18.16.2</replace>
+        <replace xpath="/beans/bean[@id='fastDFSClient']//constructor-arg[@name='trackerHttpPort']/@value">8181</replace>
+        <replace xpath="/beans/bean[@id='fastDFSClient']//property[@name='group']/@value">group1</replace>
+    </config-file>
+    -->
+    <config-file path="WEB-INF/classes/mysql.properties">
+        <replace key="c3p0.url">jdbc:mysql://112.74.167.122:3306/yoohoo_en?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true</replace>
+        <replace key="c3p0.user">xx_dev</replace>
+        <replace key="c3p0.password">!QAZ2wsx</replace>
+        <replace key="c3p0.maxPoolSize">2</replace>
+        <replace key="c3p0.minPoolSize">1</replace>
+    </config-file>
+    
+</portable-config>

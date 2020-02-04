@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>yoohooabc雅英</title>
+    <meta name="Keywords" content="yoohooabc雅英">
+    <meta name="Description" content="yoohooabc雅英">
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/simple-animate.min.css" />
+    <link href="css/tpl-apply-audition.css" rel="stylesheet" type="text/css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/core.min.js"></script>
+    <script src="js/wow.min.js"></script>
+</head>
+<body  style="zoom: 1;position: relative">
+<!--头部  start-->
+<div class="s-header">
+    <div class="top_box">
+        <a href="index.html">
+            <div class="s-h-logo f-left ">
+                <div class="logo"></div>
+                <div class="ani-dot-s"></div>
+            </div>
+        </a><div class="s-h-nav ">
+            <a href="index.html"><span class="nav cur">首页</span></a>
+            <a href="class.html"><span class="nav">如何上课</span></a>
+            <a href="about.html"><span class="nav">关于我们</span></a>
+            <div class="cursor"></div>
+        </div>
+    </div>
+</div>
+<!--头部  end-->
+<!--banner  start-->
+<div class="about_banner">
+    <h2 class="wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInRight;">Train a child in the way he should go,<br>and when he is old he will not turn from it.</h2>
+</div>
+<!--banner  end-->
+
+<!--第一版块  start-->
+<div class="about_title bg01 wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;"></div>
+<div class="about_bk01">
+    <p class="wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">yoohooabc是雅英科技有限公司旗下在线学习品牌。</p>
+    <p class="wow" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">我们所努力的是——让学习更便捷、有效、可见，将学员、老师、优质内容匹配。</p>
+    <p class="wow" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">我们期望——通过互联网师生关系的建立，构建学习的诚信体系、评估体系、价值观体系。</p>
+    <p class="wow" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">学习需要一些兴趣、技巧、新的理念，但更多的是专注、勤奋和坚持！</p>
+    <p class="wow" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">每个人的学习环境和习惯不同，愿独特的您在行动中，找到自己的学习之路，自由学、自由行！</p>
+</div>
+<!--第一版块  end-->
+
+<!--第二版块  start-->
+<div class="about_title bg02 wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;"></div>
+<div class="about_bk02">
+    <dl class="wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+        <dt>课程设计</dt><dd>（策划设计您喜爱的课本）</dd>
+    </dl>
+    <dl class="wow" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+        <dt>授课老师 | Teachers</dt><dd>（将您擅长的快乐地传授他人）</dd>
+    </dl>
+    <dl class="wow" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+        <dt>课长</dt><dd>（会上课，也会关心学员）</dd>
+    </dl>
+</div>
+<div class="about_btn wow" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+    <span id="aa" class="btn_sq" onclick="opend()">申请 / Apply</span>
+</div>
+<div class="poohoo-apply-frame" id="frame">
+    <div class="border">
+        <h3 style="text-align: center; margin: 45px 0 10px;">申请</h3>
+        <table>
+            <tr>
+                <td class="label">申请职位:</td>
+                <td class="content">
+                    <select id="job" class="verify" verify-data="请选择申请职位">
+                        <option value="">请选择</option>
+                        <option value="老师">老师</option>
+                        <option value="课长">课长</option>
+                        <option value="电教">电教</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">申请岗位:</td>
+                <td class="content">
+                    <select id="position" v-model="applyInfo.grade" class="verify" verify-data="请选择申请岗位">
+                        <option value="">请选择</option>
+                        <option value="申请授课">申请授课</option>
+                        <option value="申请制作课件">申请制作课件</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">联系方式：</td>
+                <td class="content">
+                    <input id="phone" type="text" placeholder="选填"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">建议:</td>
+                <td class="content">
+                    <textarea id="advie" rows="5" name=textarea style="resize:none;" placeholder="建议" cols="35" ></textarea>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <button class="btn" id="apply" onclick="apply">确认</button>
+            <button class="btn" id="cancel" onclick="cancel">取消</button>
+        </div>
+    </div>
+</div>
+
+<!--第二版块  end-->
+
+
+<!--footer  start-->
+<div class="footer">
+    <div class="footer_w">
+        <div class="fot_logo">
+            <div class="logo_img"><img src="images/logo.png" width="202" height="68"></div>
+            <dl>
+                <dt><img src="images/footer_icon01.png" width="18" height="18"></dt>
+                <dd>yoohooabc@foxmail.com</dd>
+            </dl>
+            <dl>
+                <dt><img src="images/footer_icon02.png" width="18" height="18"></dt>
+                <dd>0571-28284628</dd>
+            </dl>
+        </div>
+        <div class="fot_news">
+            <div class="fot_title">新闻动态<i></i></div>
+            <ul>
+                <li><a href="#">雅英出国游2018年开始招生！</a></li>
+                <li><a href="#">移动端上课从yoohooabc.com点击上课时</a></li>
+                <li><a href="#">闭设备上的其他程序，降低内存占用</a></li>
+                <li><a href="#">移动端上课从yoohooabc.com点击</a></li>
+                <li><a href="#">雅英出国游2018年开始招生！</a></li>
+            </ul>
+        </div>
+        <div class="fot_nav">
+            <div class="fot_title">首页<i></i></div>
+            <ul>
+                <li><a href="class.html">如何上课</a></li>
+                <li><a href="about.html">关于我们</a></li>
+                <li><a href="http://www.yoohooabc.com/student/views/study" target="view_window">网校入口</a></li>
+            </ul>
+        </div>
+        <div class="fot_ewm">
+            <div class="fot_title">公众号<i></i></div>
+            <p><img src="images/footer_ewm.jpg" width="132" height="132"></p>
+        </div>
+    </div>
+</div>
+<!--footer  end-->
+
+<!--copyright  start-->
+<div class="copyright">浙ICP备17003618号-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;浙公网安备33010602009680号</div>
+<!--copyright  end-->
+<script src="js/common.min.js"></script>
+<script type="text/javascript">
+    jQuery.support.cors = true;
+    $(document).ready(function (fn) {
+        $(window).scroll(function () {
+
+            //控制滚动时间重复触发
+            setTimeout(function () {
+
+                if ($(document).scrollTop() >= ($('.s-header').height() && $('.scroll-point').height() !== 0)
+                    && !$('.s-header').hasClass('site-header-scroll')) {
+                    $('.s-header').addClass('s-header-scroll');
+                }
+
+                else if ($(document).scrollTop() <= ($('.s-header').height()) && $('.scroll-point').height() !== 0) {
+                    $('.s-header').removeClass('s-header-scroll');
+                }
+                tur = true;
+            }, 100);
+            tur = false;
+        });
+
+        if ($('.scroll-point').height() === 0) {
+            $('.s-header').addClass('s-header-scroll');
+        }
+    });
+    function opend(){
+        ;
+        $('#frame').css('display','block')
+    };
+    $('#apply').click(function(){
+        var job;
+        var position;
+        var obj1=document.getElementById("job");
+        var obj2=document.getElementById("position");
+        ;
+        for(var i=0;i<obj1.length;i++) {//下拉框的长度就是它的选项数.
+            if(obj1[i].selected==true) {
+                job=obj1[i].value;//获取当前选择项的值.
+            }
+        }
+        for(var i=0;i<obj2.length;i++) {//下拉框的长度就是它的选项数.
+            if(obj2[i].selected==true) {
+                position=obj2[i].value;//获取当前选择项的值.
+            }
+
+        }
+        if (job==''){
+            ;
+            return;
+        }
+        if (position==''){
+            ;
+            return;
+        }
+        var phone=document.getElementById("phone").value;
+        var advie=document.getElementById("advie").value;
+        ;
+         $.ajax({
+             type: "POST",
+             url: "/teach/user/ApplyPostion",
+             data: {
+             job:job,
+             position:position,
+             phone:phone,
+             advie:advie,
+             messageType:11
+            },
+            dataType: "json",
+          success: function(data){
+              document.getElementById("phone").value=null;
+              document.getElementById("advie").value=null;
+              $('#frame').css('display','none');
+          }
+        });
+
+    });
+    $('#cancel').click(function(){
+        $('#frame').css('display','none');
+    });
+    // $('#send').click(function(){
+    //     $('#frame').css('display','none');
+    // });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+	#parse("sys/header.html")
+    <link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/lesson.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/frame.css">
+	<link rel="stylesheet" href="${rc.contextPath}/statics/css/lesson/teacherTag.css">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList == 1">
+		<div class="grid-btn clearfix" >
+			<div style="width: 180px;height:100%;float: left">
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</div>
+			<div style="float: left">
+				<input class="form-control" type="text" placeholder="课本名称" id="findbookname" />
+			</div>
+			<div style="width: 200px;height:100%;float: left;margin-left: 15px">
+				<a class="btn btn-primary" @click="findbookname">查询</a>
+			</div>
+
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="showList == 2" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">课本名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tLessonInfo.title" placeholder="课本名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">课本简介</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none;" v-model="tLessonInfo.introduce" placeholder="课本简介"></textarea>
+					<!--<input type="text" class="form-control" v-model="tLessonInfo.introduce" placeholder="课本简介"/>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">封面视频</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" style="background-color: #ffffff; cursor: pointer;"
+						   v-model="tLessonInfo.coverUrl" placeholder="点击选择封面视频" readonly @click="choiceFile"/>
+					<input id="fileupload" type="file" style="display: none;" name="file" data-url="../upload/uploadCover"
+						   accept="video/*"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">学习建议</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none;" v-model="tLessonInfo.ageSection" placeholder="学习建议"></textarea>
+					<!--<input type="text" class="form-control" v-model="tLessonInfo.ageSection" placeholder="学习建议"/>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">课程特色</div>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="7" name=textarea style="resize:none;" v-model="tLessonInfo.times" placeholder="课程特色"></textarea>
+					<!--<input type="text" class="form-control" v-model="tLessonInfo.times" placeholder="课时数"/>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">课程类型</div>
+				<div class="col-sm-10">
+					<select   class="form-control" v-model="tLessonInfo.lessonType"  @change="configData(tLessonInfo.lessonType)" >
+						<option value="1">正式课</option>
+						<option value="2">待开发课</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">分类</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="tLessonInfo.categoryName" placeholder="点击选择分类"
+						   readonly style="background-color: #ffffff; cursor: pointer;" @click="showTreeModal"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">推荐课长</div>
+				<div class="col-sm-10">
+					<select  id="select_masterteacher" class="form-control" v-model="masterteacherArrayList.teacherId">
+						<option v-for="item in masterteacherArrayList" :value="item.teacherId"  :name="item.name">{{item.name}}</option>
+					</select>
+				</div>
+				<input type="button" class="btn btn-primary" @click="MasterTeacherAdd()" value="添加"/>
+			</div>
+			<div class="form-tag">
+				<Tag v-for="item in lessonmasterTeacherArray"  type="dot" color="primary" :key="item" :name="item" closable @on-close="MasterTeacherDel">{{item.teacherName}}</Tag>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">推荐上课老师</div>
+				<div class="col-sm-10">
+					<select  id="select_teacher" class="form-control" v-model="teacherArrayList.teacherId">
+						<option v-for="item in teacherArrayList" :value="item.teacherId"  :name="item.name">{{item.name}}</option>
+					</select>
+				</div>
+				<input type="button" class="btn btn-primary" @click="TeacherAdd()" value="添加"/>
+			</div>
+			<div class="form-tag">
+				<Tag v-for="item in  lessonTeacherArray"  type="dot" color="primary" :key="item" :name="item" closable @on-close="TeacherDel">{{item.teacherName}}</Tag>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">推荐电教</div>
+				<div class="col-sm-10">
+					<select  id="select_eteacher" class="form-control" v-model="eteacherArrayList.teacherId"  >
+						<option v-for="item in eteacherArrayList" :value="item.teacherId"  :name="item.name">{{item.name}}</option>
+					</select>
+				</div>
+				<input type="button" class="btn btn-primary" @click="ETeacherAdd()" value="添加"/>
+			</div>
+			<div class="form-tag">
+				<Tag v-for="item in  lessoneTeacherArray "  type="dot" color="primary" :key="item" :name="item" closable @on-close="ETeacherDel">{{item.teacherName}}</Tag>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	<!--添加章节-->
+    <div class="frame-border" v-show="showAddChapterWindow">
+        <span class="close" title="关闭" @click="closeAddChapterFrame"></span>
+        <div class="frame-content">
+            <div class="window">
+                <div class="add-info">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">课节名称:</div>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="addChapterInfo.title" class="form-control" placeholder="课节名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">课节简介:</div>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="addChapterInfo.introduce" class="form-control" placeholder="课节简介"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"></div>
+                            <input type="button" class="btn btn-primary" value="添加到目录列表" @click="addChapter"/>
+                            <input type="button" class="btn btn-primary" value="保存目录" @click="saveChapterList"/>
+                            <input type="button" class="btn btn-primary" value="关闭" @click="closeAddChapterFrame"/>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="chapter-list" v-if="currentAddLessonId">
+                    <draggable v-model="chapterList" @update="afterSort" :options="{group:'people'}" @start="drag=true" @end="drag=false">
+                        <span v-for="(item, index) in chapterList"><label :title="item.title">{{index+1}}.{{item.title}}</label>
+							<i class="edit" @click="shwoChapterModifyWin(index)"></i>
+						</span>
+                    </draggable>
+                </div>
+            </div>
+        </div>
+    </div>
+	<!--关联预习课件-->
+	<!--关联上课文件-->
+	<!--后台课表管理的添加课件-->
+	<style>
+		.file-btn {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			outline: none;
+			background-color: transparent;
+			filter: alpha(opacity=0);
+			-moz-opacity: 0;
+			-khtml-opacity: 0;
+			opacity: 0;
+		}
+	</style>
+	<div class="frame-borderFile" v-show="showAddFileWindow">
+		<span class="close" title="关闭" @click="closeAddFileFrame"></span>
+		<div class="frame-content">
+			<div class="form-groupChapter">
+				<div class="col-sm-2 control-label">上课课节</div>
+				<div class="col-sm-10">
+					<select  id="select_chapter" class="form-control" v-model="LessonChapterList.chapterId"  @change="LoadChapterFile(LessonChapterList.chapterId)" >
+						<option v-for="item in LessonChapterList" :value="item.chapterId"  :name="item.title">{{item.orderNum}}.{{item.title}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">预习课件</div>
+				<div class="col-sm-10">
+
+					<input type="file" id='file' name="file"  multiple="multiple" accept=".xls,.xlsx,.ppt,.pptx,.doc,.docx,.txt,.pdf,.jpg,.gif,.jpeg,.png,.bmp,.mp3,.mp4,.zip"  placeholder="file" multiple @change="uploadFileYX($event)" style="display:none;" />
+					<button style="width: 100%;height: 30px;" id='uploadbtnYX' class="rscUploadBtnYX" type="button" onclick="document.getElementById('file').click();" >选择上传预习课件</button><br />
+
+				</div>
+
+				<div class="form-tagFile">
+					<!--<Tag v-for="item in  uploadfilenameYX "  type="dot" color="primary" closable>{{item.name}}232131</Tag>-->
+					<Tag v-for="item in  PrefileArray "  type="dot" color="primary" :key="item" :name="item" closable @on-close="PreFileDel">{{item.fileName}}</Tag>
+				</div>
+			</div>
+			<div class="form-group" >
+				<div class="col-sm-2 control-label">上课课件</div>
+				<div class="col-sm-10">
+					<input type="file" id='uploadSK' name="uploadSK"  multiple="multiple" accept=".xls,.xlsx,.ppt,.pptx,.doc,.docx,.txt,.pdf,.jpg,.gif,.jpeg,.png,.bmp,.mp3,.mp4," placeholder="file" @change="uploadFileSK($event)" style="display:none;" />
+					<button style="width: 100%;height: 30px;" id='uploadbtnSK' class="rscUploadBtn" type="button" onclick="document.getElementById('uploadSK').click();" >选择上传上课课件</button><br />
+
+				</div>
+
+				<div class="form-tagFile">
+
+					<Tag v-for="item in  fileArray "  type="dot" color="primary" :key="item" :name="item" closable @on-close="FileDel">{{item.fileName}}</Tag>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--后台课表管理的添加课件结束-->
+	<div class="frame-border" v-show="showTreeFlag">
+		<span class="close" title="关闭" @click="hideTreeModal"></span>
+		<div class="frame-content" style="width: 400px; position: relative;">
+			<!--<div class="window" style="overflow: auto; padding: 20px; position: relative;">
+				<Tree :data="baseData" @on-select-change="changeNode"></Tree>
+				<div  style="height: 50px;"></div>
+				<div style="position: absolute; bottom: 0; left: 0; height: 50px; margin: 0 50px">
+					<input type="button" class="btn btn-primary" @click="selectCategory" value="确定"/>
+				</div>
+			</div>-->
+			<div class="window" style="overflow: auto; padding: 20px;">
+				<Tree :data="baseData" @on-select-change="changeNode"></Tree>
+				<div  style="height: 50px;">
+				</div>
+			</div>
+			<div style="position: absolute; bottom: 0; right: 0; height: 50px; margin: 0 50px">
+				<input type="button" class="btn btn-primary" @click="selectCategory" value="确定"/>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="${rc.contextPath}/statics/libs/Sortable.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/vuedraggable.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/vendor/jquery.ui.widget.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/jquery.iframe-transport.js"></script>
+<script src="${rc.contextPath}/statics/libs/jqupload/jquery.fileupload.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">-->
+<!--<script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>-->
+<!--<script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>-->
+<link src="${rc.contextPath}/statics/css/iview.css">
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/vue.min.js" ></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/iview.min.js"></script>
+<script src="${rc.contextPath}/js/tlessoninfo/tlessoninfo.js?_${date.systemTime}"></script>
+
+
+
+</body>
+</html>

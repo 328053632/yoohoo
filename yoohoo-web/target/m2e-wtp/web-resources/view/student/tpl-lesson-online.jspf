@@ -1,0 +1,247 @@
+<%@ page pageEncoding="UTF-8" %>
+<script type="text/x-template" id="tpl-poohoo-lesson-online">
+    <div class="lesson-online">
+        <div v-for="(item, index) in lessonList">
+            <my-lesson-detail :lesson="item" :prefix="prefix" :inx="index"></my-lesson-detail>
+            <div class="line-h" v-if="index < lessonList.length-1"></div>
+        </div>
+        <div style="height: 20rem;" v-show="lessonList.length == 0">
+            <poohoo-no-data :text="'还没有要上的课哦～，赶快去课程库看一下吧'"></poohoo-no-data>
+        </div>
+    </div>
+</script>
+<script>
+    Vue.component('poohoo-lesson-online', {
+        template: '#tpl-poohoo-lesson-online',
+        props: [],
+        data: function () {
+            return {
+                lessonList: [],
+                prefix: '',
+                page: {
+                    start: 0,
+                    limit: 5,
+                    hashMore: true
+                }
+            }
+        },
+        created: function () {
+            this.studentOnlineLessons();
+            // this.defaultData();
+        },
+        mounted: function () {
+            this.initPage();
+        },
+        methods: {
+            studentOnlineLessons: function () {
+                var me = this;
+                AjaxClient.get({
+                    url: contextPath + "/stu/user/studentOnlineLesson",
+                    data: this.page,
+                    success: function (resp) {
+                        if (me.page.start == 0) {
+                            me.lessonList = resp.data.lessonList;
+                        } else {
+                            if (resp.data.lessonList && resp.data.lessonList.length > 0) {
+                                for (var i = 0, len = resp.data.lessonList.length; i < len; i++) {
+                                    me.lessonList.push(resp.data.lessonList[i]);
+                                }
+                            } else {
+                                me.page.hashMore = false;
+                            }
+                        }
+                        me.prefix = resp.data.prefix;
+                    }
+                })
+            },
+            nextPage: function () {
+                this.page.start = this.page.start + this.page.limit;
+                this.studentOnlineLessons();
+            },
+            initPage: function () {
+                var me = this;
+                this.$nextTick(function () {
+                    $(window).scroll(function () {
+                        var totalHeight = parseFloat($(this).height()) + parseFloat($(this).scrollTop());
+                        var documentHeight = $(document).height();
+                        if ((totalHeight + 30) >= documentHeight) {
+                            if (me.page.hashMore) {
+                                me.nextPage();
+                            }
+                        }
+                    });
+                })
+            },
+            defaultData: function () {
+                this.lessonList = [
+                    {
+                        lessonName: '学前1期',
+                        timeQuantum: '2017年12月30日—2018年6月1日',
+                        className: '西瓜班',
+                        headTeacher: 'Alina',
+                        teacher: 'Bea',
+                        assistant: 'Paloma',
+                        electrified: 'Marin',
+                        type: 0,
+                        chapterList: [
+                            {title: '第一节课', status: 1},
+                            {title: '第二节课', status: 2},
+                            {title: '第三节课', status: 3},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                        ]
+                    },
+                    {
+                        lessonName: '学前1期',
+                        timeQuantum: '2017年12月30日—2018年6月1日',
+                        className: '西瓜班',
+                        headTeacher: 'Alina',
+                        teacher: 'Bea',
+                        assistant: 'Paloma',
+                        electrified: 'Marin',
+                        type: 1,
+                        chapterList: [
+                            {title: '第一节课', status: 1},
+                            {title: '第二节课', status: 2},
+                            {title: '第三节课', status: 3},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                        ]
+                    },
+                    {
+                        lessonName: '学前1期',
+                        timeQuantum: '2017年12月30日—2018年6月1日',
+                        className: '西瓜班',
+                        headTeacher: 'Alina',
+                        teacher: 'Bea',
+                        assistant: 'Paloma',
+                        electrified: 'Marin',
+                        type: 1,
+                        chapterList: [
+                            {title: '第一节课', status: 1},
+                            {title: '第二节课', status: 2},
+                            {title: '第三节课', status: 3},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                        ]
+                    },
+                    {
+                        lessonName: '学前1期',
+                        timeQuantum: '2017年12月30日—2018年6月1日',
+                        className: '西瓜班',
+                        headTeacher: 'Alina',
+                        teacher: 'Bea',
+                        assistant: 'Paloma',
+                        electrified: 'Marin',
+                        type: 1,
+                        chapterList: [
+                            {title: '第一节课', status: 1},
+                            {title: '第二节课', status: 2},
+                            {title: '第三节课', status: 3},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                        ]
+                    },
+                    {
+                        lessonName: '学前1期',
+                        timeQuantum: '2017年12月30日—2018年6月1日',
+                        className: '西瓜班',
+                        headTeacher: 'Alina',
+                        teacher: 'Bea',
+                        assistant: 'Paloma',
+                        electrified: 'Marin',
+                        type: 1,
+                        chapterList: [
+                            {title: '第一节课', status: 1},
+                            {title: '第二节课', status: 2},
+                            {title: '第三节课', status: 3},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                            {title: '第一节课', status: 0},
+                            {title: '第二节课', status: 0},
+                            {title: '第三节课', status: 0},
+                            {title: '第四节课', status: 0},
+                            {title: '第五节课', status: 0},
+                        ]
+                    }];
+            }
+        }
+    });
+</script>
+<style>
+    .line-h {
+        width: 100%;
+        height: 20px;
+        background-color: #D9E9EA;
+    }
+</style>

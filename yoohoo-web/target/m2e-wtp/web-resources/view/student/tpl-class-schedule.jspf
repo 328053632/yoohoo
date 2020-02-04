@@ -1,0 +1,261 @@
+<%@ page pageEncoding="UTF-8" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/src/commom/tpl-class-schedule.css?version=${_dt}">
+<script type="text/x-template" id="tpl-poohoo-class-schedule">
+    <div class="schedule">
+        <div class="schedule-list">
+            <div class="day">
+                <div class="dat-date monday">{{monday}}</div>
+                <div class="list bg-1">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.monday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date tuesday">{{tuesday}}</div>
+                <div class="list bg-2">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.tuesday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date wednesday">{{wednesday}}</div>
+                <div class="list bg-1">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.wednesday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date thursday">{{thursday}}</div>
+                <div class="list bg-2">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.thursday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date friday">{{friday}}</div>
+                <div class="list bg-1">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.friday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date saturday">{{saturday}}</div>
+                <div class="list bg-2">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.saturday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <div class="day">
+                <div class="dat-date sunday">{{sunday}}</div>
+                <div class="list bg-1 border-right">
+                    <poohoo-schedule-card v-for="(item, index) in scheduleMapper.sunday"
+                                          :schedule-info="item"></poohoo-schedule-card>
+                </div>
+            </div>
+            <poohoo-no-data v-show="noData" :text="'还没有要上的课哦～，赶快去课程库看一下吧'"></poohoo-no-data>
+            <poohoo-apply-remediation ref="applyRemediationWin" :apply-chapter="applyChapter" :inx="'1000'"></poohoo-apply-remediation>
+        </div>
+    </div>
+</script>
+
+<script>
+    Vue.component('poohoo-class-schedule', {
+        template: '#tpl-poohoo-class-schedule',
+        props: [],
+        data: function () {
+            return {
+                scheduleMapper: {},
+                dateMapper: {},
+                weekDays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+                weekRefs: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+                queryParam: {
+                    monday: '',
+                    sunday: '',
+                    type: 1
+                },
+                loadIndex: 0,
+                applyChapter: {}
+            }
+        },
+        computed: {
+            monday: function () {
+                if (this.dateMapper.monday) {
+                    return this.dayLabel(new Date(this.dateMapper.monday));
+                }
+                return this.weekDays[1];
+            },
+            tuesday: function () {
+                if (this.dateMapper.tuesday) {
+                    return this.dayLabel(new Date(this.dateMapper.tuesday));
+                }
+                return this.weekDays[2];
+            },
+            wednesday: function () {
+                if (this.dateMapper.wednesday) {
+                    return this.dayLabel(new Date(this.dateMapper.wednesday));
+                }
+                return this.weekDays[3];
+            },
+            thursday: function () {
+                if (this.dateMapper.thursday) {
+                    return this.dayLabel(new Date(this.dateMapper.thursday));
+                }
+                return this.weekDays[4];
+            },
+            friday: function () {
+                if (this.dateMapper.friday) {
+                    return this.dayLabel(new Date(this.dateMapper.friday));
+                }
+                return this.weekDays[5];
+            },
+            saturday: function () {
+                if (this.dateMapper.saturday) {
+                    return this.dayLabel(new Date(this.dateMapper.saturday));
+                }
+                return this.weekDays[6];
+            },
+            sunday: function () {
+                if (this.dateMapper.sunday) {
+                    return this.dayLabel(new Date(this.dateMapper.sunday));
+                }
+                return this.weekDays[0];
+            },
+            noData: function(){
+                if (!this.scheduleMapper) {
+                    return true;
+                }
+                var mondayFlag = (!this.scheduleMapper.monday || this.scheduleMapper.monday.length == 0);
+                var tuesdayFlag = (!this.scheduleMapper.tuesday || this.scheduleMapper.tuesday.length == 0);
+                var wednesdayFlag = (!this.scheduleMapper.wednesday || this.scheduleMapper.wednesday.length == 0);
+                var thursdayFlag = (!this.scheduleMapper.thursday || this.scheduleMapper.thursday.length == 0);
+                var fridayFlag = (!this.scheduleMapper.friday || this.scheduleMapper.friday.length == 0);
+                var saturdayFlag = (!this.scheduleMapper.saturday || this.scheduleMapper.saturday.length == 0);
+                var sundayFalg = (!this.scheduleMapper.sunday || this.scheduleMapper.sunday.length == 0);
+
+                if (mondayFlag && tuesdayFlag && wednesdayFlag && thursdayFlag
+                    && fridayFlag && saturdayFlag && sundayFalg) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        created: function () {
+            // this.defaultData();
+            this.schedules();
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            dayLabel: function (time) {
+                return time.getMonth()+1 + "月" + time.getDate() + "日 " + this.weekDays[time.getDay()];
+            },
+            lastWeek: function(){
+                this.queryParam = {
+                    monday: new Date(this.dateMapper.monday).getTime(),
+                    sunday: new Date(this.dateMapper.sunday).getTime(),
+                    type: 1
+                }
+                this.schedules();
+            },
+            nextWeek: function(){
+                this.queryParam = {
+                    monday: new Date(this.dateMapper.monday).getTime(),
+                    sunday: new Date(this.dateMapper.sunday).getTime(),
+                    type: 2
+                }
+                this.schedules();
+            },
+            computedHeight: function(){
+                // 计算课表高度
+
+            },
+            schedules: function () {
+                if(this.loadIndex){
+                    return;
+                }
+                var me = this;
+                $.ajax({
+                    url: contextPath + "/stu/user/scheduleList",
+                    data: this.queryParam,
+                    type: "GET",
+                    dataType: 'JSON',
+                    success: function (resp) {
+                        if (resp.code == '0') {
+                            me.dateMapper = resp.dateMapper;
+                            me.scheduleMapper = me.parse(resp.scheduleMapper);
+                            me.$nextTick(function () {
+                                me.computedHeight();
+                            });
+                        } else if (resp.code = '10000') {
+                            window.open(contextPath + "/student/views/lesson/library");
+                            /*location.href = contextPath + "/student/views/lesson/library"*/
+                        } else {
+                            message.error("加载数据失败")
+                        }
+                    },
+                    beforeSend: function () {
+                        me.loadIndex = layer.load(1, {shade: [0.3, '#393D49']});
+                    },
+                    complete: function () {
+                        layer.close(me.loadIndex)
+                        me.loadIndex = 0;
+                    }
+                });
+            },
+            parse: function (mapper) {
+                var maxSize = 0;
+                for (key in mapper) {
+                    if (mapper[key].length > maxSize) {
+                        maxSize = mapper[key].length;
+                    }
+                }
+
+                for (key in mapper) {
+                    if (mapper[key].length < maxSize) {
+                        var count = maxSize - mapper[key].length;
+                        for (var i = 0; i < count; i++) {
+                            mapper[key].push({empty: true});
+                        }
+                    }
+                }
+                return mapper;
+            },
+            defaultData: function () {
+                this.scheduleMapper = {
+                    monday: [
+                        {lessonName: '白雪公主', chapterName: '第一课', lessonTime: '09:00', type: '0'},
+                        {lessonName: '白雪公主', chapterName: '第二课', lessonTime: '21:00', type: '1'},
+                        {lessonName: '白雪公主', chapterName: '第一课', lessonTime: '09:00', type: '2'},
+                        {lessonName: '白雪公主', chapterName: '第二课', lessonTime: '21:00', type: '3'},
+                        {lessonName: '白雪公主', chapterName: '第一课', lessonTime: '09:00', type: '4'},
+                        {lessonName: '白雪公主', chapterName: '第二课', lessonTime: '21:00', type: '5'},
+                        {lessonName: '白雪公主', chapterName: '第二课', lessonTime: '21:00', type: '6'}
+                    ],
+                    tuesday: [
+                        {lessonName: '白雪公主', chapterName: '第三课', lessonTime: '09:00', type: '3'},
+                        {lessonName: '白雪公主', chapterName: '第四课', lessonTime: '21:00', type: '4'}
+                    ],
+                    wednesday: [
+                        {lessonName: '白雪公主', chapterName: '第五课', lessonTime: '09:00', type: '5'},
+                        {lessonName: '白雪公主', chapterName: '第六课', lessonTime: '21:00', type: '6'}
+                    ],
+                    thursday: [
+                        {lessonName: '白雪公主', chapterName: '第七课', lessonTime: '09:00', type: '0'},
+                        {lessonName: '白雪公主', chapterName: '第八课', lessonTime: '21:00', type: '0'}
+                    ],
+                    friday: [
+                        {lessonName: '白雪公主', chapterName: '第九课', lessonTime: '09:00', type: '0'},
+                        {lessonName: '白雪公主', chapterName: '第十课', lessonTime: '21:00', type: '0'}
+                    ],
+                    saturday: [],
+                    sunday: []
+                }
+                var me = this;
+                this.$nextTick(function(){
+                    me.computedHeight();
+                })
+            }
+        }
+    });
+</script>
